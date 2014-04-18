@@ -1,4 +1,4 @@
-// Unit tests / User Guide for the UDC library.
+// User Guide (and unit tests) for the UDC library.
 describe('UDC', function() {
   var UDC;
 
@@ -95,23 +95,19 @@ describe('UDC', function() {
       }
     ]
   };
-
-  tables.countryNamesAndCodes = {
-    "dimensionColumns": [
-      { "dimension": "Space", "codeList": "countryName", "column": "Country" },
-      { "dimension": "Space", "codeList": "countryCode", "column": "Code" }
-    ],
-    "rows": [
-      { "Country": "India", "Code": "in" },
-      { "Country": "China", "Code": "cn" },
-      { "Country": "United States of America", "Code": "us" }
-    ]
-  };
-
   // Tables are used as input for creating cubes and concordances.
 
   // ## Cube
-  // Data cubes are referred to as "cubes".
+  // Data cubes are referred to as "cubes". A cube is a data set
+  // that comes from a table that includes columns for dimensions
+  // and measures.
+  //
+  //  * dimensions are sets of discrete entities
+  //  * measures are aggregated numeric properties
+  //
+  // One example of cube is a data set that contains values for
+  // population (number of people) in each of the three largest
+  // countries of the world - China (ch), India (in) and the USA (us).
   it('can load a data cube', function() {
     var table = tables.countryPopulations,
 
@@ -142,13 +138,27 @@ describe('UDC', function() {
   // ## Concordance
   // Concordance tables are referred to as "concordances".
   //
-  // A concordance defines equivalence classes for two or more code lists.
+  // A concordance defines equivalence classes for dimension members
+  // by matching up codes between two or more code lists.
+  //
+  // For example, one code list could define matches between two-character
+  // country codes and full country names.
+  tables.countryNamesAndCodes = {
+    "dimensionColumns": [
+      { "dimension": "Space", "codeList": "countryName", "column": "Country" },
+      { "dimension": "Space", "codeList": "countryCode", "column": "Code" }
+    ],
+    "rows": [
+      { "Country": "India", "Code": "in" },
+      { "Country": "China", "Code": "cn" },
+      { "Country": "United States of America", "Code": "us" }
+    ]
+  };
+
   it('can load a concordance', function() {
     var table = tables.countryNamesAndCodes,
 
-        // `UDC.Concordance(table)` is the constructor function for concordances.
+        // `UDC.Concordance(table)` is the concordance constructor function.
         concordance = UDC.Concordance(table);
   });
-
-
 });
