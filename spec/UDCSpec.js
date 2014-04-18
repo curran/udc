@@ -1,4 +1,4 @@
-// Unit tests for the UDC library. Also serves as the user guide.
+// Unit tests / User Guide for the UDC library.
 describe('UDC', function() {
   var UDC;
 
@@ -50,7 +50,7 @@ describe('UDC', function() {
   //  * refer to the same entities using different identifiers, or
   //  * express the same numeric field using a different scale factor.
   //
-  // ## Tables
+  // ## Table
   //
   // In the UDC library, the notion of a "table" is a set of `row` objects
   // (e.g. rows parsed from a CSV file) and some additional metadata that states 
@@ -85,7 +85,7 @@ describe('UDC', function() {
     //    * `measure` the name of the measure
     //    * `scale` the scale factor used by values.
     //      For each `row` in `table.rows`, `row[column]` yields a number `x` 
-    //      such that `x * scale` yields the measure value.
+    //      such that <br> `x * scale` yields the measure value.
     "measureColumns": [
       {
         "column": "Pop",
@@ -95,8 +95,39 @@ describe('UDC', function() {
     ]
   };
 
+  tables.countryNamesAndCodes = {
+    "dimensionColumns": [
+      { "dimension": "Space", "codeList": "countryName", "column": "Country" },
+      { "dimension": "Space", "codeList": "countryCode", "column": "Code" }
+    ],
+    "rows": [
+      { "Country": "India", "Code": "in" },
+      { "Country": "China", "Code": "cn" },
+      { "Country": "United States of America", "Code": "us" }
+    ]
+  };
+
+  // Tables are used as input for creating cubes and concordances.
+
+  // ## Cube
+  // Data cubes are referred to as "cubes".
   it('can load a data cube', function() {
     var table = tables.countryPopulations,
+
+        // `UDC.Cube(table)` is the constructor function for cubes.
         cube = UDC.Cube(table);
   });
+
+  // ## Concordance
+  // Concordance tables are referred to as "concordances".
+  //
+  // A concordance defines equivalence classes for two or more code lists.
+  it('can load a concordance', function() {
+    var table = tables.countryNamesAndCodes,
+
+        // `UDC.Cube(table)` is the constructor function for cubes.
+        concordance = UDC.Cube(table);
+  });
+
+
 });

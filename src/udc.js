@@ -1,7 +1,8 @@
 define([], function () {
   return {
     Cube: function (table) {
-      return "hello";
+    },
+    Concordance: function (table) {
     }
   };
 });

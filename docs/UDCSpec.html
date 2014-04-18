@@ -48,7 +48,7 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>Unit tests for the UDC library. Also serves as the user guide.</p>
+              <p>Unit tests / User Guide for the UDC library.</p>
 
             </div>
             
@@ -137,7 +137,7 @@ UDC library is able to integrate many data sets together that may:</p>
 <li>refer to the same entities using different identifiers, or</li>
 <li>express the same numeric field using a different scale factor.</li>
 </ul>
-<h2 id="tables">Tables</h2>
+<h2 id="table">Table</h2>
 <p>In the UDC library, the notion of a “table” is a set of <code>row</code> objects
 (e.g. rows parsed from a CSV file) and some additional metadata that states 
 how the row objects relate to universal elements.</p>
@@ -219,7 +219,7 @@ describe how columns in the table relate to measures.<ul>
 <li><code>measure</code> the name of the measure</li>
 <li><code>scale</code> the scale factor used by values.
 For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a number <code>x</code> 
-such that <code>x * scale</code> yields the measure value.</li>
+such that <br> <code>x * scale</code> yields the measure value.</li>
 </ul>
 </li>
 </ul>
@@ -235,10 +235,99 @@ such that <code>x * scale</code> yields the measure value.</li>
     ]
   };
 
-  it(<span class="hljs-string">'can load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-keyword">var</span> table = tables.countryPopulations,
-        cube = UDC.Cube(table);
+  tables.countryNamesAndCodes = {
+    <span class="hljs-string">"dimensionColumns"</span>: [
+      { <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>, <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryName"</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Country"</span> },
+      { <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>, <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryCode"</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Code"</span> }
+    ],
+    <span class="hljs-string">"rows"</span>: [
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"India"</span>, <span class="hljs-string">"Code"</span>: <span class="hljs-string">"in"</span> },
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"China"</span>, <span class="hljs-string">"Code"</span>: <span class="hljs-string">"cn"</span> },
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"United States of America"</span>, <span class="hljs-string">"Code"</span>: <span class="hljs-string">"us"</span> }
+    ]
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Tables are used as input for creating cubes and concordances.</p>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <h2 id="cube">Cube</h2>
+<p>Data cubes are referred to as “cubes”.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  it(<span class="hljs-string">'can load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> table = tables.countryPopulations,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p><code>UDC.Cube(table)</code> is the constructor function for cubes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        cube = UDC.Cube(table);
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <h2 id="concordance">Concordance</h2>
+<p>Concordance tables are referred to as “concordances”.</p>
+<p>A concordance defines equivalence classes for two or more code lists.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  it(<span class="hljs-string">'can load a concordance'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> table = tables.countryNamesAndCodes,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p><code>UDC.Cube(table)</code> is the constructor function for cubes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        concordance = UDC.Cube(table);
   });
+
+
 });</pre></div></div>
             
         </li>
