@@ -56,6 +56,7 @@ describe('UDC', function() {
   // (e.g. rows parsed from a CSV file) and some additional metadata that states 
   // how the row objects relate to universal elements.
   var tables = {};
+
   tables.countryPopulations = {
     //  * `table.rows` an array of `row` objects where
     //    * Keys are column names
@@ -115,7 +116,27 @@ describe('UDC', function() {
     var table = tables.countryPopulations,
 
         // `UDC.Cube(table)` is the constructor function for cubes.
-        cube = UDC.Cube(table);
+        cube = UDC.Cube(table),
+
+        // `cube.value(cell, measure)` queries the cube for values.
+        //   * `cell` an object that specifies the combination of dimension 
+        //     members used to look up the value. A cell corresponds to a `row`
+        //     in the original table used to create the cube.
+        //     * Keys are dimension names
+        //     * Values are `member` objects
+        //       * `member.codeList` the code list used
+        //       * `member.code` the code for this member
+        cell = {
+          Space: {
+            codeList: 'countryCode',
+            code: 'in'
+          }
+        },
+        //   * `measure` the measure name
+        measure = 'Population',
+        value = cube.value(cell, measure);
+
+    expect(value).toBe(1.237 * 1000000000);
   });
 
   // ## Concordance
@@ -125,8 +146,8 @@ describe('UDC', function() {
   it('can load a concordance', function() {
     var table = tables.countryNamesAndCodes,
 
-        // `UDC.Cube(table)` is the constructor function for cubes.
-        concordance = UDC.Cube(table);
+        // `UDC.Concordance(table)` is the constructor function for concordances.
+        concordance = UDC.Concordance(table);
   });
 
 

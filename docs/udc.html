@@ -54,10 +54,40 @@
             <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
   <span class="hljs-keyword">return</span> {
     Cube: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+      <span class="hljs-keyword">var</span> index = {};
+
+      table.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+        <span class="hljs-keyword">var</span> cell = {},
+            values = {};
+
+        table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
+          cell[dimensionColumn.dimension] = {
+            codeList: dimensionColumn.codeList,
+            code: row[dimensionColumn.column]
+          };
+        });
+
+        table.measureColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(measureColumn)</span> {</span>
+          values[measureColumn.measure] = row[measureColumn.column] * measureColumn.scale;
+        });
+
+        index[key(cell)] = values;
+      });
+
+      <span class="hljs-keyword">return</span> {
+        value: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cell, measure)</span> {</span>
+          <span class="hljs-keyword">return</span> index[key(cell)][measure];
+        }
+      };
     },
-    Concordance: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-    }
+    Concordance: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span> }
   };
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">key</span><span class="hljs-params">(cell)</span>{</span>
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.keys(cell).sort().map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension)</span> {</span>
+      <span class="hljs-keyword">var</span> member = cell[dimension];
+      <span class="hljs-keyword">return</span> member.codeList + <span class="hljs-string">':'</span> + member.code;
+    }).join(<span class="hljs-string">','</span>);
+  }
 });</pre></div></div>
             
         </li>
