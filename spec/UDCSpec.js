@@ -17,7 +17,7 @@ describe('UDC', function() {
   //  * universal elements
   //    * dimension
   //    * member
-  //    * codeList
+  //    * code list
   //    * code
   //    * measure
   //  * local elements
@@ -57,7 +57,7 @@ describe('UDC', function() {
   // how the row objects relate to universal elements.
   var tables = {};
   tables.countryPopulations = {
-    //  * `table.rows` an array of objects analogous to rows in a table.
+    //  * `table.rows` an array of `row` objects where
     //    * Keys are column names
     //    * Values are numbers or strings
     "rows": [
@@ -65,11 +65,19 @@ describe('UDC', function() {
       { "Country": "cn", "Pop": 1.351 },
       { "Country": "us", "Pop": 0.3139 }
     ],
-    //  * `table.dimensionColumns` an object
-    //    * Keys are dimension names
-    //    * Values are numbers or strings
+    //  * `table.dimensionColumns` an array of `dimensionColumn` objects that 
+    //    describe how columns in the table relate to universal dimensions.
+    //    * `column` the column name (key in `row` objects)
+    //    * `dimension` the name of the dimension
+    //    * `codeList` the name of the code list used by `row` objects.
+    //      For each `row` in `table.rows`, `row[column]` yields a string 
+    //      that is a code from this code list.
     "dimensionColumns": [
-      { "dimension": "Space", "codeList": "countryCode", "column": "Country" }
+      {
+        "column": "Country",
+        "dimension": "Space",
+        "codeList": "countryCode"
+      }
     ],
     "measureColumns": [
       { "measure": "Population", "scale": 1000000000, "column": "Pop" }

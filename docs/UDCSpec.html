@@ -90,7 +90,7 @@
 <li>universal elements<ul>
 <li>dimension</li>
 <li>member</li>
-<li>codeList</li>
+<li>code list</li>
 <li>code</li>
 <li>measure</li>
 </ul>
@@ -157,7 +157,7 @@ how the row objects relate to universal elements.</p>
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
               <ul>
-<li><code>table.rows</code> an array of objects analogous to rows in a table.<ul>
+<li><code>table.rows</code> an array of <code>row</code> objects where<ul>
 <li>Keys are column names</li>
 <li>Values are numbers or strings</li>
 </ul>
@@ -182,9 +182,13 @@ how the row objects relate to universal elements.</p>
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
               <ul>
-<li><code>table.dimensionColumns</code> an object<ul>
-<li>Keys are dimension names</li>
-<li>Values are numbers or strings</li>
+<li><code>table.dimensionColumns</code> an array of <code>dimensionColumn</code> objects that 
+describe how columns in the table relate to universal dimensions.<ul>
+<li><code>column</code> the column name (key in <code>row</code> objects)</li>
+<li><code>dimension</code> the name of the dimension</li>
+<li><code>codeList</code> the name of the code list used by <code>row</code> objects.
+For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a string 
+that is a code from this code list.</li>
 </ul>
 </li>
 </ul>
@@ -192,7 +196,11 @@ how the row objects relate to universal elements.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-string">"dimensionColumns"</span>: [
-      { <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>, <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryCode"</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Country"</span> }
+      {
+        <span class="hljs-string">"column"</span>: <span class="hljs-string">"Country"</span>,
+        <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>,
+        <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryCode"</span>
+      }
     ],
     <span class="hljs-string">"measureColumns"</span>: [
       { <span class="hljs-string">"measure"</span>: <span class="hljs-string">"Population"</span>, <span class="hljs-string">"scale"</span>: <span class="hljs-number">1000000000</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Pop"</span> }
@@ -200,22 +208,8 @@ how the row objects relate to universal elements.</p>
   };
 
   it(<span class="hljs-string">'can load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-keyword">var</span> table = tables.countryPopulations,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-7">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
-              </div>
-              <p>Data cubes can be created from tables</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>        cube = UDC.Cube(table);
+    <span class="hljs-keyword">var</span> table = tables.countryPopulations,
+        cube = UDC.Cube(table);
   });
 });</pre></div></div>
             
