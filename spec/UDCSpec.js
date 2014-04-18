@@ -66,7 +66,7 @@ describe('UDC', function() {
       { "Country": "us", "Pop": 0.3139 }
     ],
     //  * `table.dimensionColumns` an array of `dimensionColumn` objects that 
-    //    describe how columns in the table relate to universal dimensions.
+    //    describe how columns in the table relate to dimensions.
     //    * `column` the column name (key in `row` objects)
     //    * `dimension` the name of the dimension
     //    * `codeList` the name of the code list used by `row` objects.
@@ -79,8 +79,19 @@ describe('UDC', function() {
         "codeList": "countryCode"
       }
     ],
+    //  * `table.measureColumns` an array of `measureColumn` objects that 
+    //    describe how columns in the table relate to measures.
+    //    * `column` the column name (key in `row` objects)
+    //    * `measure` the name of the measure
+    //    * `scale` the scale factor used by values.
+    //      For each `row` in `table.rows`, `row[column]` yields a number `x` 
+    //      such that `x * scale` yields the measure value.
     "measureColumns": [
-      { "measure": "Population", "scale": 1000000000, "column": "Pop" }
+      {
+        "column": "Pop",
+        "measure": "Population",
+        "scale": 1000000000
+      }
     ]
   };
 

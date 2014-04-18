@@ -183,7 +183,7 @@ how the row objects relate to universal elements.</p>
               </div>
               <ul>
 <li><code>table.dimensionColumns</code> an array of <code>dimensionColumn</code> objects that 
-describe how columns in the table relate to universal dimensions.<ul>
+describe how columns in the table relate to dimensions.<ul>
 <li><code>column</code> the column name (key in <code>row</code> objects)</li>
 <li><code>dimension</code> the name of the dimension</li>
 <li><code>codeList</code> the name of the code list used by <code>row</code> objects.
@@ -201,9 +201,37 @@ that is a code from this code list.</li>
         <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>,
         <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryCode"</span>
       }
-    ],
-    <span class="hljs-string">"measureColumns"</span>: [
-      { <span class="hljs-string">"measure"</span>: <span class="hljs-string">"Population"</span>, <span class="hljs-string">"scale"</span>: <span class="hljs-number">1000000000</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Pop"</span> }
+    ],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <ul>
+<li><code>table.measureColumns</code> an array of <code>measureColumn</code> objects that 
+describe how columns in the table relate to measures.<ul>
+<li><code>column</code> the column name (key in <code>row</code> objects)</li>
+<li><code>measure</code> the name of the measure</li>
+<li><code>scale</code> the scale factor used by values.
+For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a number <code>x</code> 
+such that <code>x * scale</code> yields the measure value.</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">"measureColumns"</span>: [
+      {
+        <span class="hljs-string">"column"</span>: <span class="hljs-string">"Pop"</span>,
+        <span class="hljs-string">"measure"</span>: <span class="hljs-string">"Population"</span>,
+        <span class="hljs-string">"scale"</span>: <span class="hljs-number">1000000000</span>
+      }
     ]
   };
 
