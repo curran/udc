@@ -1,0 +1,21 @@
+{
+  "name": "JSProjectTemplate",
+  "version": "0.0.0",
+  "authors": [
+    "curran <curran.kelleher@gmail.com>"
+  ],
+  "description": "Boilerplate structure for starting a JavaScript project that uses Require.js, Jasmine and Bower.",
+  "license": "MIT",
+  "homepage": "https://github.com/curran/JSProjectTemplate",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "spec"
+  ],
+  "dependencies": {
+    "lodash": "~2.4.1",
+    "requirejs": "~2.1.11",
+    "jasmine": "~2.0.0"
+  }
+}

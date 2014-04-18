@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>UDCSpec.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+      <ul id="jump_to">
+        <li>
+          <a class="large" href="javascript:void(0);">Jump To &hellip;</a>
+          <a class="small" href="javascript:void(0);">+</a>
+          <div id="jump_wrapper">
+          <div id="jump_page">
+            
+              
+              <a class="source" href="UDCSpec.html">
+                UDCSpec.js
+              </a>
+            
+              
+              <a class="source" href="udc.html">
+                udc.js
+              </a>
+            
+          </div>
+        </li>
+      </ul>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>UDCSpec.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>Unit tests for the UDC library. Also serves as the user guide.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> UDC;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Use require.js to fetch the AMD module.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  it(<span class="hljs-string">"should load the AMD module"</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+    <span class="hljs-built_in">require</span>([<span class="hljs-string">'udc'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(loadedModule)</span> {</span>
+      UDC = loadedModule;
+      done();
+    });
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <h1 id="overview">Overview</h1>
+<p>Concepts:</p>
+<ul>
+<li>universal elements<ul>
+<li>dimension</li>
+<li>member</li>
+<li>codeList</li>
+<li>code</li>
+<li>measure</li>
+</ul>
+</li>
+<li>local elements<ul>
+<li>table</li>
+<li>concordance</li>
+<li>cube</li>
+<li>hierarchy</li>
+</ul>
+</li>
+</ul>
+<p>Tasks:</p>
+<ul>
+<li>load data cube</li>
+<li>load concordance</li>
+<li>merge data cubes</li>
+<li>load hierarchy</li>
+<li>merge hierarchies</li>
+<li>query for values</li>
+</ul>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <h1 id="user-guide">User Guide</h1>
+<p>The Universal Data Cube (UDC) library is for modeling data sets
+as data cubes and integrating them together. The UDC has two kinds of elements:</p>
+<ul>
+<li>“universal elements” are shared by all data sets</li>
+<li>“local elements” are local to each data set</li>
+</ul>
+<p>By establishing a relationship between local elements and universal elements, the
+UDC library is able to integrate many data sets together that may:</p>
+<ul>
+<li>refer to the same entities using different identifiers, or</li>
+<li>express the same numeric field using a different scale factor.</li>
+</ul>
+<h2 id="tables">Tables</h2>
+<p>In the UDC library, the notion of a “table” is a set of <code>row</code> objects
+(e.g. rows parsed from a CSV file) and some additional metadata that states 
+how the row objects relate to universal elements.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> tables = {};
+  tables.countryPopulations = {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <ul>
+<li><code>table.rows</code> an array of objects analogous to rows in a table.<ul>
+<li>Keys are column names</li>
+<li>Values are numbers or strings</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">"rows"</span>: [
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"in"</span>, <span class="hljs-string">"Pop"</span>: <span class="hljs-number">1.237</span> },
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"cn"</span>, <span class="hljs-string">"Pop"</span>: <span class="hljs-number">1.351</span> },
+      { <span class="hljs-string">"Country"</span>: <span class="hljs-string">"us"</span>, <span class="hljs-string">"Pop"</span>: <span class="hljs-number">0.3139</span> }
+    ],</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <ul>
+<li><code>table.dimensionColumns</code> an object<ul>
+<li>Keys are dimension names</li>
+<li>Values are numbers or strings</li>
+</ul>
+</li>
+</ul>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-string">"dimensionColumns"</span>: [
+      { <span class="hljs-string">"dimension"</span>: <span class="hljs-string">"Space"</span>, <span class="hljs-string">"codeList"</span>: <span class="hljs-string">"countryCode"</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Country"</span> }
+    ],
+    <span class="hljs-string">"measureColumns"</span>: [
+      { <span class="hljs-string">"measure"</span>: <span class="hljs-string">"Population"</span>, <span class="hljs-string">"scale"</span>: <span class="hljs-number">1000000000</span>, <span class="hljs-string">"column"</span>: <span class="hljs-string">"Pop"</span> }
+    ]
+  };
+
+  it(<span class="hljs-string">'can load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> table = tables.countryPopulations,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Data cubes can be created from tables</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        cube = UDC.Cube(table);
+  });
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
