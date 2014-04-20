@@ -1,8 +1,6 @@
-define(['cube'], function (Cube) {
-  var UDC = {
+define(['cube', 'concordance'], function (Cube, Concordance) {
+  return {
     Cube: Cube,
-    Concordance: function (table) { }
+    Concordance: Concordance
   };
-
-  return UDC;
 });

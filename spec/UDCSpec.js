@@ -122,11 +122,12 @@ describe('UDC', function() {
         //     * Values are `member` objects
         //       * `member.codeList` the code list used
         //       * `member.code` the code for this member
+        member = {
+          codeList: 'countryCode',
+          code: 'in'
+        },
         cell = {
-          Space: {
-            codeList: 'countryCode',
-            code: 'in'
-          }
+          Space: member
         },
         //   * `measure` the measure name
         measure = 'Population',
@@ -159,6 +160,13 @@ describe('UDC', function() {
     var table = tables.countryNamesAndCodes,
 
         // `UDC.Concordance(table)` is the concordance constructor function.
-        concordance = UDC.Concordance(table);
+        concordance = UDC.Concordance(table),
+        codeMember = {
+          codeList: 'countryCode',
+          code: 'in'
+        },
+        nameMember = concordance.translate(codeMember, 'countryName');
+    expect(nameMember.codeList).toBe('countryName');
+    expect(nameMember.code).toBe('India');
   });
 });
