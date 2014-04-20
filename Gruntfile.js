@@ -1,7 +1,10 @@
 // The Grunt configuration file.
 //
-// Curran Kelleher 4/15/2014
+// Curran Kelleher 4/20/2014
 module.exports = function(grunt) {
+
+  require('load-grunt-tasks')(grunt);
+
   grunt.initConfig({
 
     // Copies files from bower_components to lib
@@ -25,6 +28,14 @@ module.exports = function(grunt) {
         src: ['src/*', 'spec/*'],
         options: {
           output: 'docs/'
+        }
+      }
+    },
+    jasmine: {
+      all: {
+        options: {
+          specs: 'spec/*Spec.js',
+          vendor: ['lib/require.js', 'requireConfig.js']
         }
       }
     },
