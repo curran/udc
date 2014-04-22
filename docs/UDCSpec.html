@@ -316,11 +316,12 @@ in the original table used to create the cube.<ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        cell = {
-          Space: {
-            codeList: <span class="hljs-string">'countryCode'</span>,
-            code: <span class="hljs-string">'in'</span>
-          }
+            <div class="content"><div class='highlight'><pre>        member = {
+          codeList: <span class="hljs-string">'countryCode'</span>,
+          code: <span class="hljs-string">'in'</span>
+        },
+        cell = {
+          Space: member
         },</pre></div></div>
             
         </li>
@@ -390,7 +391,14 @@ country codes and full country names.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        concordance = UDC.Concordance(table);
+            <div class="content"><div class='highlight'><pre>        concordance = UDC.Concordance(table),
+        codeMember = {
+          codeList: <span class="hljs-string">'countryCode'</span>,
+          code: <span class="hljs-string">'in'</span>
+        },
+        nameMember = concordance.translate(codeMember, <span class="hljs-string">'countryName'</span>);
+    expect(nameMember.codeList).toBe(<span class="hljs-string">'countryName'</span>);
+    expect(nameMember.code).toBe(<span class="hljs-string">'India'</span>);
   });
 });</pre></div></div>
             

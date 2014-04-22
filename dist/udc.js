@@ -1,3 +1,15 @@
+(function(root, factory) {
+    if(typeof exports === 'object') {
+        module.exports = factory();
+    }
+    else if(typeof define === 'function' && define.amd) {
+        define([], factory);
+    }
+    else {
+        root['UDC'] = factory();
+    }
+}(this, function() {
+
 var UDC = {};
 
 UDC.Cube = function (table) {
@@ -58,3 +70,8 @@ UDC.Concordance = function (table) {
     }
   };
 };
+
+
+return UDC;
+
+}));

@@ -51,44 +51,66 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">return</span> {
-    Cube: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-      <span class="hljs-keyword">var</span> index = {};
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> UDC = {};
 
-      table.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
-        <span class="hljs-keyword">var</span> cell = {},
-            values = {};
+UDC.Cube = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+  <span class="hljs-keyword">var</span> index = {};
 
-        table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
-          cell[dimensionColumn.dimension] = {
-            codeList: dimensionColumn.codeList,
-            code: row[dimensionColumn.column]
-          };
-        });
+  table.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+    <span class="hljs-keyword">var</span> cell = {},
+        values = {};
 
-        table.measureColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(measureColumn)</span> {</span>
-          values[measureColumn.measure] = row[measureColumn.column] * measureColumn.scale;
-        });
-
-        index[key(cell)] = values;
-      });
-
-      <span class="hljs-keyword">return</span> {
-        value: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cell, measure)</span> {</span>
-          <span class="hljs-keyword">return</span> index[key(cell)][measure];
-        }
+    table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
+      cell[dimensionColumn.dimension] = {
+        codeList: dimensionColumn.codeList,
+        code: row[dimensionColumn.column]
       };
-    },
-    Concordance: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span> }
+    });
+
+    table.measureColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(measureColumn)</span> {</span>
+      values[measureColumn.measure] = row[measureColumn.column] * measureColumn.scale;
+    });
+
+    index[key(cell)] = values;
+  });
+
+  <span class="hljs-keyword">return</span> {
+    value: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cell, measure)</span> {</span>
+      <span class="hljs-keyword">return</span> index[key(cell)][measure];
+    }
   };
+
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">key</span><span class="hljs-params">(cell)</span>{</span>
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.keys(cell).sort().map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension)</span> {</span>
       <span class="hljs-keyword">var</span> member = cell[dimension];
       <span class="hljs-keyword">return</span> member.codeList + <span class="hljs-string">':'</span> + member.code;
     }).join(<span class="hljs-string">','</span>);
   }
-});</pre></div></div>
+};
+
+UDC.Concordance = <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+  <span class="hljs-keyword">var</span> indices = {};
+
+  table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
+    indices[dimensionColumn.codeList] = {};
+  });
+
+  table.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+    <span class="hljs-keyword">var</span> equivalenceClass = {};
+    table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
+      <span class="hljs-keyword">var</span> codeList = dimensionColumn.codeList,
+          code = row[dimensionColumn.column];
+      equivalenceClass[codeList] = { codeList: codeList, code: code };
+      indices[codeList][code] = equivalenceClass;
+    });
+  });
+
+  <span class="hljs-keyword">return</span> {
+    translate: <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(member, codeList)</span> {</span>
+      <span class="hljs-keyword">return</span> indices[member.codeList][member.code][codeList];
+    }
+  };
+};</pre></div></div>
             
         </li>
         

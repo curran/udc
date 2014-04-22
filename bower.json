@@ -1,21 +1,30 @@
 {
-  "name": "JSProjectTemplate",
-  "version": "0.0.0",
+  "name": "udc",
+  "version": "0.0.1",
   "authors": [
     "curran <curran.kelleher@gmail.com>"
   ],
-  "description": "Boilerplate structure for starting a JavaScript project that uses Require.js, Jasmine and Bower.",
+  "description": "The Universal Data Cube",
   "license": "MIT",
-  "homepage": "https://github.com/curran/JSProjectTemplate",
+  "homepage": "https://github.com/curran/udc",
   "ignore": [
-    "**/.*",
+    "Gruntfile.js",
+    "LICENSE",
+    "README.md",
+    "SpecRunner.html",
+    "bower.json",
+    "countLines.sh",
+    "docs",
+    "lib",
     "node_modules",
-    "bower_components",
-    "spec"
+    "package.json",
+    "requireConfig.js",
+    "server.js",
+    "spec",
+    "src"
   ],
-  "dependencies": {
-    "lodash": "~2.4.1",
-    "requirejs": "~2.1.11",
-    "jasmine": "~2.0.0"
+  "devDependencies": {
+    "jasmine": "~2.0.0",
+    "requirejs": "~2.1.11"
   }
 }
