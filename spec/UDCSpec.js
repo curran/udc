@@ -30,11 +30,11 @@ describe('UDC', function() {
   //
   //  * load data cube
   //  * load concordance
+  //  * query for values
+  //  * slice
   //  * merge data cubes
   //  * load hierarchy
   //  * merge hierarchies
-  //  * query for values
-  //  * slice
 
   // # User Guide
   //
@@ -96,6 +96,27 @@ describe('UDC', function() {
     ]
   };
   // Tables are used as input for creating cubes and concordances.
+  tables.countryGDP = {
+    "rows": [
+      { "name": "China", "gdp": 12261 },
+      { "name": "India", "gdp": 4716 },
+      { "name": "United States of America", "gdp": 16244 }
+    ],
+    "dimensionColumns": [
+      {
+        "column": "name",
+        "dimension": "Space",
+        "codeList": "countryName"
+      }
+    ],
+    "measureColumns": [
+      {
+        "column": "gdp",
+        "measure": "Gross Domestic Product",
+        "scale": 1000
+      }
+    ]
+  };
 
   // ## Cube
   // Data cubes are referred to as "cubes". A cube is a data set
@@ -169,4 +190,25 @@ describe('UDC', function() {
     expect(nameMember.codeList).toBe('countryName');
     expect(nameMember.code).toBe('India');
   });
+
+  // Merging Cubes
+  it('can merge two cubes', function() {
+    var concordance = UDC.Concordance(tables.countryNamesAndCodes),
+        cubeA = UDC.Cube(tables.countryPopulations),
+        cubeB = UDC.Cube(tables.countryGDP),
+        cube = UDC.mergeCubes(cubeA, cubeB, concordance),
+        cell = {
+          Space: {
+            codeList: 'countryCode',
+            code: 'in'
+          }
+        },
+        populationValue = cube.value(cell, 'Population'),
+        gdpValue = cube.value(cell, 'Gross Domestic Product');
+
+    // TODO check validity of these values with scales as actual data
+    expect(populationValue).toBe(1.237 * 1000000000);
+    expect(gdpValue).toBe(4716 * 1000);
+  });
+
 });
