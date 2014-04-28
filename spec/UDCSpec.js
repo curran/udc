@@ -34,7 +34,7 @@ describe('UDC', function() {
   //  * load hierarchy
   //  * merge hierarchies
   //  * query for values
-
+  //  * slice
 
   // # User Guide
   //
