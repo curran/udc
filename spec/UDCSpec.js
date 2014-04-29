@@ -3,7 +3,7 @@ describe('UDC', function() {
   var UDC;
 
   // Use require.js to fetch the AMD module.
-  it("should load the AMD module", function(done) {
+  it('should load the AMD module', function(done) {
     require(['udc'], function (loadedModule) {
       UDC = loadedModule;
       done();
@@ -26,8 +26,8 @@ describe('UDC', function() {
   // The Universal Data Cube (UDC) library is for modeling data sets
   // as data cubes and integrating them together. The UDC has two kinds of elements:
   //
-  //  * "universal elements" are shared by all data sets
-  //  * "local elements" are local to each data set
+  //  * 'universal elements' are shared by all data sets
+  //  * 'local elements' are local to each data set
   //
   // By establishing a relationship between local elements and universal elements, the
   // UDC library is able to integrate many data sets together that may:
@@ -37,7 +37,7 @@ describe('UDC', function() {
   //
   // ## Table
   //
-  // In the UDC library, the notion of a "table" is a set of `row` objects
+  // In the UDC library, the notion of a 'table' is a set of `row` objects
   // (e.g. rows parsed from a CSV file) and some additional metadata that states 
   // how the row objects relate to universal elements.
   var tables = {};
@@ -46,10 +46,10 @@ describe('UDC', function() {
     //  * `table.rows` an array of `row` objects where
     //    * Keys are column names
     //    * Values are numbers or strings
-    "rows": [
-      { "Country": "in", "Pop": 1.237 },
-      { "Country": "cn", "Pop": 1.351 },
-      { "Country": "us", "Pop": 0.3139 }
+    'rows': [
+      { 'Country': 'in', 'Pop': 1.237 },
+      { 'Country': 'cn', 'Pop': 1.351 },
+      { 'Country': 'us', 'Pop': 0.3139 }
     ],
     //  * `table.dimensionColumns` an array of `dimensionColumn` objects that 
     //    describe how columns in the table relate to dimensions.
@@ -58,11 +58,11 @@ describe('UDC', function() {
     //    * `codeList` the name of the code list used by `row` objects.
     //      For each `row` in `table.rows`, `row[column]` yields a string 
     //      that is a code from this code list.
-    "dimensionColumns": [
+    'dimensionColumns': [
       {
-        "column": "Country",
-        "dimension": "Space",
-        "codeList": "countryCode"
+        'column': 'Country',
+        'dimension': 'Space',
+        'codeList': 'countryCode'
       }
     ],
     //  * `table.measureColumns` an array of `measureColumn` objects that 
@@ -72,39 +72,39 @@ describe('UDC', function() {
     //    * `scale` the scale factor used by values.
     //      For each `row` in `table.rows`, `row[column]` yields a number `x` 
     //      such that <br> `x * scale` yields the measure value.
-    "measureColumns": [
+    'measureColumns': [
       {
-        "column": "Pop",
-        "measure": "Population",
-        "scale": 1000000000
+        'column': 'Pop',
+        'measure': 'Population',
+        'scale': 1000000000
       }
     ]
   };
   // Tables are used as input for creating cubes and thesauruss.
   tables.countryGDP = {
-    "rows": [
-      { "name": "China", "gdp": 12261 },
-      { "name": "India", "gdp": 4716 },
-      { "name": "United States of America", "gdp": 16244 }
+    'rows': [
+      { 'name': 'China', 'gdp': 12261 },
+      { 'name': 'India', 'gdp': 4716 },
+      { 'name': 'United States of America', 'gdp': 16244 }
     ],
-    "dimensionColumns": [
+    'dimensionColumns': [
       {
-        "column": "name",
-        "dimension": "Space",
-        "codeList": "countryName"
+        'column': 'name',
+        'dimension': 'Space',
+        'codeList': 'countryName'
       }
     ],
-    "measureColumns": [
+    'measureColumns': [
       {
-        "column": "gdp",
-        "measure": "Gross Domestic Product",
-        "scale": 1000
+        'column': 'gdp',
+        'measure': 'Gross Domestic Product',
+        'scale': 1000
       }
     ]
   };
 
   // ## Cube
-  // Data cubes are referred to as "cubes". A cube is a data set
+  // Data cubes are referred to as 'cubes'. A cube is a data set
   // that comes from a table that includes columns for dimensions
   // and measures.
   //
@@ -114,7 +114,7 @@ describe('UDC', function() {
   // One example of cube is a data set that contains values for
   // population (number of people) in each of the three largest
   // countries of the world - China (ch), India (in) and the USA (us).
-  it('can load a data cube', function() {
+  it('should load a data cube', function() {
     var table = tables.countryPopulations,
 
         // `UDC.Cube(table)` is the constructor function for cubes.
@@ -135,27 +135,27 @@ describe('UDC', function() {
   // between codes from different code lists. A collection of thesaurus
   // tables can be assembled into an equivalence index called a thesaurus.
   tables.countryNamesAndCodes = {
-    "dimensionColumns": [
-      { "dimension": "Space", "codeList": "countryName", "column": "Country" },
-      { "dimension": "Space", "codeList": "countryCode", "column": "Code" }
+    'dimensionColumns': [
+      { 'dimension': 'Space', 'codeList': 'countryName', 'column': 'Country' },
+      { 'dimension': 'Space', 'codeList': 'countryCode', 'column': 'Code' }
     ],
-    "rows": [
-      { "Country": "India", "Code": "in" },
-      { "Country": "China", "Code": "cn" },
-      { "Country": "United States of America", "Code": "us" }
+    'rows': [
+      { 'Country': 'India', 'Code': 'in' },
+      { 'Country': 'China', 'Code': 'cn' },
+      { 'Country': 'United States of America', 'Code': 'us' }
     ]
   };
   tables.unUsLocations = {
-    "dimensionColumns": [
-      { "dimension": "Space", "codeList": "countryName", "column": "unName" },
-      { "dimension": "Space", "codeList": "countryCode", "column": "usName" }
+    'dimensionColumns': [
+      { 'dimension': 'Space', 'codeList': 'countryName', 'column': 'unName' },
+      { 'dimension': 'Space', 'codeList': 'usLocationName', 'column': 'usName' }
     ],
-    "rows": [
-      { "unName": "United States of America", "usName": "USA" }
+    'rows': [
+      { 'unName': 'United States of America', 'usName': 'USA' }
     ]
   };
 
-  it('can load a thesaurus', function() {
+  it('should load a thesaurus', function() {
     var table = tables.countryNamesAndCodes,
 
         // `UDC.Thesaurus([tables])` is the thesaurus constructor function.
@@ -170,34 +170,34 @@ describe('UDC', function() {
   // ## Hierarchies
   var trees = {};
   trees.unLocations = {
-   "dimension": "Space",
-   "codeList": "countryName",
-   "code": "World",
-   "children": [
+   'dimension': 'Space',
+   'codeList': 'countryName',
+   'code': 'World',
+   'children': [
     {
-     "code": "Asia",
-     "children": [
+     'code': 'Asia',
+     'children': [
       {
-       "code": "Southern Asia",
-       "children": [
-        {"code": "India"},
+       'code': 'Southern Asia',
+       'children': [
+        {'code': 'India'},
        ]
       },
       {
-       "code": "Eastern Asia",
-       "children": [
-        {"code": "China"},
+       'code': 'Eastern Asia',
+       'children': [
+        {'code': 'China'},
        ]
       }
      ]
     },
     {
-     "code": "Americas",
-     "children": [
+     'code': 'Americas',
+     'children': [
       {
-       "code": "Northern America",
-       "children": [
-        {"code": "United States of America"}
+       'code': 'Northern America',
+       'children': [
+        {'code': 'United States of America'}
        ]
       }
      ]
@@ -205,17 +205,17 @@ describe('UDC', function() {
    ]
   };
   trees.usLocations = {
-   "dimension": "Space",
-   "codeList": "usLocationNames",
-   "code": "USA",
-   "children": [
-    { "code": "California" },
-    { "code": "Texas" },
-    { "code": "New York" }
+   'dimension': 'Space',
+   'codeList': 'usLocationName',
+   'code': 'USA',
+   'children': [
+    { 'code': 'California' },
+    { 'code': 'Texas' },
+    { 'code': 'New York' }
    ]
   };
 
-  it('can load a hierarchy', function() {
+  it('should load a hierarchy', function() {
     // `UDC.Hierarchy(tree)` is the hierarchy constructor function.
     var hierarchy = UDC.Hierarchy(trees.unLocations);
     expect(hierarchy.dimension).toBe('Space');
@@ -224,20 +224,23 @@ describe('UDC', function() {
       .toBe('countryName|India');
   });
 
-  it('can merge two hierarchies', function() {
+  it('should merge two hierarchies', function() {
     var hierarchyA = UDC.Hierarchy(trees.unLocations),
         hierarchyB = UDC.Hierarchy(trees.usLocations),
         thesaurus = UDC.Thesaurus([tables.unUsLocations]),
-        hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB);
-    //console.log(JSON.stringify(hierarchy, null, 2));
-    //expect(hierarchy.dimension).toBe('Space');
-    //expect(hierarchy.tree.member.key).toBe('countryName|World');
-    //expect(hierarchy.tree.children[0].children[0].children[0].member.key)
-    //  .toBe('countryName|India');
+        hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
+    expect(hierarchy.dimension).toBe('Space');
+    expect(hierarchy.tree.member.key).toBe('countryName|World');
+    expect(hierarchy.tree.children[0].children[0].children[0].member.key)
+      .toBe('countryName|India');
+    expect(hierarchy.tree.children[1].children[0].children[0].member.key)
+      .toBe('countryName|United States of America');
+    expect(hierarchy.tree.children[1].children[0].children[0].children[0].member.key)
+      .toBe('usLocationName|California');
   });
 
   // ## Merging Cubes
-  it('can merge two cubes with the same domain', function() {
+  it('should merge two cubes with the same domain', function() {
     var thesaurus = UDC.Thesaurus([tables.countryNamesAndCodes]),
         cubeA = UDC.Cube(tables.countryPopulations),
         cubeB = UDC.Cube(tables.countryGDP),
@@ -251,10 +254,7 @@ describe('UDC', function() {
         populationValue = index.values(cell)['Population'],
         gdpValue = index.values(cell)['Gross Domestic Product'];
 
-    // TODO check validity of these values with scales as actual data
     expect(populationValue).toBe(1.237 * 1000000000);
     expect(gdpValue).toBe(4716 * 1000);
   });
-
-
 });

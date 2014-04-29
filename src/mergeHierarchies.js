@@ -1,24 +1,18 @@
 define([], function () {
-  // TODO canonicalize hierarchy
-  // TODO refactor canonicalization code
-  // TODO change concordance to concordance collection
-  //      possible terms: 
-  //        Concordance
-  //        ConcorcanceCollection
-  //        DataDictionary
-  //        MemberDictionary
-  //        EquivalenceIndex
-  //        Matches
-  return function (hierarchyA, hierarchyB, concordance) {
+  return function (hierarchyA, hierarchyB, thesaurus) {
     var newNodes = {},
         parents = {},
-        rootB = indexNodes(hierarchyB.tree),
-        rootA = indexNodes(hierarchyA.tree);
+        treeB = indexNodes(hierarchyB.tree),
+        treeA = indexNodes(hierarchyA.tree);
 
-    return hasParent(rootA) ? rootB : rootA;
+    return {
+      dimension: hierarchyA.dimension,
+      tree: hasParent(treeA) ? treeB : treeA
+    };
 
     function indexNodes(node) {
-      var newNode = getNewNode(node.member);
+      var member = thesaurus.canonicalizeMember(node.member),
+          newNode = getNewNode(member);
       if(node.children){
         newNode.children = (newNode.children || []);
         newNode.children = newNode.children.concat(node.children.map(indexNodes));

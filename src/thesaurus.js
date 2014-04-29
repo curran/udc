@@ -33,7 +33,26 @@ define(['Member', 'Cell'], function (Member, Cell) {
 
     // Translates the given member to the canonical code list for its dimension.
     function canonicalizeMember(member){
-      return translate(member, canonicalCodeLists[member.dimension][0]);
+      var codeListIndex = index[member.dimension][member.codeList];
+      if(codeListIndex.hasOwnProperty(member.code)) {
+        var codeList = canonicalCodeLists[member.dimension][0];
+        return codeListIndex[member.code][codeList];
+
+        // TODO find a case where this is necessary
+        //var equivalenceClass = codeListIndex[member.code],
+        //    codeLists = canonicalCodeLists[member.dimension],
+        //    codeList,
+        //    i;
+        //console.log(equivalenceClass);
+        //for(i = 0; i < codeLists.length; i++) {
+        //  codeList = codeLists[i];
+        //  if(equivalenceClass.hasOwnProperty(codeList)) {
+        //    return equivalenceClass[codeList];
+        //  }
+        //}
+      } else {
+        return member;
+      }
     }
 
     // Translates the members of the given cell to the canonical code lists
@@ -63,7 +82,7 @@ define(['Member', 'Cell'], function (Member, Cell) {
 
     return {
       translate: translate,
-      //canonicalizeMember: canonicalizeMember,
+      canonicalizeMember: canonicalizeMember,
       //canonicalizeCell: canonicalizeCell,
       //canonicalizeObservation: canonicalizeObservation,
       canonicalizeCube: canonicalizeCube
