@@ -1,60 +1,81 @@
-var UDC = {};
-
-UDC.Cube = function (table) {
-  var index = {};
-
-  table.rows.forEach(function (row) {
-    var cell = {},
-        values = {};
-
-    table.dimensionColumns.forEach(function (dimensionColumn) {
-      cell[dimensionColumn.dimension] = {
-        codeList: dimensionColumn.codeList,
-        code: row[dimensionColumn.column]
-      };
-    });
-
-    table.measureColumns.forEach(function (measureColumn) {
-      values[measureColumn.measure] = row[measureColumn.column] * measureColumn.scale;
-    });
-
-    index[key(cell)] = values;
-  });
-
-  return {
-    value: function (cell, measure) {
-      return index[key(cell)][measure];
-    }
+define(['_', 'cube'], function (_, Cube) {
+  var UDC = {
+    Cube: Cube
   };
 
-  function key(cell){
-    return Object.keys(cell).sort().map(function (dimension) {
-      var member = cell[dimension];
-      return member.codeList + ':' + member.code;
-    }).join(',');
-  }
-};
+  console.log(_);
 
-UDC.Concordance = function (table) {
-  var indices = {};
+  UDC.Concordance = function (table) {
+    var indices = {},
+        codeLists = [],
+        dimension = table.dimensionColumns[0].dimension;
 
-  table.dimensionColumns.forEach(function (dimensionColumn) {
-    indices[dimensionColumn.codeList] = {};
-  });
-
-  table.rows.forEach(function (row) {
-    var equivalenceClass = {};
     table.dimensionColumns.forEach(function (dimensionColumn) {
-      var codeList = dimensionColumn.codeList,
-          code = row[dimensionColumn.column];
-      equivalenceClass[codeList] = { codeList: codeList, code: code };
-      indices[codeList][code] = equivalenceClass;
+      var codeList = dimensionColumn.codeList;
+      codeLists.push(codeList);
+      indices[codeList] = {};
     });
-  });
 
-  return {
-    translate: function (member, codeList) {
-      return indices[member.codeList][member.code][codeList];
-    }
+    table.rows.forEach(function (row) {
+      var equivalenceClass = {};
+      table.dimensionColumns.forEach(function (dimensionColumn) {
+        var codeList = dimensionColumn.codeList,
+            code = row[dimensionColumn.column];
+        equivalenceClass[codeList] = { codeList: codeList, code: code };
+        indices[codeList][code] = equivalenceClass;
+      });
+    });
+
+    return {
+      translate: function (member, codeList) {
+        return indices[member.codeList][member.code][codeList];
+      },
+      codeLists: codeLists,
+      dimension: dimension
+    };
   };
-};
+
+  UDC.mergeCubes = (function () {
+
+    function canonicalizeCube(cube, concordance){
+
+      // Keys are dimensions
+      // values are canonical codeLists chosen for each dimension
+      var canonicalCodeLists = {};
+
+      // Use the first code list in alpha sorted order as the canonical one.
+      canonicalCodeLists[concordance.dimension] = concordance.codeLists.sort()[0];
+
+      return {
+        dimensions: cube.dimensions,
+        measures: cube.measures,
+        observations: cube.observations.map(function (observation) {
+          var canonicalCell = {};
+
+          cube.dimensions.forEach(function (dimension) {
+            var member = observation.cell[dimension],
+                canonicalCodeList = canonicalCodeLists[dimension];
+            canonicalCell[dimension] = concordance.translate(member, canonicalCodeList);
+          });
+
+          return {
+            cell: canonicalCell,
+            values: observation.values
+          };
+        })
+      }; 
+    }
+
+    function simpleMerge(a, b){
+      console.log(a);
+    }
+
+    return function (cubeA, cubeB, concordance) {
+      var a = canonicalizeCube(cubeA, concordance),
+          b = canonicalizeCube(cubeB, concordance);
+      return simpleMerge(a, b);
+    };
+  }());
+
+  return UDC;
+});

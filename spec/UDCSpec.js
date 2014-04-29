@@ -191,11 +191,20 @@ describe('UDC', function() {
     expect(nameMember.code).toBe('India');
   });
 
-  // Merging Cubes
+  // ## Merging Cubes
+  //
+  // In order to visualize many cubes together, they need
+  // to be integrated using `UDC.mergeCubes`. This operation
+  // utilizes concordance tables to resolve when cubes
+  // refer to the same entity using different identifiers.
   it('can merge two cubes', function() {
     var concordance = UDC.Concordance(tables.countryNamesAndCodes),
         cubeA = UDC.Cube(tables.countryPopulations),
         cubeB = UDC.Cube(tables.countryGDP),
+        /* TODO think about API changes: [cubes], [concordances]
+         *      possibly remove UDC.Concordance() constructor?
+         *      alternative: concordancePool
+         * TODO think about reactive models - recanonicalize when concordances added.*/
         cube = UDC.mergeCubes(cubeA, cubeB, concordance),
         cell = {
           Space: {
