@@ -11,25 +11,10 @@ describe('UDC', function() {
   });
 
   // # Overview
-  //
-  // Concepts:
-  //
-  //  * universal elements
-  //    * dimension
-  //    * member
-  //    * code list
-  //    * code
-  //    * measure
-  //  * local elements
-  //    * table
-  //    * concordance
-  //    * cube
-  //    * hierarchy
-  //
   // Tasks:
   //
   //  * load data cube
-  //  * load concordance
+  //  * load thesauruss into a thesaurus
   //  * query for values
   //  * load hierarchy
   //  * merge hierarchies
@@ -95,7 +80,7 @@ describe('UDC', function() {
       }
     ]
   };
-  // Tables are used as input for creating cubes and concordances.
+  // Tables are used as input for creating cubes and thesauruss.
   tables.countryGDP = {
     "rows": [
       { "name": "China", "gdp": 12261 },
@@ -145,14 +130,10 @@ describe('UDC', function() {
     expect(value).toBe(1.237 * 1000000000);
   });
 
-  // ## Concordance
-  // Concordance tables are referred to as "concordances".
-  //
-  // A concordance defines equivalence classes for dimension members
-  // by matching up codes between two or more code lists.
-  //
-  // For example, one code list could define matches between two-character
-  // country codes and full country names.
+  // ## Thesaurus
+  // Thesaurus tables are tables that provide equivalence mappings
+  // between codes from different code lists. A collection of thesaurus
+  // tables can be assembled into an equivalence index called a thesaurus.
   tables.countryNamesAndCodes = {
     "dimensionColumns": [
       { "dimension": "Space", "codeList": "countryName", "column": "Country" },
@@ -174,13 +155,14 @@ describe('UDC', function() {
     ]
   };
 
-  it('can load a concordance', function() {
+  it('can load a thesaurus', function() {
     var table = tables.countryNamesAndCodes,
 
-        // `UDC.Concordance(table)` is the concordance constructor function.
-        concordance = UDC.Concordance(table),
+        // `UDC.Thesaurus([tables])` is the thesaurus constructor function.
+        thesaurus = UDC.Thesaurus([table]),
         codeMember = UDC.Member('Space', 'countryCode', 'in'),
-        nameMember = concordance.translate(codeMember, 'countryName');
+        nameMember = thesaurus.translate(codeMember, 'countryName');
+
     expect(nameMember.codeList).toBe('countryName');
     expect(nameMember.code).toBe('India');
   });
@@ -245,9 +227,9 @@ describe('UDC', function() {
   it('can merge two hierarchies', function() {
     var hierarchyA = UDC.Hierarchy(trees.unLocations),
         hierarchyB = UDC.Hierarchy(trees.usLocations),
-        concordance = UDC.Concordance(tables.unUsLocations),
+        thesaurus = UDC.Thesaurus([tables.unUsLocations]),
         hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB);
-    console.log(JSON.stringify(hierarchy, null, 2));
+    //console.log(JSON.stringify(hierarchy, null, 2));
     //expect(hierarchy.dimension).toBe('Space');
     //expect(hierarchy.tree.member.key).toBe('countryName|World');
     //expect(hierarchy.tree.children[0].children[0].children[0].member.key)
@@ -256,14 +238,14 @@ describe('UDC', function() {
 
   // ## Merging Cubes
   it('can merge two cubes with the same domain', function() {
-    var concordance = UDC.Concordance(tables.countryNamesAndCodes),
+    var thesaurus = UDC.Thesaurus([tables.countryNamesAndCodes]),
         cubeA = UDC.Cube(tables.countryPopulations),
         cubeB = UDC.Cube(tables.countryGDP),
-        /* TODO think about API changes: [cubes], [concordances]
-         *      possibly remove UDC.Concordance() constructor?
-         *      alternative: concordancePool
-         * TODO think about reactive models - recanonicalize when concordances added.*/
-        cube = UDC.mergeCubes(cubeA, cubeB, concordance),
+        /* TODO think about API changes: [cubes], [thesauruss]
+         *      possibly remove UDC.Thesaurus() constructor?
+         *      alternative: thesaurusPool
+         * TODO think about reactive models - recanonicalize when thesauruss added.*/
+        cube = UDC.mergeCubes(cubeA, cubeB, thesaurus),
         index = UDC.CubeIndex(cube.observations),
         cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
         populationValue = index.values(cell)['Population'],

@@ -1,11 +1,11 @@
-define(['member', 'cell', 'cube', 'cubeIndex', 'concordance', 'hierarchy', 'mergeHierarchies', 'mergeCubes'],
-    function (Member, Cell, Cube, CubeIndex, Concordance, Hierarchy, mergeHierarchies, mergeCubes) {
+define(['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes'],
+    function (Member, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes) {
   return {
     Member: Member,
     Cell: Cell,
     Cube: Cube,
     CubeIndex: CubeIndex,
-    Concordance: Concordance,
+    Thesaurus: Thesaurus,
     Hierarchy: Hierarchy,
     mergeHierarchies: mergeHierarchies,
     mergeCubes: mergeCubes
