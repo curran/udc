@@ -2,6 +2,7 @@
 // Curran Kelleher 4/21/2014
 require.config({
   paths: {
-    udc: 'dist/udc'
+    _: 'lib/lodash/dist/lodash.min',
+    udc: 'src/udc'
   }
 });
