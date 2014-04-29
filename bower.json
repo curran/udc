@@ -8,23 +8,10 @@
   "license": "MIT",
   "homepage": "https://github.com/curran/udc",
   "ignore": [
-    "Gruntfile.js",
-    "LICENSE",
-    "README.md",
-    "SpecRunner.html",
-    "bower.json",
-    "countLines.sh",
-    "docs",
-    "lib",
-    "node_modules",
-    "package.json",
-    "requireConfig.js",
-    "server.js",
-    "spec",
-    "src"
+    "TODO Update this",
   ],
   "devDependencies": {
-    "jasmine": "~2.0.0",
+    "lodash": "~2.4.1",
     "requirejs": "~2.1.11"
   }
 }
