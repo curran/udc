@@ -1,4 +1,4 @@
-define([], function () {
+define(['_', 'cubeIndex'], function (_, CubeIndex) {
 
   return function mergeCubes(cubeA, cubeB, concordance) {
     var a = canonicalizeCube(cubeA, concordance),
@@ -15,27 +15,55 @@ define([], function () {
     // Use the first code list in alpha sorted order as the canonical one.
     canonicalCodeLists[concordance.dimension] = concordance.codeLists.sort()[0];
 
+    function canonicalizeObservation(observation){
+      var canonicalCell = {};
+
+      cube.dimensions.forEach(function (dimension) {
+        var member = observation.cell[dimension],
+            canonicalCodeList = canonicalCodeLists[dimension];
+        canonicalCell[dimension] = concordance.translate(member, canonicalCodeList);
+      });
+
+      return {
+        cell: canonicalCell,
+        values: observation.values
+      };
+    }
+
     return {
       dimensions: cube.dimensions,
-      observations: cube.observations.map(function (observation) {
-        var canonicalCell = {};
-
-        cube.dimensions.forEach(function (dimension) {
-          var member = observation.cell[dimension],
-              canonicalCodeList = canonicalCodeLists[dimension];
-          canonicalCell[dimension] = concordance.translate(member, canonicalCodeList);
-        });
-
-        return {
-          cell: canonicalCell,
-          values: observation.values
-        };
-      })
+      codeLists: cube.codeLists,
+      measures: cube.measures,
+      observations: cube.observations.map(canonicalizeObservation)
     }; 
   }
-
+  
   function simpleMerge(a, b){
-    console.log(a);
+    var dimensions = _.intersection(a.dimensions, b.dimensions),
+        members = {},
+        measures = _.union(a.measures, b.measures),
+        indexA = CubeIndex(a.observations),
+        indexB = CubeIndex(b.observations);
+
+    //dimensions.forEach(function (d) {
+    //  members[d] = _.union(a.members[d], b.members[d]);
+    //});
+    //
+    // cells = cartesian product members for each dimension
+    // observations = cells.map(function (cell) {
+    //   var valuesA = indexA.values(cell),
+    //       valuesB = indexB.values(cell);
+    //   return {
+    //     cell: cell,
+    //     values: _.extend(valuesA, valuesB)
+    //   };
+    // });
+    
+    //return {
+    //  dimensions: dimensions,
+    //  measures: measures
+    //  observations: observations
+    //};
     return a;
   }
 });

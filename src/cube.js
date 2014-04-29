@@ -7,18 +7,23 @@ define(['_'], function (_) {
         measures = _.pluck(measureColumns, 'measure'),
         observations = table.rows.map(function (row) {
           return Observation(row, dimensionColumns, measureColumns);
-        }),
-        codeLists = {};
+        });
 
-    table.dimensionColumns.forEach(function (d) {
-      codeLists[d.dimension] = d.codeList;
-    });
+
+//        members = {};
+//
+//    dimensions.forEach(function (dimension) {
+//      members[dimension] = var codes = _.unique(observations.map(function (observation) {
+//        return observation.cell[dimension].code;
+//      }));
+//    });
+//
+//    console.log(members);
 
     return {
       dimensions: dimensions,
-      //measures: measures,
+      measures: measures,
       observations: observations
-      //codeLists: codeLists,
     };
   };
 

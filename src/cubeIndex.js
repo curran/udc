@@ -17,7 +17,7 @@ define([], function () {
   function key(cell){
     return Object.keys(cell).sort().map(function (dimension) {
       var member = cell[dimension];
-      return member.codeList + ':' + member.code;
+      return member.codeList + '|' + member.code;
     }).join(',');
   }
 });
