@@ -197,27 +197,27 @@ describe('UDC', function() {
   // to be integrated using `UDC.mergeCubes`. This operation
   // utilizes concordance tables to resolve when cubes
   // refer to the same entity using different identifiers.
-  it('can merge two cubes', function() {
-    var concordance = UDC.Concordance(tables.countryNamesAndCodes),
-        cubeA = UDC.Cube(tables.countryPopulations),
-        cubeB = UDC.Cube(tables.countryGDP),
-        /* TODO think about API changes: [cubes], [concordances]
-         *      possibly remove UDC.Concordance() constructor?
-         *      alternative: concordancePool
-         * TODO think about reactive models - recanonicalize when concordances added.*/
-        cube = UDC.mergeCubes(cubeA, cubeB, concordance),
-        cell = {
-          Space: {
-            codeList: 'countryCode',
-            code: 'in'
-          }
-        },
-        populationValue = cube.value(cell, 'Population'),
-        gdpValue = cube.value(cell, 'Gross Domestic Product');
+  //it('can merge two cubes', function() {
+  //  var concordance = UDC.Concordance(tables.countryNamesAndCodes),
+  //      cubeA = UDC.Cube(tables.countryPopulations),
+  //      cubeB = UDC.Cube(tables.countryGDP),
+  //      /* TODO think about API changes: [cubes], [concordances]
+  //       *      possibly remove UDC.Concordance() constructor?
+  //       *      alternative: concordancePool
+  //       * TODO think about reactive models - recanonicalize when concordances added.*/
+  //      cube = UDC.mergeCubes(cubeA, cubeB, concordance),
+  //      cell = {
+  //        Space: {
+  //          codeList: 'countryCode',
+  //          code: 'in'
+  //        }
+  //      };
+  //      populationValue = cube.value(cell, 'Population'),
+  //      gdpValue = cube.value(cell, 'Gross Domestic Product');
 
-    // TODO check validity of these values with scales as actual data
-    expect(populationValue).toBe(1.237 * 1000000000);
-    expect(gdpValue).toBe(4716 * 1000);
-  });
+  //  // TODO check validity of these values with scales as actual data
+  //  expect(populationValue).toBe(1.237 * 1000000000);
+  //  expect(gdpValue).toBe(4716 * 1000);
+  //});
 
 });

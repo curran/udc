@@ -1,38 +1,7 @@
-define(['_', 'cube'], function (_, Cube) {
+define(['_', 'cube', 'concordance'], function (_, Cube, Concordance) {
   var UDC = {
-    Cube: Cube
-  };
-
-  console.log(_);
-
-  UDC.Concordance = function (table) {
-    var indices = {},
-        codeLists = [],
-        dimension = table.dimensionColumns[0].dimension;
-
-    table.dimensionColumns.forEach(function (dimensionColumn) {
-      var codeList = dimensionColumn.codeList;
-      codeLists.push(codeList);
-      indices[codeList] = {};
-    });
-
-    table.rows.forEach(function (row) {
-      var equivalenceClass = {};
-      table.dimensionColumns.forEach(function (dimensionColumn) {
-        var codeList = dimensionColumn.codeList,
-            code = row[dimensionColumn.column];
-        equivalenceClass[codeList] = { codeList: codeList, code: code };
-        indices[codeList][code] = equivalenceClass;
-      });
-    });
-
-    return {
-      translate: function (member, codeList) {
-        return indices[member.codeList][member.code][codeList];
-      },
-      codeLists: codeLists,
-      dimension: dimension
-    };
+    Cube: Cube,
+    Concordance: Concordance
   };
 
   UDC.mergeCubes = (function () {
@@ -47,8 +16,6 @@ define(['_', 'cube'], function (_, Cube) {
       canonicalCodeLists[concordance.dimension] = concordance.codeLists.sort()[0];
 
       return {
-        dimensions: cube.dimensions,
-        measures: cube.measures,
         observations: cube.observations.map(function (observation) {
           var canonicalCell = {};
 
@@ -62,7 +29,8 @@ define(['_', 'cube'], function (_, Cube) {
             cell: canonicalCell,
             values: observation.values
           };
-        })
+        }),
+        dimensions: cube.dimensions
       }; 
     }
 
