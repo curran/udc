@@ -145,12 +145,7 @@ describe('UDC', function() {
         //     * Values are `member` objects
         //       * `member.codeList` the code list used
         //       * `member.code` the code for this member
-        cell = {
-          Space: {
-            codeList: 'countryCode',
-            code: 'in'
-          }
-        },
+        cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
         //   * `measure` the measure name
         measure = 'Population',
         value = index.values(cell)[measure];
@@ -208,12 +203,7 @@ describe('UDC', function() {
          * TODO think about reactive models - recanonicalize when concordances added.*/
         cube = UDC.mergeCubes(cubeA, cubeB, concordance),
         index = UDC.CubeIndex(cube.observations),
-        cell = {
-          Space: {
-            codeList: 'countryCode',
-            code: 'in'
-          }
-        };
+        cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
         populationValue = index.values(cell)['Population'],
         gdpValue = index.values(cell)['Gross Domestic Product'];
 

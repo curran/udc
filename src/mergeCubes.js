@@ -1,4 +1,4 @@
-define(['_', 'cubeIndex'], function (_, CubeIndex) {
+define(['_', 'cubeIndex', 'Cell', 'Member'], function (_, CubeIndex, Cell, Member) {
 
   return function mergeCubes(cubeA, cubeB, concordance) {
     var a = canonicalizeCube(cubeA, concordance),
@@ -15,27 +15,26 @@ define(['_', 'cubeIndex'], function (_, CubeIndex) {
     // Use the first code list in alpha sorted order as the canonical one.
     canonicalCodeLists[concordance.dimension] = concordance.codeLists.sort()[0];
 
-    function canonicalizeObservation(observation){
-      var canonicalCell = {};
-
-      cube.dimensions.forEach(function (dimension) {
-        var member = observation.cell[dimension],
-            canonicalCodeList = canonicalCodeLists[dimension];
-        canonicalCell[dimension] = concordance.translate(member, canonicalCodeList);
-      });
-
-      return {
-        cell: canonicalCell,
-        values: observation.values
-      };
-    }
-
     return {
       dimensions: cube.dimensions,
-      codeLists: cube.codeLists,
       measures: cube.measures,
       observations: cube.observations.map(canonicalizeObservation)
     }; 
+
+    function canonicalizeObservation(observation){
+      return {
+        cell: canonicalizeCell(observation.cell),
+        values: observation.values
+      };
+    }
+    function canonicalizeCell(cell){
+      return Cell(cell.members.map(canonicalizeMember));
+      var canonicalCell = {};
+    }
+    function canonicalizeMember(member){
+      var canonicalCodeList = canonicalCodeLists[member.dimension];
+      return concordance.translate(member, canonicalCodeList);
+    }
   }
   
   function simpleMerge(a, b){

@@ -1,10 +1,8 @@
-define(['_'], function (_) {
+define(['_', 'member', 'cell'], function (_, Member, Cell) {
 
   return function Cube (table) {
     var dimensionColumns = table.dimensionColumns,
         measureColumns = table.measureColumns,
-        dimensions = _.pluck(dimensionColumns, 'dimension'),
-        measures = _.pluck(measureColumns, 'measure'),
         observations = table.rows.map(function (row) {
           return Observation(row, dimensionColumns, measureColumns);
         });
@@ -21,29 +19,28 @@ define(['_'], function (_) {
 //    console.log(members);
 
     return {
-      dimensions: dimensions,
-      measures: measures,
+      dimensions: _.pluck(dimensionColumns, 'dimension'),
+      measures: _.pluck(measureColumns, 'measure'),
       observations: observations
     };
   };
 
   function Observation(row, dimensionColumns, measureColumns) {
     var observation = {
-      cell: {},
+      cell: Cell(dimensionColumns.map(function (dimensionColumn) {
+        var dimension = dimensionColumn.dimension,
+            codeList = dimensionColumn.codeList,
+            code = row[dimensionColumn.column];
+        return Member(dimension, codeList, code);
+      })),
       values: {}
     };
-
-    dimensionColumns.forEach(function (d) {
-      observation.cell[d.dimension] = {
-        codeList: d.codeList,
-        code: row[d.column]
-      };
-    });
 
     measureColumns.forEach(function (d) {
       observation.values[d.measure] = row[d.column] * d.scale;
     });
 
+    console.log(JSON.stringify(observation));
     return observation;
   }
 });

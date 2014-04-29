@@ -1,4 +1,4 @@
-define([], function () {
+define(['Member'], function (Member) {
   return function Concordance (table) {
     var indices = {},
         codeLists = [],
@@ -13,9 +13,11 @@ define([], function () {
     table.rows.forEach(function (row) {
       var equivalenceClass = {};
       table.dimensionColumns.forEach(function (dimensionColumn) {
-        var codeList = dimensionColumn.codeList,
-            code = row[dimensionColumn.column];
-        equivalenceClass[codeList] = { codeList: codeList, code: code };
+        var dimension = dimensionColumn.dimension,
+            codeList = dimensionColumn.codeList,
+            code = row[dimensionColumn.column]
+            member = Member(dimension, codeList, code);
+        equivalenceClass[codeList] = member;
         indices[codeList][code] = equivalenceClass;
       });
     });
