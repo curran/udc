@@ -31,10 +31,10 @@ describe('UDC', function() {
   //  * load data cube
   //  * load concordance
   //  * query for values
-  //  * slice
-  //  * merge data cubes
   //  * load hierarchy
   //  * merge hierarchies
+  //  * slice
+  //  * merge data cubes
 
   // # User Guide
   //
@@ -164,6 +164,15 @@ describe('UDC', function() {
       { "Country": "United States of America", "Code": "us" }
     ]
   };
+  tables.unUsLocations = {
+    "dimensionColumns": [
+      { "dimension": "Space", "codeList": "countryName", "column": "unName" },
+      { "dimension": "Space", "codeList": "countryCode", "column": "usName" }
+    ],
+    "rows": [
+      { "unName": "United States of America", "usName": "USA" }
+    ]
+  };
 
   it('can load a concordance', function() {
     var table = tables.countryNamesAndCodes,
@@ -213,6 +222,16 @@ describe('UDC', function() {
     }
    ]
   };
+  trees.usLocations = {
+   "dimension": "Space",
+   "codeList": "usLocationNames",
+   "code": "USA",
+   "children": [
+    { "code": "California" },
+    { "code": "Texas" },
+    { "code": "New York" }
+   ]
+  };
 
   it('can load a hierarchy', function() {
     // `UDC.Hierarchy(tree)` is the hierarchy constructor function.
@@ -223,12 +242,19 @@ describe('UDC', function() {
       .toBe('countryName|India');
   });
 
+  it('can merge two hierarchies', function() {
+    var hierarchyA = UDC.Hierarchy(trees.unLocations),
+        hierarchyB = UDC.Hierarchy(trees.usLocations),
+        concordance = UDC.Concordance(tables.unUsLocations),
+        hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB);
+    console.log(JSON.stringify(hierarchy, null, 2));
+    //expect(hierarchy.dimension).toBe('Space');
+    //expect(hierarchy.tree.member.key).toBe('countryName|World');
+    //expect(hierarchy.tree.children[0].children[0].children[0].member.key)
+    //  .toBe('countryName|India');
+  });
+
   // ## Merging Cubes
-  //
-  // In order to visualize many cubes together, they need
-  // to be integrated using `UDC.mergeCubes`. This operation
-  // utilizes concordances to resolve when cubes
-  // refer to the same entity using different identifiers.
   it('can merge two cubes with the same domain', function() {
     var concordance = UDC.Concordance(tables.countryNamesAndCodes),
         cubeA = UDC.Cube(tables.countryPopulations),

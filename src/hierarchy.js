@@ -3,19 +3,21 @@ define(['member'], function (Member) {
     var dimension = tree.dimension,
         codeList = tree.codeList;
   
-    function extractMembers(node){
-      var newNode = {
-        member: Member(dimension, codeList, node.code)
-      };
+    function transformTree(node, transformNode){
+      var newNode = transformNode(node);
       if(node.children) {
-        newNode.children = node.children.map(extractMembers);
+        newNode.children = node.children.map(function (child) {
+          return transformTree(child, transformNode);
+        });
       }
       return newNode;
     }
 
     return {
       dimension: dimension,
-      tree: extractMembers(tree, codeList)
+      tree: transformTree(tree, function (node) {
+        return { member: Member(dimension, codeList, node.code) };
+      }),
     };
   };
 });
