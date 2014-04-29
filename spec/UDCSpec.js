@@ -219,7 +219,7 @@ describe('UDC', function() {
 
     // TODO check validity of these values with scales as actual data
     expect(populationValue).toBe(1.237 * 1000000000);
-    //expect(gdpValue).toBe(4716 * 1000);
+    expect(gdpValue).toBe(4716 * 1000);
   });
 
 });

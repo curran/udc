@@ -40,30 +40,26 @@ define(['_', 'cubeIndex'], function (_, CubeIndex) {
   
   function simpleMerge(a, b){
     var dimensions = _.intersection(a.dimensions, b.dimensions),
-        members = {},
         measures = _.union(a.measures, b.measures),
         indexA = CubeIndex(a.observations),
-        indexB = CubeIndex(b.observations);
+        indexB = CubeIndex(b.observations),
 
-    //dimensions.forEach(function (d) {
-    //  members[d] = _.union(a.members[d], b.members[d]);
-    //});
-    //
-    // cells = cartesian product members for each dimension
-    // observations = cells.map(function (cell) {
-    //   var valuesA = indexA.values(cell),
-    //       valuesB = indexB.values(cell);
-    //   return {
-    //     cell: cell,
-    //     values: _.extend(valuesA, valuesB)
-    //   };
-    // });
+        // TODO cells = cartesian product of members for each dimension
+        cells = _.pluck(a.observations, 'cell');
+        
+        observations = cells.map(function (cell) {
+          var valuesA = indexA.values(cell),
+              valuesB = indexB.values(cell);
+          return {
+            cell: cell,
+            values: _.extend(valuesA, valuesB)
+          };
+        });
     
-    //return {
-    //  dimensions: dimensions,
-    //  measures: measures
-    //  observations: observations
-    //};
-    return a;
+    return {
+      dimensions: dimensions,
+      measures: measures,
+      observations: observations
+    };
   }
 });

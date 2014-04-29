@@ -13,7 +13,7 @@ define(['_'], function (_) {
 //        members = {};
 //
 //    dimensions.forEach(function (dimension) {
-//      members[dimension] = var codes = _.unique(observations.map(function (observation) {
+//      members[dimension] = _.unique(observations.map(function (observation) {
 //        return observation.cell[dimension].code;
 //      }));
 //    });
