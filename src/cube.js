@@ -40,7 +40,6 @@ define(['_', 'member', 'cell'], function (_, Member, Cell) {
       observation.values[d.measure] = row[d.column] * d.scale;
     });
 
-    console.log(JSON.stringify(observation));
     return observation;
   }
 });

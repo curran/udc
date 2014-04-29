@@ -137,16 +137,8 @@ describe('UDC', function() {
 
         index = UDC.CubeIndex(cube.observations),
 
-        // `cube.value(cell, measure)` queries the cube for values.
-        //   * `cell` an object that specifies the combination of dimension 
-        //     members used to look up the value. A cell corresponds to a `row`
-        //     in the original table used to create the cube.
-        //     * Keys are dimension names
-        //     * Values are `member` objects
-        //       * `member.codeList` the code list used
-        //       * `member.code` the code for this member
+        // `cube.values(cell)` queries the cube for values.
         cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
-        //   * `measure` the measure name
         measure = 'Population',
         value = index.values(cell)[measure];
 
@@ -178,22 +170,66 @@ describe('UDC', function() {
 
         // `UDC.Concordance(table)` is the concordance constructor function.
         concordance = UDC.Concordance(table),
-        codeMember = {
-          codeList: 'countryCode',
-          code: 'in'
-        },
+        codeMember = UDC.Member('Space', 'countryCode', 'in'),
         nameMember = concordance.translate(codeMember, 'countryName');
     expect(nameMember.codeList).toBe('countryName');
     expect(nameMember.code).toBe('India');
+  });
+
+  // ## Hierarchies
+  var trees = {};
+  trees.unLocations = {
+   "dimension": "Space",
+   "codeList": "countryName",
+   "code": "World",
+   "children": [
+    {
+     "code": "Asia",
+     "children": [
+      {
+       "code": "Southern Asia",
+       "children": [
+        {"code": "India"},
+       ]
+      },
+      {
+       "code": "Eastern Asia",
+       "children": [
+        {"code": "China"},
+       ]
+      }
+     ]
+    },
+    {
+     "code": "Americas",
+     "children": [
+      {
+       "code": "Northern America",
+       "children": [
+        {"code": "United States of America"}
+       ]
+      }
+     ]
+    }
+   ]
+  };
+
+  it('can load a hierarchy', function() {
+    // `UDC.Hierarchy(tree)` is the hierarchy constructor function.
+    var hierarchy = UDC.Hierarchy(trees.unLocations);
+    expect(hierarchy.dimension).toBe('Space');
+    expect(hierarchy.tree.member.key).toBe('countryName|World');
+    expect(hierarchy.tree.children[0].children[0].children[0].member.key)
+      .toBe('countryName|India');
   });
 
   // ## Merging Cubes
   //
   // In order to visualize many cubes together, they need
   // to be integrated using `UDC.mergeCubes`. This operation
-  // utilizes concordance tables to resolve when cubes
+  // utilizes concordances to resolve when cubes
   // refer to the same entity using different identifiers.
-  it('can merge two cubes', function() {
+  it('can merge two cubes with the same domain', function() {
     var concordance = UDC.Concordance(tables.countryNamesAndCodes),
         cubeA = UDC.Cube(tables.countryPopulations),
         cubeB = UDC.Cube(tables.countryGDP),
@@ -211,5 +247,6 @@ describe('UDC', function() {
     expect(populationValue).toBe(1.237 * 1000000000);
     expect(gdpValue).toBe(4716 * 1000);
   });
+
 
 });
