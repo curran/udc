@@ -1,57 +1,44 @@
 define([], function () {
-  function key(cell){
-    return Object.keys(cell).sort().map(function (dimension) {
-      var member = cell[dimension];
-      return member.codeList + ':' + member.code;
-    }).join(',');
-  }
-
-  function CubeIndex(observations) {
-    var index = {};
-
-    observations.forEach( function (observation) {
-      index[key(observation.cell)] = observation.values;
-    });
-
-    return index;
-  }
 
   function Observation(row, dimensionColumns, measureColumns) {
-    var cell = {},
-        values = {};
+    var observation = {
+      cell: {},
+      values: {}
+    };
 
     dimensionColumns.forEach(function (d) {
-      cell[d.dimension] = {
+      observation.cell[d.dimension] = {
         codeList: d.codeList,
         code: row[d.column]
       };
     });
 
     measureColumns.forEach(function (d) {
-      values[d.measure] = row[d.column] * d.scale;
+      observation.values[d.measure] = row[d.column] * d.scale;
     });
 
-    return {
-      cell: cell,
-      values: values
-    };
+    return observation;
   }
 
   return function Cube (table) {
-    var observations = table.rows.map(function (row) {
-          return Observation(row, table.dimensionColumns, table.measureColumns);
+    var dimensionColumns = table.dimensionColumns,
+        measureColumns = table.measureColumns,
+        observations = table.rows.map(function (row) {
+          return Observation(row, dimensionColumns, measureColumns);
         }),
-        index = CubeIndex(observations),
-        dimensions = table.dimensionColumns.map(function (dimensionColumn) {
-          return dimensionColumn.dimension;
-        });
+        dimensions = dimensionColumns.map(function (d) { return d.dimension; }),
+        measures = measureColumns.map(function (d) { return d.measure; }),
+        codeLists = {};
+
+    table.dimensionColumns.forEach(function (d) {
+      codeLists[d.dimension] = d.codeList;
+    });
 
     return {
-      value: function (cell, measure) {
-        return index[key(cell)][measure];
-      },
-      observations: observations,
-      dimensions: dimensions
+      //dimensions: dimensions,
+      //measures: measures,
+      observations: observations
+      //codeLists: codeLists,
     };
   };
 });

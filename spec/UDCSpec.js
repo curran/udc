@@ -135,6 +135,8 @@ describe('UDC', function() {
         // `UDC.Cube(table)` is the constructor function for cubes.
         cube = UDC.Cube(table),
 
+        index = UDC.CubeIndex(cube.observations),
+
         // `cube.value(cell, measure)` queries the cube for values.
         //   * `cell` an object that specifies the combination of dimension 
         //     members used to look up the value. A cell corresponds to a `row`
@@ -143,16 +145,15 @@ describe('UDC', function() {
         //     * Values are `member` objects
         //       * `member.codeList` the code list used
         //       * `member.code` the code for this member
-        member = {
-          codeList: 'countryCode',
-          code: 'in'
-        },
         cell = {
-          Space: member
+          Space: {
+            codeList: 'countryCode',
+            code: 'in'
+          }
         },
         //   * `measure` the measure name
         measure = 'Population',
-        value = cube.value(cell, measure);
+        value = index.values(cell)[measure];
 
     expect(value).toBe(1.237 * 1000000000);
   });
