@@ -16,6 +16,7 @@ define([], function () {
     canonicalCodeLists[concordance.dimension] = concordance.codeLists.sort()[0];
 
     return {
+      dimensions: cube.dimensions,
       observations: cube.observations.map(function (observation) {
         var canonicalCell = {};
 
@@ -29,8 +30,7 @@ define([], function () {
           cell: canonicalCell,
           values: observation.values
         };
-      }),
-      dimensions: cube.dimensions
+      })
     }; 
   }
 
