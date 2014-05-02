@@ -19,10 +19,9 @@
     "package.json",
     "server.js",
     "src",
-    "tests",
+    "tests"
   ],
   "devDependencies": {
-    "lodash": "~2.4.1",
-    "requirejs": "~2.1.11"
+    "lodash": "~2.4.1"
   }
 }
