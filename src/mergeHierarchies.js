@@ -32,5 +32,5 @@ define([], function () {
     function hasParent(node){
       return parents[node.member.key];
     }
-  }
+  };
 });

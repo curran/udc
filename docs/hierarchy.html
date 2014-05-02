@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>hierarchy.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>hierarchy.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'member'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Member)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tree)</span> {</span>
+    <span class="hljs-keyword">var</span> dimension = tree.dimension,
+        codeList = tree.codeList;
+  
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">transformTree</span><span class="hljs-params">(node, transformNode)</span>{</span>
+      <span class="hljs-keyword">var</span> newNode = transformNode(node);
+      <span class="hljs-keyword">if</span>(node.children) {
+        newNode.children = node.children.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> {</span>
+          <span class="hljs-keyword">return</span> transformTree(child, transformNode);
+        });
+      }
+      <span class="hljs-keyword">return</span> newNode;
+    }
+
+    <span class="hljs-keyword">return</span> {
+      dimension: dimension,
+      tree: transformTree(tree, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node)</span> {</span>
+        <span class="hljs-keyword">return</span> { member: Member(dimension, codeList, node.code) };
+      }),
+    };
+  };
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

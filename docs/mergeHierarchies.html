@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>mergeHierarchies.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>mergeHierarchies.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(hierarchyA, hierarchyB, thesaurus)</span> {</span>
+    <span class="hljs-keyword">var</span> newNodes = {},
+        parents = {},
+        treeB = indexNodes(hierarchyB.tree),
+        treeA = indexNodes(hierarchyA.tree);
+
+    <span class="hljs-keyword">return</span> {
+      dimension: hierarchyA.dimension,
+      tree: hasParent(treeA) ? treeB : treeA
+    };
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">indexNodes</span><span class="hljs-params">(node)</span> {</span>
+      <span class="hljs-keyword">var</span> member = thesaurus.canonicalizeMember(node.member),
+          newNode = getNewNode(member);
+      <span class="hljs-keyword">if</span>(node.children){
+        newNode.children = (newNode.children || []);
+        newNode.children = newNode.children.concat(node.children.map(indexNodes));
+        node.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> {</span>
+          parents[child.member.key] = <span class="hljs-literal">true</span>;
+        });
+      }
+      <span class="hljs-keyword">return</span> newNode;
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getNewNode</span><span class="hljs-params">(member)</span>{</span>
+      <span class="hljs-keyword">return</span> newNodes[member.key] || (newNodes[member.key] = {
+        member: member
+      });
+    }
+
+    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasParent</span><span class="hljs-params">(node)</span>{</span>
+      <span class="hljs-keyword">return</span> parents[node.member.key];
+    }
+  };
+});</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>

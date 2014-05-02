@@ -1,11 +1,14 @@
-// User Guide (and unit tests) for the UDC library.
+var requirejs = require('requirejs'),
+    expect = require('chai').expect;
+
+requirejs.config(require('./requireConfig.js'));
+
 describe('UDC', function() {
   var UDC;
 
-  // Use require.js to fetch the AMD module.
   it('should load the AMD module', function(done) {
-    require(['udc'], function (loadedModule) {
-      UDC = loadedModule;
+    requirejs(['udc'], function (_UDC) {
+      UDC = _UDC;
       done();
     });
   });
@@ -127,7 +130,7 @@ describe('UDC', function() {
         measure = 'Population',
         value = index.values(cell)[measure];
 
-    expect(value).toBe(1.237 * 1000000000);
+    expect(value).to.equal(1.237 * 1000000000);
   });
 
   // ## Thesaurus
@@ -163,8 +166,8 @@ describe('UDC', function() {
         codeMember = UDC.Member('Space', 'countryCode', 'in'),
         nameMember = thesaurus.translate(codeMember, 'countryName');
 
-    expect(nameMember.codeList).toBe('countryName');
-    expect(nameMember.code).toBe('India');
+    expect(nameMember.codeList).to.equal('countryName');
+    expect(nameMember.code).to.equal('India');
   });
 
   // ## Hierarchies
@@ -218,10 +221,10 @@ describe('UDC', function() {
   it('should load a hierarchy', function() {
     // `UDC.Hierarchy(tree)` is the hierarchy constructor function.
     var hierarchy = UDC.Hierarchy(trees.unLocations);
-    expect(hierarchy.dimension).toBe('Space');
-    expect(hierarchy.tree.member.key).toBe('countryName|World');
+    expect(hierarchy.dimension).to.equal('Space');
+    expect(hierarchy.tree.member.key).to.equal('countryName|World');
     expect(hierarchy.tree.children[0].children[0].children[0].member.key)
-      .toBe('countryName|India');
+      .to.equal('countryName|India');
   });
 
   it('should merge two hierarchies', function() {
@@ -229,14 +232,14 @@ describe('UDC', function() {
         hierarchyB = UDC.Hierarchy(trees.usLocations),
         thesaurus = UDC.Thesaurus([tables.unUsLocations]),
         hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
-    expect(hierarchy.dimension).toBe('Space');
-    expect(hierarchy.tree.member.key).toBe('countryName|World');
+    expect(hierarchy.dimension).to.equal('Space');
+    expect(hierarchy.tree.member.key).to.equal('countryName|World');
     expect(hierarchy.tree.children[0].children[0].children[0].member.key)
-      .toBe('countryName|India');
+      .to.equal('countryName|India');
     expect(hierarchy.tree.children[1].children[0].children[0].member.key)
-      .toBe('countryName|United States of America');
+      .to.equal('countryName|United States of America');
     expect(hierarchy.tree.children[1].children[0].children[0].children[0].member.key)
-      .toBe('usLocationName|California');
+      .to.equal('usLocationName|California');
   });
 
   // ## Merging Cubes
@@ -251,10 +254,9 @@ describe('UDC', function() {
         cube = UDC.mergeCubes(cubeA, cubeB, thesaurus),
         index = UDC.CubeIndex(cube.observations),
         cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
-        populationValue = index.values(cell)['Population'],
-        gdpValue = index.values(cell)['Gross Domestic Product'];
+        values = index.values(cell);
 
-    expect(populationValue).toBe(1.237 * 1000000000);
-    expect(gdpValue).toBe(4716 * 1000);
+    expect(values.Population).to.equal(1.237 * 1000000000);
+    expect(values['Gross Domestic Product']).to.equal(4716 * 1000);
   });
 });
