@@ -4,11 +4,11 @@ var requirejs = require('requirejs'),
 requirejs.config(require('./requireConfig.js'));
 
 describe('UDC', function() {
-  var UDC;
+  var udc;
 
   it('should load the AMD module', function(done) {
-    requirejs(['udc'], function (_UDC) {
-      UDC = _UDC;
+    requirejs(['udc'], function (_udc) {
+      udc = _udc;
       done();
     });
   });
@@ -26,21 +26,21 @@ describe('UDC', function() {
 
   // # User Guide
   //
-  // The Universal Data Cube (UDC) library is for modeling data sets
-  // as data cubes and integrating them together. The UDC has two kinds of elements:
+  // The Universal Data Cube (udc) library is for modeling data sets
+  // as data cubes and integrating them together. The udc has two kinds of elements:
   //
   //  * 'universal elements' are shared by all data sets
   //  * 'local elements' are local to each data set
   //
   // By establishing a relationship between local elements and universal elements, the
-  // UDC library is able to integrate many data sets together that may:
+  // udc library is able to integrate many data sets together that may:
   //
   //  * refer to the same entities using different identifiers, or
   //  * express the same numeric field using a different scale factor.
   //
   // ## Table
   //
-  // In the UDC library, the notion of a 'table' is a set of `row` objects
+  // In the udc library, the notion of a 'table' is a set of `row` objects
   // (e.g. rows parsed from a CSV file) and some additional metadata that states 
   // how the row objects relate to universal elements.
   var tables = {};
@@ -83,7 +83,7 @@ describe('UDC', function() {
       }
     ]
   };
-  // Tables are used as input for creating cubes and thesauruss.
+  // Tables are used as input for creating cubes and thesauri.
   tables.countryGDP = {
     'rows': [
       { 'name': 'China', 'gdp': 12261 },
@@ -120,13 +120,13 @@ describe('UDC', function() {
   it('should load a data cube', function() {
     var table = tables.countryPopulations,
 
-        // `UDC.Cube(table)` is the constructor function for cubes.
-        cube = UDC.Cube(table),
+        // `udc.Cube(table)` is the constructor function for cubes.
+        cube = udc.Cube(table),
 
-        index = UDC.CubeIndex(cube.observations),
+        index = udc.CubeIndex(cube.observations),
 
         // `cube.values(cell)` queries the cube for values.
-        cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
+        cell = udc.Cell([udc.Member('Space', 'countryCode', 'in')]),
         measure = 'Population',
         value = index.values(cell)[measure];
 
@@ -161,9 +161,9 @@ describe('UDC', function() {
   it('should load a thesaurus', function() {
     var table = tables.countryNamesAndCodes,
 
-        // `UDC.Thesaurus([tables])` is the thesaurus constructor function.
-        thesaurus = UDC.Thesaurus([table]),
-        codeMember = UDC.Member('Space', 'countryCode', 'in'),
+        // `udc.Thesaurus([tables])` is the thesaurus constructor function.
+        thesaurus = udc.Thesaurus([table]),
+        codeMember = udc.Member('Space', 'countryCode', 'in'),
         nameMember = thesaurus.translate(codeMember, 'countryName');
 
     expect(nameMember.codeList).to.equal('countryName');
@@ -219,8 +219,8 @@ describe('UDC', function() {
   };
 
   it('should load a hierarchy', function() {
-    // `UDC.Hierarchy(tree)` is the hierarchy constructor function.
-    var hierarchy = UDC.Hierarchy(trees.unLocations);
+    // `udc.Hierarchy(tree)` is the hierarchy constructor function.
+    var hierarchy = udc.Hierarchy(trees.unLocations);
     expect(hierarchy.dimension).to.equal('Space');
     expect(hierarchy.tree.member.key).to.equal('countryName|World');
     expect(hierarchy.tree.children[0].children[0].children[0].member.key)
@@ -228,10 +228,10 @@ describe('UDC', function() {
   });
 
   it('should merge two hierarchies', function() {
-    var hierarchyA = UDC.Hierarchy(trees.unLocations),
-        hierarchyB = UDC.Hierarchy(trees.usLocations),
-        thesaurus = UDC.Thesaurus([tables.unUsLocations]),
-        hierarchy = UDC.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
+    var hierarchyA = udc.Hierarchy(trees.unLocations),
+        hierarchyB = udc.Hierarchy(trees.usLocations),
+        thesaurus = udc.Thesaurus([tables.unUsLocations]),
+        hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
     expect(hierarchy.dimension).to.equal('Space');
     expect(hierarchy.tree.member.key).to.equal('countryName|World');
     expect(hierarchy.tree.children[0].children[0].children[0].member.key)
@@ -244,16 +244,16 @@ describe('UDC', function() {
 
   // ## Merging Cubes
   it('should merge two cubes with the same domain', function() {
-    var thesaurus = UDC.Thesaurus([tables.countryNamesAndCodes]),
-        cubeA = UDC.Cube(tables.countryPopulations),
-        cubeB = UDC.Cube(tables.countryGDP),
+    var thesaurus = udc.Thesaurus([tables.countryNamesAndCodes]),
+        cubeA = udc.Cube(tables.countryPopulations),
+        cubeB = udc.Cube(tables.countryGDP),
         /* TODO think about API changes: [cubes], [thesauruss]
-         *      possibly remove UDC.Thesaurus() constructor?
+         *      possibly remove udc.Thesaurus() constructor?
          *      alternative: thesaurusPool
          * TODO think about reactive models - recanonicalize when thesauruss added.*/
-        cube = UDC.mergeCubes(cubeA, cubeB, thesaurus),
-        index = UDC.CubeIndex(cube.observations),
-        cell = UDC.Cell([UDC.Member('Space', 'countryCode', 'in')]),
+        cube = udc.mergeCubes(cubeA, cubeB, thesaurus),
+        index = udc.CubeIndex(cube.observations),
+        cell = udc.Cell([udc.Member('Space', 'countryCode', 'in')]),
         values = index.values(cell);
 
     expect(values.Population).to.equal(1.237 * 1000000000);
