@@ -1,0 +1,21 @@
+{
+  "dimensionColumns": [
+    {
+      "column": "countryCode",
+      "dimension": "Space",
+      "codeList": "UN M.49"
+    },
+    {
+      "column": "year",
+      "dimension": "Time",
+      "codeList": "year"
+    }
+  ],
+  "measureColumns": [
+    {
+      "column": "population",
+      "measure": "Population",
+      "scale": 1000
+    }
+  ]
+}

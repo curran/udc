@@ -1,0 +1,21 @@
+{
+  "dimensionColumns": [
+    {
+      "column": "countryCode",
+      "dimension": "Space",
+      "codeList": "ISO 3166-1 alpha-3"
+    },
+    {
+      "column": "year",
+      "dimension": "Time",
+      "codeList": "year"
+    }
+  ],
+  "measureColumns": [
+    {
+      "column": "gdp",
+      "measure": "GDP (current US$)",
+      "scale": 1
+    }
+  ]
+}

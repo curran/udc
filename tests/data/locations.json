@@ -1,0 +1,19 @@
+{
+  "dimensionColumns": [
+    {
+      "column": "countryName",
+      "dimension": "Space",
+      "codeList": "United Nations Geographic Name"
+    },
+    {
+      "column": "unCountryCode",
+      "dimension": "Space",
+      "codeList": "UN M.49"
+    },
+    {
+      "column": "alphaCode",
+      "dimension": "Space",
+      "codeList": "ISO 3166-1 alpha-3"
+    }
+  ]
+}
