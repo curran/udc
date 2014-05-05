@@ -28,5 +28,5 @@ cd src
 countLines
 
 echo Unit tests:
-cd ../spec
+cd ../tests
 countLines
