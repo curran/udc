@@ -21,7 +21,7 @@ gulp.task('build', function() {
     out: moduleName + '.js',
     paths: { _: 'empty:' }
   })
-  .pipe(uglify())
+  //.pipe(uglify())
   .pipe(gulp.dest('dist'));
 });
 

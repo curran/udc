@@ -30,14 +30,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'_'</span>, <span class="hljs-string">'member'</span>, <span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Member, Cell)</span> {</span>
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Cube</span> <span class="hljs-params">(table)</span> {</span>
-    <span class="hljs-keyword">var</span> dimensionColumns = table.dimensionColumns,
-        measureColumns = table.measureColumns,
-        observations = table.rows.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
-          <span class="hljs-keyword">return</span> Observation(row, dimensionColumns, measureColumns);
-        });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'_'</span>, <span class="hljs-string">'member'</span>, <span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, Member, Cell)</span> {</span></pre></div></div>
             
         </li>
         
@@ -48,17 +41,42 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <pre><code>   members = {};
-</code></pre><p>   dimensions.forEach(function (dimension) {
-     members[dimension] = _.unique(observations.map(function (observation) {
-       return observation.cell[dimension].code;
-     }));
-   });</p>
-<p>   console.log(members);</p>
+              <p>Creates a cube from the given <code>table</code> object, where</p>
+<ul>
+<li><code>table.rows</code> an array of <code>row</code> objects where<ul>
+<li>Keys are column names</li>
+<li>Values are numbers or strings</li>
+</ul>
+</li>
+<li><code>table.dimensionColumns</code> an array of <code>dimensionColumn</code> objects that 
+describe how columns in the table relate to dimensions.<ul>
+<li><code>column</code> the column name (key in <code>row</code> objects)</li>
+<li><code>dimension</code> the name of the dimension</li>
+<li><code>codeList</code> the name of the code list used by <code>row</code> objects.
+For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a string 
+that is a code from this code list.</li>
+</ul>
+</li>
+<li><code>table.measureColumns</code> an array of <code>measureColumn</code> objects that 
+describe how columns in the table relate to measures.<ul>
+<li><code>column</code> the column name (key in <code>row</code> objects)</li>
+<li><code>measure</code> the name of the measure</li>
+<li><code>scale</code> the scale factor used by values.
+For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a number <code>x</code> 
+such that <br> <code>x * scale</code> yields the measure value.</li>
+</ul>
+</li>
+</ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Cube</span> <span class="hljs-params">(table)</span> {</span>
+    <span class="hljs-keyword">var</span> dimensionColumns = table.dimensionColumns,
+        measureColumns = table.measureColumns,
+        observations = table.rows.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+          <span class="hljs-keyword">return</span> Observation(row, dimensionColumns, measureColumns);
+        });
+
     <span class="hljs-keyword">return</span> {
       dimensions: _.pluck(dimensionColumns, <span class="hljs-string">'dimension'</span>),
       measures: _.pluck(measureColumns, <span class="hljs-string">'measure'</span>),
