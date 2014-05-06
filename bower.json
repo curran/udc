@@ -1,6 +1,6 @@
 {
   "name": "udc",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "authors": [
     "curran <curran.kelleher@gmail.com>"
   ],
@@ -8,6 +8,8 @@
   "license": "MIT",
   "homepage": "https://github.com/curran/udc",
   "ignore": [
+    ".git",
+    ".gitignore",
     "LICENSE",
     "README.md",
     "bower.json",
@@ -21,7 +23,7 @@
     "src",
     "tests"
   ],
-  "dependencies": {
+  "devDependencies": {
     "lodash": "~2.4.1"
   }
 }
