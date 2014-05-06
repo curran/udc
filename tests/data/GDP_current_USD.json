@@ -14,7 +14,7 @@
   "measureColumns": [
     {
       "column": "gdp",
-      "measure": "GDP (current US$)",
+      "measure": "Gross Domestic Product (current US$)",
       "scale": 1
     }
   ]

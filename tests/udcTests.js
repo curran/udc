@@ -87,4 +87,19 @@ describe('UDC', function(done) {
       done();
     });
   });
+  it('should load World Bank GDP data', function(done) {
+    data.load('tests/data/GDP_current_USD', function (table) {
+      var cube = udc.Cube(table),
+          index = udc.CubeIndex(cube.observations),
+          cell = udc.Cell([
+            udc.Member('Space', 'ISO 3166-1 alpha-3', 'CHN'),
+            udc.Member('Time', 'year', '1960')
+          ]),
+          measure = 'Gross Domestic Product (current US$)',
+          value = index.values(cell)[measure];
+
+      expect(value).to.equal(61377930682.0013);
+      done();
+    });
+  });
 });
