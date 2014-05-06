@@ -1,4 +1,5 @@
-var data = { tables: {}, trees: {} };
+var fs = require('fs'),
+    data = { tables: {}, trees: {} };
 
 data.tables.countryPopulations = {
   'rows': [
@@ -107,4 +108,71 @@ data.trees.usLocations = {
   { 'code': 'New York' }
  ]
 };
+data.load = loadTable;
+
+function loadTable(path, callback){
+  loadCSV(path + '.csv', function (rows) {
+    loadJSON(path + '.json', function (table) {
+      table.rows = rows;
+      callback(table);
+    });
+  });
+}
+
+function loadCSV(path, callback){
+  input(path, function (data){
+    callback(parseCSVTable(data));
+  });
+}
+
+function loadJSON(path, callback){
+  input(path, function (data){
+    callback(JSON.parse(data));
+  });
+}
+
+function input(name, callback){
+  fs.readFile(name, 'utf8', function (err, data) {
+    if(err) throw err;
+    callback(data);
+  });
+}
+
+function parseCSVTable(data){
+  var rows = data.split('\n').filter(function (row) {
+        return row.length > 0;
+      }),
+      header = rows.splice(0, 1)[0],
+      properties = parseCSVRow(header);
+  return rows.map(function (rowStr) {
+    var values = parseCSVRow(rowStr);
+    var row = {};
+    properties.forEach(function (property, i) {
+      row[property] = values[i];
+    });
+    return row;
+  });
+}
+
+// Parse a CSV row, accounting for commas inside quotes
+function parseCSVRow(row){
+  var insideQuote = false,
+      entries = [],
+      entry = [];
+  row.split('').forEach(function (character) {
+    if(character === '"') {
+      insideQuote = !insideQuote;
+    } else {
+      if(character == "," && !insideQuote) {
+        entries.push(entry.join(''));
+        entry = [];
+      } else {
+        entry.push(character);
+      }
+    }
+  });
+  entries.push(entry.join(''));
+  return entries;
+}
+
 module.exports = data;

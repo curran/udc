@@ -30,7 +30,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> data = { tables: {}, trees: {} };
+            <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> fs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>),
+    data = { tables: {}, trees: {} };
 
 data.tables.countryPopulations = {
   <span class="hljs-string">'rows'</span>: [
@@ -139,6 +140,85 @@ data.trees.usLocations = {
   { <span class="hljs-string">'code'</span>: <span class="hljs-string">'New York'</span> }
  ]
 };
+data.load = loadTable;
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadTable</span><span class="hljs-params">(path, callback)</span>{</span>
+  loadCSV(path + <span class="hljs-string">'.csv'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(rows)</span> {</span>
+    loadJSON(path + <span class="hljs-string">'.json'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+      table.rows = rows;
+      callback(table);
+    });
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadCSV</span><span class="hljs-params">(path, callback)</span>{</span>
+  input(path, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span>{</span>
+    callback(parseCSVTable(data));
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">loadJSON</span><span class="hljs-params">(path, callback)</span>{</span>
+  input(path, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(data)</span>{</span>
+    callback(<span class="hljs-built_in">JSON</span>.parse(data));
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">input</span><span class="hljs-params">(name, callback)</span>{</span>
+  fs.readFile(name, <span class="hljs-string">'utf8'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(err, data)</span> {</span>
+    <span class="hljs-keyword">if</span>(err) <span class="hljs-keyword">throw</span> err;
+    callback(data);
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseCSVTable</span><span class="hljs-params">(data)</span>{</span>
+  <span class="hljs-keyword">var</span> rows = data.split(<span class="hljs-string">'\n'</span>).filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+        <span class="hljs-keyword">return</span> row.length &gt; <span class="hljs-number">0</span>;
+      }),
+      header = rows.splice(<span class="hljs-number">0</span>, <span class="hljs-number">1</span>)[<span class="hljs-number">0</span>],
+      properties = parseCSVRow(header);
+  <span class="hljs-keyword">return</span> rows.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(rowStr)</span> {</span>
+    <span class="hljs-keyword">var</span> values = parseCSVRow(rowStr);
+    <span class="hljs-keyword">var</span> row = {};
+    properties.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(property, i)</span> {</span>
+      row[property] = values[i];
+    });
+    <span class="hljs-keyword">return</span> row;
+  });
+}</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Parse a CSV row, accounting for commas inside quotes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">parseCSVRow</span><span class="hljs-params">(row)</span>{</span>
+  <span class="hljs-keyword">var</span> insideQuote = <span class="hljs-literal">false</span>,
+      entries = [],
+      entry = [];
+  row.split(<span class="hljs-string">''</span>).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(character)</span> {</span>
+    <span class="hljs-keyword">if</span>(character === <span class="hljs-string">'"'</span>) {
+      insideQuote = !insideQuote;
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-keyword">if</span>(character == <span class="hljs-string">","</span> &amp;&amp; !insideQuote) {
+        entries.push(entry.join(<span class="hljs-string">''</span>));
+        entry = [];
+      } <span class="hljs-keyword">else</span> {
+        entry.push(character);
+      }
+    }
+  });
+  entries.push(entry.join(<span class="hljs-string">''</span>));
+  <span class="hljs-keyword">return</span> entries;
+}
+
 module.exports = data;</pre></div></div>
             
         </li>

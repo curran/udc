@@ -71,4 +71,20 @@ describe('UDC', function(done) {
     expect(values.Population).to.equal(1.237 * 1000000000);
     expect(values['Gross Domestic Product']).to.equal(4716 * 1000);
   });
+
+  it('should load UN population data', function(done) {
+    data.load('tests/data/total_population', function (table) {
+      var cube = udc.Cube(table),
+          index = udc.CubeIndex(cube.observations),
+          cell = udc.Cell([
+            udc.Member('Space', 'UN M.49', '356'),
+            udc.Member('Time', 'year', '1960')
+          ]),
+          measure = 'Population',
+          value = index.values(cell)[measure];
+
+      expect(value).to.equal(449595.489 * 1000);
+      done();
+    });
+  });
 });

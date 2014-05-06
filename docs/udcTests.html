@@ -103,6 +103,22 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
     expect(values.Population).to.equal(<span class="hljs-number">1.237</span> * <span class="hljs-number">1000000000</span>);
     expect(values[<span class="hljs-string">'Gross Domestic Product'</span>]).to.equal(<span class="hljs-number">4716</span> * <span class="hljs-number">1000</span>);
   });
+
+  it(<span class="hljs-string">'should load UN population data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+    data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+      <span class="hljs-keyword">var</span> cube = udc.Cube(table),
+          index = udc.CubeIndex(cube.observations),
+          cell = udc.Cell([
+            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'356'</span>),
+            udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+          ]),
+          measure = <span class="hljs-string">'Population'</span>,
+          value = index.values(cell)[measure];
+
+      expect(value).to.equal(<span class="hljs-number">449595.489</span> * <span class="hljs-number">1000</span>);
+      done();
+    });
+  });
 });</pre></div></div>
             
         </li>
