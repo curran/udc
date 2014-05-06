@@ -76,14 +76,14 @@ describe('UDC', function(done) {
     data.load('tests/data/total_population', function (table) {
       var cube = udc.Cube(table),
           index = udc.CubeIndex(cube.observations),
-          cell = udc.Cell([
-            udc.Member('Space', 'UN M.49', '356'),
+          chinaIn1960 = [
+            udc.Member('Space', 'UN M.49', '156'),
             udc.Member('Time', 'year', '1960')
-          ]),
-          measure = 'Population',
-          value = index.values(cell)[measure];
+          ],
+          cell = udc.Cell(chinaIn1960),
+          values = index.values(cell);
 
-      expect(value).to.equal(449595.489 * 1000);
+      expect(values.Population).to.equal(650680.114 * 1000);
       done();
     });
   });
@@ -91,15 +91,39 @@ describe('UDC', function(done) {
     data.load('tests/data/GDP_current_USD', function (table) {
       var cube = udc.Cube(table),
           index = udc.CubeIndex(cube.observations),
-          cell = udc.Cell([
+          chinaIn1960 = [
             udc.Member('Space', 'ISO 3166-1 alpha-3', 'CHN'),
             udc.Member('Time', 'year', '1960')
-          ]),
-          measure = 'Gross Domestic Product (current US$)',
-          value = index.values(cell)[measure];
+          ],
+          cell = udc.Cell(chinaIn1960),
+          values = index.values(cell);
 
-      expect(value).to.equal(61377930682.0013);
+      expect(values['Gross Domestic Product (current US$)']).to.equal(61377930682.0013);
       done();
+    });
+  });
+  it('should merge UN population data and World Bank DGP data', function(done) {
+    data.load('tests/data/GDP_current_USD', function (tableA) {
+      data.load('tests/data/total_population', function (tableB) {
+        data.load('tests/data/locations', function (concordance) {
+          var thesaurus = udc.Thesaurus([concordance]),
+              cubeA = udc.Cube(tableA),
+              cubeB = udc.Cube(tableB),
+              cube = udc.mergeCubes(cubeA, cubeB, thesaurus),
+              index = udc.CubeIndex(cube.observations),
+              chinaIn1960 = [
+                udc.Member('Space', 'ISO 3166-1 alpha-3', 'CHN'),
+                udc.Member('Time', 'year', '1960')
+              ],
+              cell = udc.Cell(chinaIn1960),
+              canonicalCell = thesaurus.canonicalizeCell(cell),
+              values = index.values(canonicalCell);
+
+          expect(values['Gross Domestic Product (current US$)']).to.equal(61377930682.0013);
+          expect(values.Population).to.equal(650680.114 * 1000);
+          done();
+        });
+      });
     });
   });
 });

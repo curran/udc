@@ -1,7 +1,7 @@
 module.exports = {
-  baseUrl: '.',
+  baseUrl: 'src',
   paths: {
-    udc: 'dist/udc',
-    _: 'bower_components/lodash/dist/lodash.min'
+    //udc: 'dist/udc',
+    _: '../bower_components/lodash/dist/lodash.min'
   }
 };

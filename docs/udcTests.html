@@ -108,15 +108,54 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
     data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
       <span class="hljs-keyword">var</span> cube = udc.Cube(table),
           index = udc.CubeIndex(cube.observations),
-          cell = udc.Cell([
-            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'356'</span>),
+          chinaIn1960 = [
+            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>),
             udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
-          ]),
-          measure = <span class="hljs-string">'Population'</span>,
-          value = index.values(cell)[measure];
+          ],
+          cell = udc.Cell(chinaIn1960),
+          values = index.values(cell);
 
-      expect(value).to.equal(<span class="hljs-number">449595.489</span> * <span class="hljs-number">1000</span>);
+      expect(values.Population).to.equal(<span class="hljs-number">650680.114</span> * <span class="hljs-number">1000</span>);
       done();
+    });
+  });
+  it(<span class="hljs-string">'should load World Bank GDP data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+    data.load(<span class="hljs-string">'tests/data/GDP_current_USD'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+      <span class="hljs-keyword">var</span> cube = udc.Cube(table),
+          index = udc.CubeIndex(cube.observations),
+          chinaIn1960 = [
+            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+            udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+          ],
+          cell = udc.Cell(chinaIn1960),
+          values = index.values(cell);
+
+      expect(values[<span class="hljs-string">'Gross Domestic Product (current US$)'</span>]).to.equal(<span class="hljs-number">61377930682.0013</span>);
+      done();
+    });
+  });
+  it(<span class="hljs-string">'should merge UN population data and World Bank DGP data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+    data.load(<span class="hljs-string">'tests/data/GDP_current_USD'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tableA)</span> {</span>
+      data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tableB)</span> {</span>
+        data.load(<span class="hljs-string">'tests/data/locations'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(concordance)</span> {</span>
+          <span class="hljs-keyword">var</span> thesaurus = udc.Thesaurus([concordance]),
+              cubeA = udc.Cube(tableA),
+              cubeB = udc.Cube(tableB),
+              cube = udc.mergeCubes(cubeA, cubeB, thesaurus),
+              index = udc.CubeIndex(cube.observations),
+              chinaIn1960 = [
+                udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+                udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+              ],
+              cell = udc.Cell(chinaIn1960),
+              canonicalCell = thesaurus.canonicalizeCell(cell),
+              values = index.values(canonicalCell);
+
+          expect(values[<span class="hljs-string">'Gross Domestic Product (current US$)'</span>]).to.equal(<span class="hljs-number">61377930682.0013</span>);
+          expect(values.Population).to.equal(<span class="hljs-number">650680.114</span> * <span class="hljs-number">1000</span>);
+          done();
+        });
+      });
     });
   });
 });</pre></div></div>

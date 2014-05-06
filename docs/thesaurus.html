@@ -113,10 +113,14 @@
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">canonicalizeMember</span><span class="hljs-params">(member)</span>{</span>
-      <span class="hljs-keyword">var</span> codeListIndex = index[member.dimension][member.codeList];
-      <span class="hljs-keyword">if</span>(codeListIndex.hasOwnProperty(member.code)) {
-        <span class="hljs-keyword">var</span> codeList = canonicalCodeLists[member.dimension][<span class="hljs-number">0</span>];
-        <span class="hljs-keyword">return</span> codeListIndex[member.code][codeList];</pre></div></div>
+      <span class="hljs-keyword">var</span> dimensionIndex = index[member.dimension],
+          codeListIndex,
+          codeList;
+      <span class="hljs-keyword">if</span>(dimensionIndex) {
+        codeListIndex = dimensionIndex[member.codeList];
+        <span class="hljs-keyword">if</span>(codeListIndex.hasOwnProperty(member.code)) {
+          codeList = canonicalCodeLists[member.dimension][<span class="hljs-number">0</span>];
+          <span class="hljs-keyword">return</span> codeListIndex[member.code][codeList];</pre></div></div>
             
         </li>
         
@@ -142,9 +146,9 @@ for(i = 0; i &lt; codeLists.length; i++) {
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      } <span class="hljs-keyword">else</span> {
-        <span class="hljs-keyword">return</span> member;
+            <div class="content"><div class='highlight'><pre>        }
       }
+      <span class="hljs-keyword">return</span> member;
     }</pre></div></div>
             
         </li>
@@ -210,7 +214,8 @@ given cube to the canonical code lists for their respective dimensions.</p>
 
     <span class="hljs-keyword">return</span> {
       translate: translate,
-      canonicalizeMember: canonicalizeMember,</pre></div></div>
+      canonicalizeMember: canonicalizeMember,
+      canonicalizeCell: canonicalizeCell,</pre></div></div>
             
         </li>
         
@@ -221,8 +226,7 @@ given cube to the canonical code lists for their respective dimensions.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-10">&#182;</a>
               </div>
-              <p>canonicalizeCell: canonicalizeCell,
-canonicalizeObservation: canonicalizeObservation,</p>
+              <p>canonicalizeObservation: canonicalizeObservation,</p>
 
             </div>
             
