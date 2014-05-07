@@ -27,15 +27,15 @@ define('cell',[], function () {
     return a.dimension > b.dimension ? 1 : -1;
   }
   function createCell(members){
-    //var membersByDimension = {};
+    var membersByDimension = {};
 
-    //members.forEach(function (member) {
-    //  membersByDimension[member.dimension] = member;
-    //});
+    members.forEach(function (member) {
+      membersByDimension[member.dimension] = member;
+    });
 
     return Object.freeze({
       members: members,
-      //membersByDimension: membersByDimension,
+      membersByDimension: membersByDimension,
       key: members.map(function (d) { return d.key; }).join('~')
     });
   }
@@ -140,15 +140,15 @@ define('Cell',[], function () {
     return a.dimension > b.dimension ? 1 : -1;
   }
   function createCell(members){
-    //var membersByDimension = {};
+    var membersByDimension = {};
 
-    //members.forEach(function (member) {
-    //  membersByDimension[member.dimension] = member;
-    //});
+    members.forEach(function (member) {
+      membersByDimension[member.dimension] = member;
+    });
 
     return Object.freeze({
       members: members,
-      //membersByDimension: membersByDimension,
+      membersByDimension: membersByDimension,
       key: members.map(function (d) { return d.key; }).join('~')
     });
   }
@@ -345,8 +345,29 @@ define('mergeCubes',['_', 'cubeIndex', 'Cell', 'Member'], function (_, CubeIndex
   }
 });
 
-define('udc',['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes'],
-    function (Member, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes) {
+define('slice',['Cell'], function (Cell) {
+  return function (cube, member) {
+    return {
+      dimensions: cube.dimensions.filter(function (dimension) {
+        return dimension !== member.dimension;
+      }),
+      measures: cube.measures,
+      observations: cube.observations.filter(function (observation) {
+        return observation.cell.membersByDimension[member.dimension].key === member.key;
+      }).map(function (observation) {
+        return {
+          cell: Cell(observation.cell.members.filter(function (cellMember) {
+            return cellMember.dimension !== member.dimension;
+          })),
+          values: observation.values
+        };
+      })
+    };
+  };
+});
+
+define('udc',['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
+    function (Member, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
   return {
     Member: Member,
     Cell: Cell,
@@ -355,6 +376,7 @@ define('udc',['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', '
     Thesaurus: Thesaurus,
     Hierarchy: Hierarchy,
     mergeHierarchies: mergeHierarchies,
-    mergeCubes: mergeCubes
+    mergeCubes: mergeCubes,
+    slice: slice
   };
 });

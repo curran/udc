@@ -126,4 +126,28 @@ describe('UDC', function(done) {
       });
     });
   });
+
+  it('should slice by a single year', function(done) {
+    data.load('tests/data/total_population', function (table) {
+      var fullCube = udc.Cube(table),
+          year2010 = udc.Member('Time', 'year', '2010'),
+          cube = udc.slice(fullCube, year2010),
+          index = udc.CubeIndex(cube.observations),
+          china = [ udc.Member('Space', 'UN M.49', '156') ],
+          cell = udc.Cell(china),
+          values = index.values(cell);
+
+      expect(values.Population).to.equal(1359821.465 * 1000);
+
+      expect(cube.dimensions.length).to.equal(1);
+      expect(cube.dimensions[0]).to.equal('Space');
+
+      expect(cube.observations[0].cell.members.length).to.equal(1);
+      expect(cube.observations[0].cell.members[0].dimension).to.equal('Space');
+
+      expect(cube.observations.length).to.equal(3);
+
+      done();
+    });
+  });
 });

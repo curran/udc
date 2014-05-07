@@ -12,15 +12,15 @@ define([], function () {
     return a.dimension > b.dimension ? 1 : -1;
   }
   function createCell(members){
-    //var membersByDimension = {};
+    var membersByDimension = {};
 
-    //members.forEach(function (member) {
-    //  membersByDimension[member.dimension] = member;
-    //});
+    members.forEach(function (member) {
+      membersByDimension[member.dimension] = member;
+    });
 
     return Object.freeze({
       members: members,
-      //membersByDimension: membersByDimension,
+      membersByDimension: membersByDimension,
       key: members.map(function (d) { return d.key; }).join('~')
     });
   }

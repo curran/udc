@@ -158,6 +158,30 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
       });
     });
   });
+
+  it(<span class="hljs-string">'should slice by a single year'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
+    data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
+      <span class="hljs-keyword">var</span> fullCube = udc.Cube(table),
+          year2010 = udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'2010'</span>),
+          cube = udc.slice(fullCube, year2010),
+          index = udc.CubeIndex(cube.observations),
+          china = [ udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>) ],
+          cell = udc.Cell(china),
+          values = index.values(cell);
+
+      expect(values.Population).to.equal(<span class="hljs-number">1359821.465</span> * <span class="hljs-number">1000</span>);
+
+      expect(cube.dimensions.length).to.equal(<span class="hljs-number">1</span>);
+      expect(cube.dimensions[<span class="hljs-number">0</span>]).to.equal(<span class="hljs-string">'Space'</span>);
+
+      expect(cube.observations[<span class="hljs-number">0</span>].cell.members.length).to.equal(<span class="hljs-number">1</span>);
+      expect(cube.observations[<span class="hljs-number">0</span>].cell.members[<span class="hljs-number">0</span>].dimension).to.equal(<span class="hljs-string">'Space'</span>);
+
+      expect(cube.observations.length).to.equal(<span class="hljs-number">3</span>);
+
+      done();
+    });
+  });
 });</pre></div></div>
             
         </li>

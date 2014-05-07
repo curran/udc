@@ -43,54 +43,17 @@
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">byDimension</span><span class="hljs-params">(a, b)</span> {</span>
     <span class="hljs-keyword">return</span> a.dimension &gt; b.dimension ? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;
   }
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createCell</span><span class="hljs-params">(members)</span>{</span></pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-2">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              <p>var membersByDimension = {};</p>
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createCell</span><span class="hljs-params">(members)</span>{</span>
+    <span class="hljs-keyword">var</span> membersByDimension = {};
 
-            </div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>members.forEach(function (member) {
- membersByDimension[member.dimension] = member;
-});</p>
+    members.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(member)</span> {</span>
+      membersByDimension[member.dimension] = member;
+    });
 
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.freeze({
-      members: members,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
-              </div>
-              <p>membersByDimension: membersByDimension,</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      key: members.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span> <span class="hljs-keyword">return</span> d.key; }).join(<span class="hljs-string">'~'</span>)
+      members: members,
+      membersByDimension: membersByDimension,
+      key: members.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span> <span class="hljs-keyword">return</span> d.key; }).join(<span class="hljs-string">'~'</span>)
     });
   }
 });</pre></div></div>
