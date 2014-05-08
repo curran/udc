@@ -1,12 +1,8 @@
 # UDC
 The Universal Data Cube (udc) library is for modeling data sets
-as data cubes and integrating them together. The udc has two kinds of elements:
+as data cubes and integrating them together for visualization.
 
- * 'universal elements' are shared by all data sets
- * 'local elements' are local to each data set
+See also:
 
-By establishing a relationship between local elements and universal elements, the
-udc library is able to integrate many data sets together that may:
-
- * refer to the same entities using different identifiers, or
- * express the same numeric field using a different scale factor.
+ * [udc-data](https://github.com/curran/udc-data) Data sets imported into the UDC framework.
+ * countriesScatter - [run it](http://curran.github.io/examples/countriesScatter/v1/), [source](https://github.com/curran/examples/tree/gh-pages/countriesScatter/v1) - An example visualization that integrates two data sets and visualizes the combined result as a scatter plot.
