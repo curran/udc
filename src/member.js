@@ -1,5 +1,6 @@
 define([], function () {
-  var index = {};
+  var index = {},
+      id = 0;
   return function (dimension, codeList, code) {
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
@@ -7,7 +8,7 @@ define([], function () {
       dimension: dimension,
       codeList: codeList,
       code: code,
-      key: codeList + '|' + code
+      key: id++//codeList + '|' + code
     }));
   };
 });
