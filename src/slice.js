@@ -1,4 +1,4 @@
-define(['Cell'], function (Cell) {
+define(['cell'], function (Cell) {
   return function (cube, member) {
     return {
       dimensions: cube.dimensions.filter(function (dimension) {

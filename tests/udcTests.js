@@ -1,18 +1,32 @@
-// TODO slice
 var requirejs = require('requirejs'),
     expect = require('chai').expect,
     data = require('./data.js');
 
-requirejs.config(require('./requireConfig.js'));
+requirejs.config({
+  baseUrl: 'src',
+  paths: { _: '../bower_components/lodash/dist/lodash.min' }
+});
 
-describe('UDC', function(done) {
-  var udc;
+describe('UDC', function() {
+  var udc = requirejs('udc');
 
-  it('should load required AMD modules', function(done) {
-    requirejs(['udc'], function (_udc) {
-      udc = _udc;
-      done();
-    });
+  it('should resolve equality of members', function() {
+    expect(     udc.Member('Space', 'countryCode', 'in').key)
+      .to.equal(udc.Member('Space', 'countryCode', 'in').key);
+    expect(     udc.Member('Space', 'countryName', 'United States of America').key)
+      .to.equal(udc.Member('Space', 'countryName', 'United States of America').key);
+  });
+
+  it('should resolve equality of cells', function() {
+    var a = udc.Cell([
+          udc.Member('Space', 'ISO 3166-1 alpha-3', 'CHN'),
+          udc.Member('Time', 'year', '1960')
+        ]),
+        b = udc.Cell([
+          udc.Member('Space', 'ISO 3166-1 alpha-3', 'CHN'),
+          udc.Member('Time', 'year', '1960')
+        ]);
+    expect(a.key).to.equal(b.key);
   });
 
   it('should load a data cube', function() {
@@ -39,25 +53,44 @@ describe('UDC', function(done) {
   it('should load a hierarchy', function() {
     var hierarchy = udc.Hierarchy(data.trees.unLocations);
     expect(hierarchy.dimension).to.equal('Space');
-    expect(hierarchy.tree.member.key).to.equal('countryName|World');
-    expect(hierarchy.tree.children[0].children[0].children[0].member.key)
-      .to.equal('countryName|India');
+    expect(hierarchy.tree.member.codeList).to.equal('countryName');
+    expect(hierarchy.tree.member.code).to.equal('World');
+    expect(hierarchy.tree.children[0].children[0].children[0].member.codeList)
+      .to.equal('countryName');
+    expect(hierarchy.tree.children[0].children[0].children[0].member.code)
+      .to.equal('India');
   });
 
   it('should merge two hierarchies', function() {
     var hierarchyA = udc.Hierarchy(data.trees.unLocations),
         hierarchyB = udc.Hierarchy(data.trees.usLocations),
         thesaurus = udc.Thesaurus([data.tables.unUsLocations]),
-        hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
+        hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus),
+        world = hierarchy.tree,
+        americas,
+        northernAmerica,
+        usa;
     expect(hierarchy.dimension).to.equal('Space');
-    expect(hierarchy.tree.member.key).to.equal('countryName|World');
-    expect(hierarchy.tree.children[0].children[0].children[0].member.key)
-      .to.equal('countryName|India');
-    expect(hierarchy.tree.children[1].children[0].children[0].member.key)
-      .to.equal('countryName|United States of America');
-    expect(hierarchy.tree.children[1].children[0].children[0].children[0].member.key)
-      .to.equal('usLocationName|California');
+    expect(hierarchy.tree.member.codeList).to.equal('countryName');
+    expect(hierarchy.tree.member.code).to.equal('World');
+
+    americas = child(world, 'Americas');
+    expect(americas.member.key).to.equal(udc.Member('Space', 'countryName', 'Americas').key);
+
+    northernAmerica = child(americas, 'Northern America');
+    expect(northernAmerica.member.key).to.equal(udc.Member('Space', 'countryName', 'Northern America').key);
+
+    usa = child(northernAmerica, 'United States of America');
+    expect(usa.member.key).to.equal(udc.Member('Space', 'countryName', 'United States of America').key);
+
+    california = child(usa, 'California');
+    expect(california.member.key).to.equal(udc.Member('Space', 'usLocationName', 'California').key);
   });
+  function child(tree, code){
+    return tree.children.filter(function (node) {
+      return node.member.code === code;
+    })[0];
+  }
 
   it('should merge two cubes with the same domain', function() {
     var thesaurus = udc.Thesaurus([data.tables.countryNamesAndCodes]),

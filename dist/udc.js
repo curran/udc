@@ -1,20 +1,23 @@
 
 define('member',[], function () {
-  var index = {};
+  var index = {},
+      id = 0;
   return function (dimension, codeList, code) {
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
+
     return codeListIndex[code] || (codeListIndex[code] = Object.freeze({
       dimension: dimension,
       codeList: codeList,
       code: code,
-      key: codeList + '|' + code
+      key: id++//codeList + '|' + code
     }));
   };
 });
 
 define('cell',[], function () {
-  var index = {};
+  var index = {},
+      id = 0;
   return function (members) {
     var cellIndex = members.sort(byDimension).reduce(function (subIndex, member) {
       var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
@@ -36,7 +39,7 @@ define('cell',[], function () {
     return Object.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      key: members.map(function (d) { return d.key; }).join('~')
+      key: id++//members.map(function (d) { return d.key; }).join('~')
     });
   }
 });
@@ -112,49 +115,7 @@ define('cubeIndex',[], function () {
   };
 });
 
-define('Member',[], function () {
-  var index = {};
-  return function (dimension, codeList, code) {
-    var dimensionIndex = index[dimension] || (index[dimension] = {}),
-        codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
-    return codeListIndex[code] || (codeListIndex[code] = Object.freeze({
-      dimension: dimension,
-      codeList: codeList,
-      code: code,
-      key: codeList + '|' + code
-    }));
-  };
-});
-
-define('Cell',[], function () {
-  var index = {};
-  return function (members) {
-    var cellIndex = members.sort(byDimension).reduce(function (subIndex, member) {
-      var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
-          codeListIndex = dimensionIndex[member.codeList] || (dimensionIndex[member.codeList] = {});
-      return codeListIndex[member.code] || (codeListIndex[member.code] = {});
-    }, index);
-    return cellIndex.cell || (cellIndex.cell = createCell(members));
-  };
-  function byDimension(a, b) {
-    return a.dimension > b.dimension ? 1 : -1;
-  }
-  function createCell(members){
-    var membersByDimension = {};
-
-    members.forEach(function (member) {
-      membersByDimension[member.dimension] = member;
-    });
-
-    return Object.freeze({
-      members: members,
-      membersByDimension: membersByDimension,
-      key: members.map(function (d) { return d.key; }).join('~')
-    });
-  }
-});
-
-define('thesaurus',['Member', 'Cell'], function (Member, Cell) {
+define('thesaurus',['member', 'cell'], function (Member, Cell) {
   return function Thesaurus (tables) {
 
     var index = {},
@@ -311,7 +272,7 @@ define('mergeHierarchies',[], function () {
   };
 });
 
-define('mergeCubes',['_', 'cubeIndex', 'Cell', 'Member'], function (_, CubeIndex, Cell, Member) {
+define('mergeCubes',['_', 'cubeIndex', 'cell', 'member'], function (_, CubeIndex, Cell, Member) {
 
   return function mergeCubes(cubeA, cubeB, thesaurus) {
     var a = thesaurus.canonicalizeCube(cubeA),
@@ -345,7 +306,7 @@ define('mergeCubes',['_', 'cubeIndex', 'Cell', 'Member'], function (_, CubeIndex
   }
 });
 
-define('slice',['Cell'], function (Cell) {
+define('slice',['cell'], function (Cell) {
   return function (cube, member) {
     return {
       dimensions: cube.dimensions.filter(function (dimension) {

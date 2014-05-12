@@ -1,4 +1,4 @@
-define(['_', 'cubeIndex', 'Cell', 'Member'], function (_, CubeIndex, Cell, Member) {
+define(['_', 'cubeIndex', 'cell', 'member'], function (_, CubeIndex, Cell, Member) {
 
   return function mergeCubes(cubeA, cubeB, thesaurus) {
     var a = thesaurus.canonicalizeCube(cubeA),

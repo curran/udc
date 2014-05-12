@@ -1,4 +1,4 @@
-define(['Member', 'Cell'], function (Member, Cell) {
+define(['member', 'cell'], function (Member, Cell) {
   return function Thesaurus (tables) {
 
     var index = {},
