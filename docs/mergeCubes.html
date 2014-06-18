@@ -30,19 +30,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'_'</span>, <span class="hljs-string">'cubeIndex'</span>, <span class="hljs-string">'cell'</span>, <span class="hljs-string">'member'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, CubeIndex, Cell, Member)</span> {</span>
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeCubes</span><span class="hljs-params">(cubeA, cubeB, thesaurus)</span> {</span>
-    <span class="hljs-keyword">var</span> a = thesaurus.canonicalizeCube(cubeA),
-        b = thesaurus.canonicalizeCube(cubeB);
-    <span class="hljs-keyword">return</span> simpleMerge(a, b);
-  };
-  
-  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">simpleMerge</span><span class="hljs-params">(a, b)</span>{</span>
-    <span class="hljs-keyword">var</span> dimensions = _.intersection(a.dimensions, b.dimensions),
-        measures = _.union(a.measures, b.measures),
-        indexA = CubeIndex(a.observations),
-        indexB = CubeIndex(b.observations),</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'_'</span>, <span class="hljs-string">'cubeIndex'</span>, <span class="hljs-string">'cell'</span>, <span class="hljs-string">'member'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_, CubeIndex, Cell, Member)</span> {</span></pre></div></div>
             
         </li>
         
@@ -53,22 +41,133 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>TODO cells = cartesian product of members for each dimension</p>
+              <p>Canonicalizes and merges two cubes.</p>
+<p>TODO separate canonicalization and merging completely</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>        cells = _.pluck(a.observations, <span class="hljs-string">'cell'</span>);
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">mergeCubes</span><span class="hljs-params">(cubeA, cubeB, thesaurus)</span> {</span>
+    <span class="hljs-keyword">var</span> a = thesaurus.canonicalizeCube(cubeA),
+        b = thesaurus.canonicalizeCube(cubeB);
+    <span class="hljs-keyword">return</span> simpleMerge(a, b);
+  };</pre></div></div>
+            
+        </li>
         
-        observations = cells.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cell)</span> {</span>
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Merges two canonicalized cubes.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">simpleMerge</span><span class="hljs-params">(a, b)</span>{</span>
+    <span class="hljs-keyword">var</span> dimensions = _.intersection(a.dimensions, b.dimensions),
+        measures = _.union(a.measures, b.measures),
+        indexA = CubeIndex(a.observations),
+        indexB = CubeIndex(b.observations),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>TODO cells = join of members for each dimension
+TODO add unit tests for the join</p>
+<p>Options:</p>
+<ul>
+<li>Inner Join<ul>
+<li>requires observations in both cubes with matching cells</li>
+<li>produces integrated cubes with no missing values</li>
+<li>may exclude data</li>
+</ul>
+</li>
+<li>Outer Join - Produces integrated cubes with missing data<ul>
+<li>requires observations with equivalent cells in one cube or the other, or both</li>
+<li>produces integrated cubes with missing values</li>
+<li>includes all original data</li>
+</ul>
+</li>
+</ul>
+<p>Currently the implementation just uses all the cells present in a’s observations.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        cells = _.pluck(a.observations, <span class="hljs-string">'cell'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Combine values from every pair of observations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        observations = cells.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cell)</span> {</span>
           <span class="hljs-keyword">var</span> valuesA = indexA.values(cell),
-              valuesB = indexB.values(cell);
-          <span class="hljs-keyword">return</span> {
-            cell: cell,
-            values: _.extend(valuesA, valuesB)
+              valuesB = indexB.values(cell);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>TODO create a module for Observations</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">return</span> {
+            cell: cell,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>TODO take average of measures found in both
+TODO think about tracking difference values</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            values: _.extend(valuesA, valuesB)
           };
-        });
-    
-    <span class="hljs-keyword">return</span> {
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>TODO create a module for Cubes</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">return</span> {
       dimensions: dimensions,
       measures: measures,
       observations: observations
