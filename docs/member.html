@@ -27,20 +27,91 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>Implements the Member concept of the Universal Data Cube data model.</p>
+<h1 id="member-dimension-codelist-code-">Member(dimension, codeList, code)</h1>
+<p>A Member is a (dimension, codeList, code) tuple representing a member of a dimension hierarchy.</p>
+<ul>
+<li>dimension: String</li>
+<li>codeList: String</li>
+<li>code: String</li>
+<li>key: String - The unique key for this particular (dimension, codeList, code) tuple.</li>
+</ul>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">var</span> index = {};
+            <div class="content"><div class='highlight'><pre>
+define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>index[dimension][codeList][code] == Member (dimension, codeList, code, key)</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> index = {},</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>An auto-incrementing integer id for generating Member keys. </p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      id = <span class="hljs-number">0</span>;
+
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension, codeList, code)</span> {</span>
     <span class="hljs-keyword">var</span> dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
+
     <span class="hljs-keyword">return</span> codeListIndex[code] || (codeListIndex[code] = <span class="hljs-built_in">Object</span>.freeze({
       dimension: dimension,
       codeList: codeList,
-      code: code,
-      key: codeList + <span class="hljs-string">'|'</span> + code
-    }));
+      code: code,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>There is a single unique integer key for each
+unique (codeList, code) pair that occurred in the data.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      key: <span class="hljs-built_in">String</span>(id++)</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Store key as a String, because it will be used primarily
+as a key for JavaScript objects, which must be a string.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    }));
   };
 });</pre></div></div>
             

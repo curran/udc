@@ -27,24 +27,38 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              <p>TODO slice</p>
-
+              
             </div>
             
             <div class="content"><div class='highlight'><pre><span class="hljs-keyword">var</span> requirejs = <span class="hljs-built_in">require</span>(<span class="hljs-string">'requirejs'</span>),
     expect = <span class="hljs-built_in">require</span>(<span class="hljs-string">'chai'</span>).expect,
     data = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./data.js'</span>);
 
-requirejs.config(<span class="hljs-built_in">require</span>(<span class="hljs-string">'./requireConfig.js'</span>));
+requirejs.config({
+  baseUrl: <span class="hljs-string">'src'</span>,
+  paths: { _: <span class="hljs-string">'../bower_components/lodash/dist/lodash.min'</span> }
+});
 
-describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
-  <span class="hljs-keyword">var</span> udc;
+describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+  <span class="hljs-keyword">var</span> udc = requirejs(<span class="hljs-string">'udc'</span>);
 
-  it(<span class="hljs-string">'should load required AMD modules'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
-    requirejs([<span class="hljs-string">'udc'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(_udc)</span> {</span>
-      udc = _udc;
-      done();
-    });
+  it(<span class="hljs-string">'should resolve equality of members'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    expect(     udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).key)
+      .to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).key);
+    expect(     udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key)
+      .to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key);
+  });
+
+  it(<span class="hljs-string">'should resolve equality of cells'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    <span class="hljs-keyword">var</span> a = udc.Cell([
+          udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+          udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+        ]),
+        b = udc.Cell([
+          udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+          udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+        ]);
+    expect(a.key).to.equal(b.key);
   });
 
   it(<span class="hljs-string">'should load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
@@ -71,25 +85,44 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
   it(<span class="hljs-string">'should load a hierarchy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> hierarchy = udc.Hierarchy(data.trees.unLocations);
     expect(hierarchy.dimension).to.equal(<span class="hljs-string">'Space'</span>);
-    expect(hierarchy.tree.member.key).to.equal(<span class="hljs-string">'countryName|World'</span>);
-    expect(hierarchy.tree.children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.key)
-      .to.equal(<span class="hljs-string">'countryName|India'</span>);
+    expect(hierarchy.tree.member.codeList).to.equal(<span class="hljs-string">'countryName'</span>);
+    expect(hierarchy.tree.member.code).to.equal(<span class="hljs-string">'World'</span>);
+    expect(hierarchy.tree.children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.codeList)
+      .to.equal(<span class="hljs-string">'countryName'</span>);
+    expect(hierarchy.tree.children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.code)
+      .to.equal(<span class="hljs-string">'India'</span>);
   });
 
   it(<span class="hljs-string">'should merge two hierarchies'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> hierarchyA = udc.Hierarchy(data.trees.unLocations),
         hierarchyB = udc.Hierarchy(data.trees.usLocations),
         thesaurus = udc.Thesaurus([data.tables.unUsLocations]),
-        hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus);
+        hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus),
+        world = hierarchy.tree,
+        americas,
+        northernAmerica,
+        usa;
     expect(hierarchy.dimension).to.equal(<span class="hljs-string">'Space'</span>);
-    expect(hierarchy.tree.member.key).to.equal(<span class="hljs-string">'countryName|World'</span>);
-    expect(hierarchy.tree.children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.key)
-      .to.equal(<span class="hljs-string">'countryName|India'</span>);
-    expect(hierarchy.tree.children[<span class="hljs-number">1</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.key)
-      .to.equal(<span class="hljs-string">'countryName|United States of America'</span>);
-    expect(hierarchy.tree.children[<span class="hljs-number">1</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].children[<span class="hljs-number">0</span>].member.key)
-      .to.equal(<span class="hljs-string">'usLocationName|California'</span>);
+    expect(hierarchy.tree.member.codeList).to.equal(<span class="hljs-string">'countryName'</span>);
+    expect(hierarchy.tree.member.code).to.equal(<span class="hljs-string">'World'</span>);
+
+    americas = child(world, <span class="hljs-string">'Americas'</span>);
+    expect(americas.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Americas'</span>).key);
+
+    northernAmerica = child(americas, <span class="hljs-string">'Northern America'</span>);
+    expect(northernAmerica.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Northern America'</span>).key);
+
+    usa = child(northernAmerica, <span class="hljs-string">'United States of America'</span>);
+    expect(usa.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key);
+
+    california = child(usa, <span class="hljs-string">'California'</span>);
+    expect(california.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'usLocationName'</span>, <span class="hljs-string">'California'</span>).key);
   });
+  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">child</span><span class="hljs-params">(tree, code)</span>{</span>
+    <span class="hljs-keyword">return</span> tree.children.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node)</span> {</span>
+      <span class="hljs-keyword">return</span> node.member.code === code;
+    })[<span class="hljs-number">0</span>];
+  }
 
   it(<span class="hljs-string">'should merge two cubes with the same domain'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> thesaurus = udc.Thesaurus([data.tables.countryNamesAndCodes]),
@@ -130,7 +163,7 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
           cell = udc.Cell(chinaIn1960),
           values = index.values(cell);
 
-      expect(values[<span class="hljs-string">'Gross Domestic Product (current US$)'</span>]).to.equal(<span class="hljs-number">61377930682.0013</span>)
+      expect(values[<span class="hljs-string">'Gross Domestic Product (current US$)'</span>]).to.equal(<span class="hljs-number">61377930682.0013</span>);
       done();
     });
   });

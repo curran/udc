@@ -1,6 +1,22 @@
+// Implements the Member concept of the Universal Data Cube data model.
+//
+// # Member(dimension, codeList, code)
+//
+// A Member is a (dimension, codeList, code) tuple representing a member of a dimension hierarchy.
+//
+//  * dimension: String
+//  * codeList: String
+//  * code: String
+//  * key: String - The unique key for this particular (dimension, codeList, code) tuple.
+
 define([], function () {
+
+  // index[dimension][codeList][code] == Member (dimension, codeList, code, key)
   var index = {},
+
+      // An auto-incrementing integer id for generating Member keys. 
       id = 0;
+
   return function (dimension, codeList, code) {
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
@@ -9,7 +25,11 @@ define([], function () {
       dimension: dimension,
       codeList: codeList,
       code: code,
-      key: id++//codeList + '|' + code
+      // There is a single unique integer key for each
+      // unique (codeList, code) pair that occurred in the data.
+      key: String(id++)
+      // Store key as a String, because it will be used primarily
+      // as a key for JavaScript objects, which must be a string.
     }));
   };
 });

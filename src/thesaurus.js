@@ -1,6 +1,7 @@
 define(['member', 'cell'], function (Member, Cell) {
   return function Thesaurus (tables) {
 
+    
     var index = {},
         canonicalCodeLists = {};
 
