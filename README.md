@@ -3,7 +3,7 @@ The Universal Data Cube (udc) library is for modeling data sets
 as data cubes and integrating them together for visualization. The main points of interest are:
 
  * [Unit Tests](tests/udcTests.js)
- * [Source Code](udc)
+ * [Annotated Source Code](docs/udc.html)
 
 See also:
 
