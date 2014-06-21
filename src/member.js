@@ -15,7 +15,7 @@ define([], function () {
   var index = {},
 
       // An auto-incrementing integer id for generating Member keys. 
-      id = 0;
+      idCounter = 0;
 
   return function (dimension, codeList, code) {
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
@@ -25,9 +25,9 @@ define([], function () {
       dimension: dimension,
       codeList: codeList,
       code: code,
-      // There is a single unique integer key for each
-      // unique (codeList, code) pair that occurred in the data.
-      key: String(id++)
+      // There is a single unique integer id for each
+      // unique (dimension, codelist, code) pair that occurred in the data.
+      id: String(idCounter++)
       // Store key as a String, because it will be used primarily
       // as a key for JavaScript objects, which must be a string.
     }));

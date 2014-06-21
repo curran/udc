@@ -16,7 +16,7 @@ define('member',[], function () {
   var index = {},
 
       // An auto-incrementing integer id for generating Member keys. 
-      id = 0;
+      idCounter = 0;
 
   return function (dimension, codeList, code) {
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
@@ -26,9 +26,9 @@ define('member',[], function () {
       dimension: dimension,
       codeList: codeList,
       code: code,
-      // There is a single unique integer key for each
-      // unique (codeList, code) pair that occurred in the data.
-      key: String(id++)
+      // There is a single unique integer id for each
+      // unique (dimension, codelist, code) pair that occurred in the data.
+      id: String(idCounter++)
       // Store key as a String, because it will be used primarily
       // as a key for JavaScript objects, which must be a string.
     }));
@@ -37,7 +37,7 @@ define('member',[], function () {
 
 define('cell',[], function () {
   var index = {},
-      id = 0;
+      idCounter = 0;
   return function (members) {
     var cellIndex = members.sort(byDimension).reduce(function (subIndex, member) {
       var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
@@ -59,7 +59,7 @@ define('cell',[], function () {
     return Object.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      key: id++//members.map(function (d) { return d.key; }).join('~')
+      id: idCounter++//members.map(function (d) { return d.key; }).join('~')
     });
   }
 });
@@ -124,12 +124,12 @@ define('cubeIndex',[], function () {
     var index = {};
 
     observations.forEach(function (observation) {
-      index[observation.cell.key] = observation.values;
+      index[observation.cell.id] = observation.values;
     });
 
     return {
       values: function (cell) {
-        return index[cell.key];
+        return index[cell.id];
       }
     };
   };
@@ -275,20 +275,20 @@ define('mergeHierarchies',[], function () {
         newNode.children = (newNode.children || []);
         newNode.children = newNode.children.concat(node.children.map(indexNodes));
         node.children.forEach(function (child) {
-          parents[child.member.key] = true;
+          parents[child.member.id] = true;
         });
       }
       return newNode;
     }
 
     function getNewNode(member){
-      return newNodes[member.key] || (newNodes[member.key] = {
+      return newNodes[member.id] || (newNodes[member.id] = {
         member: member
       });
     }
 
     function hasParent(node){
-      return parents[node.member.key];
+      return parents[node.member.id];
     }
   };
 });
@@ -358,7 +358,7 @@ define('slice',['cell'], function (Cell) {
       }),
       measures: cube.measures,
       observations: cube.observations.filter(function (observation) {
-        return observation.cell.membersByDimension[member.dimension].key === member.key;
+        return observation.cell.membersByDimension[member.dimension].id === member.id;
       }).map(function (observation) {
         return {
           cell: Cell(observation.cell.members.filter(function (cellMember) {
@@ -374,14 +374,15 @@ define('slice',['cell'], function (Cell) {
 define('udc',['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
     function (Member, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
   return {
-    Member: Member,
-    Cell: Cell,
-    Cube: Cube,
-    CubeIndex: CubeIndex,
-    Thesaurus: Thesaurus,
+    getMember: Member,
+    getCell: Cell,
+    createCube: Cube,
+    createCubeIndex: CubeIndex,
+    createThesaurus: Thesaurus,
+    mergeCubes: mergeCubes,
+    slice: slice,
+
     Hierarchy: Hierarchy,
     mergeHierarchies: mergeHierarchies,
-    mergeCubes: mergeCubes,
-    slice: slice
   };
 });

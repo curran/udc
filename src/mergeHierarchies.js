@@ -17,20 +17,20 @@ define([], function () {
         newNode.children = (newNode.children || []);
         newNode.children = newNode.children.concat(node.children.map(indexNodes));
         node.children.forEach(function (child) {
-          parents[child.member.key] = true;
+          parents[child.member.id] = true;
         });
       }
       return newNode;
     }
 
     function getNewNode(member){
-      return newNodes[member.key] || (newNodes[member.key] = {
+      return newNodes[member.id] || (newNodes[member.id] = {
         member: member
       });
     }
 
     function hasParent(node){
-      return parents[node.member.key];
+      return parents[node.member.id];
     }
   };
 });

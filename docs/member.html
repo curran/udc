@@ -70,7 +70,7 @@ define([], <span class="hljs-function"><span class="hljs-keyword">function</span
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      id = <span class="hljs-number">0</span>;
+            <div class="content"><div class='highlight'><pre>      idCounter = <span class="hljs-number">0</span>;
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension, codeList, code)</span> {</span>
     <span class="hljs-keyword">var</span> dimensionIndex = index[dimension] || (index[dimension] = {}),
@@ -90,12 +90,12 @@ define([], <span class="hljs-function"><span class="hljs-keyword">function</span
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>There is a single unique integer key for each
-unique (codeList, code) pair that occurred in the data.</p>
+              <p>There is a single unique integer id for each
+unique (dimension, codelist, code) pair that occurred in the data.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>      key: <span class="hljs-built_in">String</span>(id++)</pre></div></div>
+            <div class="content"><div class='highlight'><pre>      id: <span class="hljs-built_in">String</span>(idCounter++)</pre></div></div>
             
         </li>
         

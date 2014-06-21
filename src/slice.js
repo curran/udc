@@ -6,7 +6,7 @@ define(['cell'], function (Cell) {
       }),
       measures: cube.measures,
       observations: cube.observations.filter(function (observation) {
-        return observation.cell.membersByDimension[member.dimension].key === member.key;
+        return observation.cell.membersByDimension[member.dimension].id === member.id;
       }).map(function (observation) {
         return {
           cell: Cell(observation.cell.members.filter(function (cellMember) {

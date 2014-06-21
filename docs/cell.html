@@ -32,7 +32,7 @@
             
             <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
   <span class="hljs-keyword">var</span> index = {},
-      id = <span class="hljs-number">0</span>;
+      idCounter = <span class="hljs-number">0</span>;
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(members)</span> {</span>
     <span class="hljs-keyword">var</span> cellIndex = members.sort(byDimension).reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(subIndex, member)</span> {</span>
       <span class="hljs-keyword">var</span> dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
@@ -54,7 +54,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      key: id++<span class="hljs-comment">//members.map(function (d) { return d.key; }).join('~')</span>
+      id: idCounter++<span class="hljs-comment">//members.map(function (d) { return d.key; }).join('~')</span>
     });
   }
 });</pre></div></div>

@@ -49,20 +49,20 @@
         newNode.children = (newNode.children || []);
         newNode.children = newNode.children.concat(node.children.map(indexNodes));
         node.children.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(child)</span> {</span>
-          parents[child.member.key] = <span class="hljs-literal">true</span>;
+          parents[child.member.id] = <span class="hljs-literal">true</span>;
         });
       }
       <span class="hljs-keyword">return</span> newNode;
     }
 
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getNewNode</span><span class="hljs-params">(member)</span>{</span>
-      <span class="hljs-keyword">return</span> newNodes[member.key] || (newNodes[member.key] = {
+      <span class="hljs-keyword">return</span> newNodes[member.id] || (newNodes[member.id] = {
         member: member
       });
     }
 
     <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">hasParent</span><span class="hljs-params">(node)</span>{</span>
-      <span class="hljs-keyword">return</span> parents[node.member.key];
+      <span class="hljs-keyword">return</span> parents[node.member.id];
     }
   };
 });</pre></div></div>

@@ -38,7 +38,7 @@
       }),
       measures: cube.measures,
       observations: cube.observations.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
-        <span class="hljs-keyword">return</span> observation.cell.membersByDimension[member.dimension].key === member.key;
+        <span class="hljs-keyword">return</span> observation.cell.membersByDimension[member.dimension].id === member.id;
       }).map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
         <span class="hljs-keyword">return</span> {
           cell: Cell(observation.cell.members.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cellMember)</span> {</span>

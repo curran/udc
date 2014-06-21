@@ -4,12 +4,12 @@ define([], function () {
     var index = {};
 
     observations.forEach(function (observation) {
-      index[observation.cell.key] = observation.values;
+      index[observation.cell.id] = observation.values;
     });
 
     return {
       values: function (cell) {
-        return index[cell.key];
+        return index[cell.id];
       }
     };
   };

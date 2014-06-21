@@ -1,6 +1,6 @@
 define([], function () {
   var index = {},
-      id = 0;
+      idCounter = 0;
   return function (members) {
     var cellIndex = members.sort(byDimension).reduce(function (subIndex, member) {
       var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
@@ -22,7 +22,7 @@ define([], function () {
     return Object.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      key: id++//members.map(function (d) { return d.key; }).join('~')
+      id: idCounter++//members.map(function (d) { return d.key; }).join('~')
     });
   }
 });

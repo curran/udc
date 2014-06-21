@@ -40,32 +40,45 @@ requirejs.config({
 });
 
 describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-  <span class="hljs-keyword">var</span> udc = requirejs(<span class="hljs-string">'udc'</span>);
+  <span class="hljs-keyword">var</span> udc = requirejs(<span class="hljs-string">'udc'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Members are (dimension, codelist, code) tuples.</p>
 
-  it(<span class="hljs-string">'should resolve equality of members'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    expect(     udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).key)
-      .to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).key);
-    expect(     udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key)
-      .to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key);
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  it(<span class="hljs-string">'should resolve equality of members'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
+    expect(     udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).id)
+      .to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>).id);
+    expect(     udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).id)
+      .to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).id);
   });
 
   it(<span class="hljs-string">'should resolve equality of cells'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-keyword">var</span> a = udc.Cell([
-          udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
-          udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+    <span class="hljs-keyword">var</span> a = udc.getCell([
+          udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+          udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
         ]),
-        b = udc.Cell([
-          udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
-          udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+        b = udc.getCell([
+          udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+          udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
         ]);
     expect(a.key).to.equal(b.key);
   });
 
   it(<span class="hljs-string">'should load a data cube'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> table = data.tables.countryPopulations,
-        cube = udc.Cube(table),
-        index = udc.CubeIndex(cube.observations),
-        cell = udc.Cell([udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>)]),
+        cube = udc.createCube(table),
+        index = udc.createCubeIndex(cube.observations),
+        cell = udc.getCell([udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>)]),
         measure = <span class="hljs-string">'Population'</span>,
         value = index.values(cell)[measure];
 
@@ -74,12 +87,12 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
 
   it(<span class="hljs-string">'should load a thesaurus'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> table = data.tables.countryNamesAndCodes,
-        thesaurus = udc.Thesaurus([table]),
-        codeMember = udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>),
-        nameMember = thesaurus.translate(codeMember, <span class="hljs-string">'countryName'</span>);
+        thesaurus = udc.createThesaurus([table]),
+        codegetMember = udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>),
+        namegetMember = thesaurus.translate(codegetMember, <span class="hljs-string">'countryName'</span>);
 
-    expect(nameMember.codeList).to.equal(<span class="hljs-string">'countryName'</span>);
-    expect(nameMember.code).to.equal(<span class="hljs-string">'India'</span>);
+    expect(namegetMember.codeList).to.equal(<span class="hljs-string">'countryName'</span>);
+    expect(namegetMember.code).to.equal(<span class="hljs-string">'India'</span>);
   });
 
   it(<span class="hljs-string">'should load a hierarchy'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
@@ -96,7 +109,7 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
   it(<span class="hljs-string">'should merge two hierarchies'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
     <span class="hljs-keyword">var</span> hierarchyA = udc.Hierarchy(data.trees.unLocations),
         hierarchyB = udc.Hierarchy(data.trees.usLocations),
-        thesaurus = udc.Thesaurus([data.tables.unUsLocations]),
+        thesaurus = udc.createThesaurus([data.tables.unUsLocations]),
         hierarchy = udc.mergeHierarchies(hierarchyA, hierarchyB, thesaurus),
         world = hierarchy.tree,
         americas,
@@ -107,16 +120,16 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
     expect(hierarchy.tree.member.code).to.equal(<span class="hljs-string">'World'</span>);
 
     americas = child(world, <span class="hljs-string">'Americas'</span>);
-    expect(americas.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Americas'</span>).key);
+    expect(americas.member.id).to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Americas'</span>).id);
 
     northernAmerica = child(americas, <span class="hljs-string">'Northern America'</span>);
-    expect(northernAmerica.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Northern America'</span>).key);
+    expect(northernAmerica.member.key).to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'Northern America'</span>).key);
 
     usa = child(northernAmerica, <span class="hljs-string">'United States of America'</span>);
-    expect(usa.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key);
+    expect(usa.member.key).to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryName'</span>, <span class="hljs-string">'United States of America'</span>).key);
 
     california = child(usa, <span class="hljs-string">'California'</span>);
-    expect(california.member.key).to.equal(udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'usLocationName'</span>, <span class="hljs-string">'California'</span>).key);
+    expect(california.member.key).to.equal(udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'usLocationName'</span>, <span class="hljs-string">'California'</span>).key);
   });
   <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">child</span><span class="hljs-params">(tree, code)</span>{</span>
     <span class="hljs-keyword">return</span> tree.children.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node)</span> {</span>
@@ -125,12 +138,12 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
   }
 
   it(<span class="hljs-string">'should merge two cubes with the same domain'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">()</span> {</span>
-    <span class="hljs-keyword">var</span> thesaurus = udc.Thesaurus([data.tables.countryNamesAndCodes]),
-        cubeA = udc.Cube(data.tables.countryPopulations),
-        cubeB = udc.Cube(data.tables.countryGDP),
+    <span class="hljs-keyword">var</span> thesaurus = udc.createThesaurus([data.tables.countryNamesAndCodes]),
+        cubeA = udc.createCube(data.tables.countryPopulations),
+        cubeB = udc.createCube(data.tables.countryGDP),
         cube = udc.mergeCubes(cubeA, cubeB, thesaurus),
-        index = udc.CubeIndex(cube.observations),
-        cell = udc.Cell([udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>)]),
+        index = udc.createCubeIndex(cube.observations),
+        cell = udc.getCell([udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'countryCode'</span>, <span class="hljs-string">'in'</span>)]),
         values = index.values(cell);
 
     expect(values.Population).to.equal(<span class="hljs-number">1.237</span> * <span class="hljs-number">1000000000</span>);
@@ -139,13 +152,13 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
 
   it(<span class="hljs-string">'should load UN population data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
     data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-      <span class="hljs-keyword">var</span> cube = udc.Cube(table),
-          index = udc.CubeIndex(cube.observations),
+      <span class="hljs-keyword">var</span> cube = udc.createCube(table),
+          index = udc.createCubeIndex(cube.observations),
           chinaIn1960 = [
-            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>),
-            udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+            udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>),
+            udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
           ],
-          cell = udc.Cell(chinaIn1960),
+          cell = udc.getCell(chinaIn1960),
           values = index.values(cell);
 
       expect(values.Population).to.equal(<span class="hljs-number">650680.114</span> * <span class="hljs-number">1000</span>);
@@ -154,13 +167,13 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
   });
   it(<span class="hljs-string">'should load World Bank GDP data'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
     data.load(<span class="hljs-string">'tests/data/GDP_current_USD'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-      <span class="hljs-keyword">var</span> cube = udc.Cube(table),
-          index = udc.CubeIndex(cube.observations),
+      <span class="hljs-keyword">var</span> cube = udc.createCube(table),
+          index = udc.createCubeIndex(cube.observations),
           chinaIn1960 = [
-            udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
-            udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+            udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+            udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
           ],
-          cell = udc.Cell(chinaIn1960),
+          cell = udc.getCell(chinaIn1960),
           values = index.values(cell);
 
       expect(values[<span class="hljs-string">'Gross Domestic Product (current US$)'</span>]).to.equal(<span class="hljs-number">61377930682.0013</span>);
@@ -171,16 +184,16 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
     data.load(<span class="hljs-string">'tests/data/GDP_current_USD'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tableA)</span> {</span>
       data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tableB)</span> {</span>
         data.load(<span class="hljs-string">'tests/data/locations'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(concordance)</span> {</span>
-          <span class="hljs-keyword">var</span> thesaurus = udc.Thesaurus([concordance]),
-              cubeA = udc.Cube(tableA),
-              cubeB = udc.Cube(tableB),
+          <span class="hljs-keyword">var</span> thesaurus = udc.createThesaurus([concordance]),
+              cubeA = udc.createCube(tableA),
+              cubeB = udc.createCube(tableB),
               cube = udc.mergeCubes(cubeA, cubeB, thesaurus),
-              index = udc.CubeIndex(cube.observations),
+              index = udc.createCubeIndex(cube.observations),
               chinaIn1960 = [
-                udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
-                udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
+                udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'ISO 3166-1 alpha-3'</span>, <span class="hljs-string">'CHN'</span>),
+                udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'1960'</span>)
               ],
-              cell = udc.Cell(chinaIn1960),
+              cell = udc.getCell(chinaIn1960),
               canonicalCell = thesaurus.canonicalizeCell(cell),
               values = index.values(canonicalCell);
 
@@ -194,12 +207,12 @@ describe(<span class="hljs-string">'UDC'</span>, <span class="hljs-function"><sp
 
   it(<span class="hljs-string">'should slice by a single year'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span><span class="hljs-params">(done)</span> {</span>
     data.load(<span class="hljs-string">'tests/data/total_population'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-      <span class="hljs-keyword">var</span> fullCube = udc.Cube(table),
-          year2010 = udc.Member(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'2010'</span>),
+      <span class="hljs-keyword">var</span> fullCube = udc.createCube(table),
+          year2010 = udc.getMember(<span class="hljs-string">'Time'</span>, <span class="hljs-string">'year'</span>, <span class="hljs-string">'2010'</span>),
           cube = udc.slice(fullCube, year2010),
-          index = udc.CubeIndex(cube.observations),
-          china = [ udc.Member(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>) ],
-          cell = udc.Cell(china),
+          index = udc.createCubeIndex(cube.observations),
+          china = [ udc.getMember(<span class="hljs-string">'Space'</span>, <span class="hljs-string">'UN M.49'</span>, <span class="hljs-string">'156'</span>) ],
+          cell = udc.getCell(china),
           values = index.values(cell);
 
       expect(values.Population).to.equal(<span class="hljs-number">1359821.465</span> * <span class="hljs-number">1000</span>);
