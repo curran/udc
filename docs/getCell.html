@@ -44,12 +44,13 @@ domain of Observations, which assign Measure values to Cells.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>index[dimension][codelist][code][dimension][codelist][code] …</p>
+              <p>index[memberId][memberId][memberId] …</p>
 
             </div>
             
             <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> index = {},
-
+      
+      <span class="hljs-comment">/* An auto-incrementing integer id counter */</span>
       idCounter = <span class="hljs-number">0</span>;
 
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getCell</span><span class="hljs-params">(members)</span> {</span></pre></div></div>
@@ -84,9 +85,7 @@ by sorting alphabetically by the dimension names of the members.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>        cellIndex = sortedMembers.reduce(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(subIndex, member)</span> {</span>
-          <span class="hljs-keyword">var</span> dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
-              codeListIndex = dimensionIndex[member.codeList] || (dimensionIndex[member.codeList] = {});
-          <span class="hljs-keyword">return</span> codeListIndex[member.code] || (codeListIndex[member.code] = {});
+          <span class="hljs-keyword">return</span> subIndex[member.id] || (subIndex[member.id] = {});
         }, index);</pre></div></div>
             
         </li>

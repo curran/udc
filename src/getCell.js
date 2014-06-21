@@ -11,9 +11,10 @@
 //  * id: String - The unique key for this particular set of Members.
 define(['_'], function () {
 
-  // index[dimension][codelist][code][dimension][codelist][code] ...
+  // index[memberId][memberId][memberId] ...
   var index = {},
-
+      
+      /* An auto-incrementing integer id counter */
       idCounter = 0;
 
   return function getCell(members) {
@@ -24,9 +25,7 @@ define(['_'], function () {
         
         // Get or create the index bucket for the Cell object.
         cellIndex = sortedMembers.reduce(function (subIndex, member) {
-          var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
-              codeListIndex = dimensionIndex[member.codeList] || (dimensionIndex[member.codeList] = {});
-          return codeListIndex[member.code] || (codeListIndex[member.code] = {});
+          return subIndex[member.id] || (subIndex[member.id] = {});
         }, index);
 
     // Get or create the Cell object
