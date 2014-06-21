@@ -8,7 +8,7 @@
 //  * dimension: String
 //  * codeList: String
 //  * code: String
-//  * key: String - The unique key for this particular (dimension, codeList, code) tuple.
+//  * id: String - The unique key for this particular (dimension, codeList, code) tuple.
 
 define('member',[], function () {
 
@@ -59,7 +59,7 @@ define('cell',[], function () {
     return Object.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      id: idCounter++//members.map(function (d) { return d.key; }).join('~')
+      id: String(idCounter++)//members.map(function (d) { return d.key; }).join('~')
     });
   }
 });

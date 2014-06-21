@@ -7,7 +7,7 @@
 //  * dimension: String
 //  * codeList: String
 //  * code: String
-//  * key: String - The unique key for this particular (dimension, codeList, code) tuple.
+//  * id: String - The unique key for this particular (dimension, codeList, code) tuple.
 
 define([], function () {
 

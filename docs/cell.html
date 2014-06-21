@@ -54,7 +54,7 @@
     <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      id: idCounter++<span class="hljs-comment">//members.map(function (d) { return d.key; }).join('~')</span>
+      id: <span class="hljs-built_in">String</span>(idCounter++)<span class="hljs-comment">//members.map(function (d) { return d.key; }).join('~')</span>
     });
   }
 });</pre></div></div>

@@ -22,7 +22,7 @@ define([], function () {
     return Object.freeze({
       members: members,
       membersByDimension: membersByDimension,
-      id: idCounter++//members.map(function (d) { return d.key; }).join('~')
+      id: String(idCounter++)//members.map(function (d) { return d.key; }).join('~')
     });
   }
 });
