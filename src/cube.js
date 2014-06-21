@@ -1,4 +1,4 @@
-define(['_', 'member', 'cell'], function (_, Member, Cell) {
+define(['_', 'getMember', 'cell'], function (_, getMember, Cell) {
 
   // Creates a cube from the given `table` object, where
   //
@@ -39,7 +39,7 @@ define(['_', 'member', 'cell'], function (_, Member, Cell) {
         var dimension = dimensionColumn.dimension,
             codeList = dimensionColumn.codeList,
             code = row[dimensionColumn.column];
-        return Member(dimension, codeList, code);
+        return getMember(dimension, codeList, code);
       })),
       values: {}
     };

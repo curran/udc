@@ -1,27 +1,34 @@
 
+// # getMember(dimension, codelist, code)
+//
 // Implements the Member concept of the Universal Data Cube data model.
 //
-// # Member(dimension, codeList, code)
+// Members are nodes in Dimension hierarchies.
 //
-// A Member is a (dimension, codeList, code) tuple representing a member of a dimension hierarchy.
+// Gets (or creates if necessary) the Member object corresponding to
+// the given (dimension, codelist, code) tuple.
 //
-//  * dimension: String
-//  * codeList: String
-//  * code: String
-//  * id: String - The unique key for this particular (dimension, codeList, code) tuple.
+// Member objects contain:
+//
+//  * dimension: String - A Dimension name
+//  * codelist: String - A Codelist name
+//  * code: String - A Code within the codelist
+//  * id: String - The unique key for this particular (dimension, codelist, code) tuple.
+define('getMember',[], function () {
 
-define('member',[], function () {
-
-  // index[dimension][codeList][code] == Member (dimension, codeList, code, key)
+  /* index[dimension][codeList][code] == Member (dimension, codeList, code, key) */
   var index = {},
 
-      // An auto-incrementing integer id for generating Member keys. 
+      /* An auto-incrementing integer id counter */
       idCounter = 0;
 
   return function (dimension, codeList, code) {
+
+    /* Get or create the index bucket for the Member object. */
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
 
+    /* Get or create the Member object */
     return codeListIndex[code] || (codeListIndex[code] = Object.freeze({
       dimension: dimension,
       codeList: codeList,
@@ -64,7 +71,7 @@ define('cell',[], function () {
   }
 });
 
-define('cube',['_', 'member', 'cell'], function (_, Member, Cell) {
+define('cube',['_', 'getMember', 'cell'], function (_, getMember, Cell) {
 
   // Creates a cube from the given `table` object, where
   //
@@ -105,7 +112,7 @@ define('cube',['_', 'member', 'cell'], function (_, Member, Cell) {
         var dimension = dimensionColumn.dimension,
             codeList = dimensionColumn.codeList,
             code = row[dimensionColumn.column];
-        return Member(dimension, codeList, code);
+        return getMember(dimension, codeList, code);
       })),
       values: {}
     };
@@ -135,7 +142,7 @@ define('cubeIndex',[], function () {
   };
 });
 
-define('thesaurus',['member', 'cell'], function (Member, Cell) {
+define('thesaurus',['getMember', 'cell'], function (getMember, Cell) {
   return function Thesaurus (tables) {
 
     
@@ -150,7 +157,7 @@ define('thesaurus',['member', 'cell'], function (Member, Cell) {
           var dimension = dimensionColumn.dimension,
               codeList = dimensionColumn.codeList,
               code = row[dimensionColumn.column],
-              member = Member(dimension, codeList, code),
+              member = getMember(dimension, codeList, code),
               dimensionIndex = index[dimension] || (index[dimension] = {}),
               codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
           equivalenceClass[codeList] = member;
@@ -232,7 +239,7 @@ define('thesaurus',['member', 'cell'], function (Member, Cell) {
   };
 });
 
-define('hierarchy',['member'], function (Member) {
+define('hierarchy',['getMember'], function (getMember) {
   return function (tree) {
     var dimension = tree.dimension,
         codeList = tree.codeList;
@@ -250,7 +257,7 @@ define('hierarchy',['member'], function (Member) {
     return {
       dimension: dimension,
       tree: transformTree(tree, function (node) {
-        return { member: Member(dimension, codeList, node.code) };
+        return { member: getMember(dimension, codeList, node.code) };
       }),
     };
   };
@@ -293,7 +300,7 @@ define('mergeHierarchies',[], function () {
   };
 });
 
-define('mergeCubes',['_', 'cubeIndex', 'cell', 'member'], function (_, CubeIndex, Cell, Member) {
+define('mergeCubes',['_', 'cubeIndex', 'cell'], function (_, CubeIndex, Cell) {
 
   // Canonicalizes and merges two cubes.
   //
@@ -371,10 +378,10 @@ define('slice',['cell'], function (Cell) {
   };
 });
 
-define('udc',['member', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
-    function (Member, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
+define('udc',['getMember', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
+    function (getMember, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
   return {
-    getMember: Member,
+    getMember: getMember,
     getCell: Cell,
     createCube: Cube,
     createCubeIndex: CubeIndex,

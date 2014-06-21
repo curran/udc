@@ -30,7 +30,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'member'</span>, <span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Member, Cell)</span> {</span>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>, <span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember, Cell)</span> {</span>
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Thesaurus</span> <span class="hljs-params">(tables)</span> {</span>
 
     
@@ -57,7 +57,7 @@
           <span class="hljs-keyword">var</span> dimension = dimensionColumn.dimension,
               codeList = dimensionColumn.codeList,
               code = row[dimensionColumn.column],
-              member = Member(dimension, codeList, code),
+              member = getMember(dimension, codeList, code),
               dimensionIndex = index[dimension] || (index[dimension] = {}),
               codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
           equivalenceClass[codeList] = member;

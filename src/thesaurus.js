@@ -1,4 +1,4 @@
-define(['member', 'cell'], function (Member, Cell) {
+define(['getMember', 'cell'], function (getMember, Cell) {
   return function Thesaurus (tables) {
 
     
@@ -13,7 +13,7 @@ define(['member', 'cell'], function (Member, Cell) {
           var dimension = dimensionColumn.dimension,
               codeList = dimensionColumn.codeList,
               code = row[dimensionColumn.column],
-              member = Member(dimension, codeList, code),
+              member = getMember(dimension, codeList, code),
               dimensionIndex = index[dimension] || (index[dimension] = {}),
               codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
           equivalenceClass[codeList] = member;

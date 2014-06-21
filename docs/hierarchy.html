@@ -30,7 +30,7 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'member'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Member)</span> {</span>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember)</span> {</span>
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(tree)</span> {</span>
     <span class="hljs-keyword">var</span> dimension = tree.dimension,
         codeList = tree.codeList;
@@ -48,7 +48,7 @@
     <span class="hljs-keyword">return</span> {
       dimension: dimension,
       tree: transformTree(tree, <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(node)</span> {</span>
-        <span class="hljs-keyword">return</span> { member: Member(dimension, codeList, node.code) };
+        <span class="hljs-keyword">return</span> { member: getMember(dimension, codeList, node.code) };
       }),
     };
   };

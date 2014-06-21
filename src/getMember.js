@@ -1,26 +1,33 @@
+// # getMember(dimension, codelist, code)
+//
 // Implements the Member concept of the Universal Data Cube data model.
 //
-// # Member(dimension, codeList, code)
+// Members are nodes in Dimension hierarchies.
 //
-// A Member is a (dimension, codeList, code) tuple representing a member of a dimension hierarchy.
+// Gets (or creates if necessary) the Member object corresponding to
+// the given (dimension, codelist, code) tuple.
 //
-//  * dimension: String
-//  * codeList: String
-//  * code: String
-//  * id: String - The unique key for this particular (dimension, codeList, code) tuple.
-
+// Member objects contain:
+//
+//  * dimension: String - A Dimension name
+//  * codelist: String - A Codelist name
+//  * code: String - A Code within the codelist
+//  * id: String - The unique key for this particular (dimension, codelist, code) tuple.
 define([], function () {
 
-  // index[dimension][codeList][code] == Member (dimension, codeList, code, key)
+  /* index[dimension][codeList][code] == Member (dimension, codeList, code, key) */
   var index = {},
 
-      // An auto-incrementing integer id for generating Member keys. 
+      /* An auto-incrementing integer id counter */
       idCounter = 0;
 
   return function (dimension, codeList, code) {
+
+    /* Get or create the index bucket for the Member object. */
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
         codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
 
+    /* Get or create the Member object */
     return codeListIndex[code] || (codeListIndex[code] = Object.freeze({
       dimension: dimension,
       codeList: codeList,

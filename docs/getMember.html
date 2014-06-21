@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>member.js</title>
+  <title>getMember(dimension, codelist, code)</title>
   <meta http-equiv="content-type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
   <link rel="stylesheet" media="all" href="docco.css" />
@@ -13,12 +13,6 @@
     
     <ul class="sections">
         
-          <li id="title">
-              <div class="annotation">
-                  <h1>member.js</h1>
-              </div>
-          </li>
-        
         
         
         <li id="section-1">
@@ -27,11 +21,40 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <h1 id="getmember-dimension-codelist-code-">getMember(dimension, codelist, code)</h1>
+<p>Implements the Member concept of the Universal Data Cube data model.</p>
+<p>Members are nodes in Dimension hierarchies.</p>
+<p>Gets (or creates if necessary) the Member object corresponding to
+the given (dimension, codelist, code) tuple.</p>
+<p>Member objects contain:</p>
+<ul>
+<li>dimension: String - A Dimension name</li>
+<li>codelist: String - A Codelist name</li>
+<li>code: String - A Code within the codelist</li>
+<li>id: String - The unique key for this particular (dimension, codelist, code) tuple.</li>
+</ul>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>
-define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span></pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">()</span> {</span>
+
+  <span class="hljs-comment">/* index[dimension][codeList][code] == Member (dimension, codeList, code, key) */</span>
+  <span class="hljs-keyword">var</span> index = {},
+
+      <span class="hljs-comment">/* An auto-incrementing integer id counter */</span>
+      idCounter = <span class="hljs-number">0</span>;
+
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension, codeList, code)</span> {</span>
+
+    <span class="hljs-comment">/* Get or create the index bucket for the Member object. */</span>
+    <span class="hljs-keyword">var</span> dimensionIndex = index[dimension] || (index[dimension] = {}),
+        codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
+
+    <span class="hljs-comment">/* Get or create the Member object */</span>
+    <span class="hljs-keyword">return</span> codeListIndex[code] || (codeListIndex[code] = <span class="hljs-built_in">Object</span>.freeze({
+      dimension: dimension,
+      codeList: codeList,
+      code: code,</pre></div></div>
             
         </li>
         
@@ -41,45 +64,6 @@ define([], <span class="hljs-function"><span class="hljs-keyword">function</span
               
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
-              </div>
-              <p>index[dimension][codeList][code] == Member (dimension, codeList, code, key)</p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">var</span> index = {},</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-3">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-3">&#182;</a>
-              </div>
-              <p>An auto-incrementing integer id for generating Member keys. </p>
-
-            </div>
-            
-            <div class="content"><div class='highlight'><pre>      idCounter = <span class="hljs-number">0</span>;
-
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension, codeList, code)</span> {</span>
-    <span class="hljs-keyword">var</span> dimensionIndex = index[dimension] || (index[dimension] = {}),
-        codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
-
-    <span class="hljs-keyword">return</span> codeListIndex[code] || (codeListIndex[code] = <span class="hljs-built_in">Object</span>.freeze({
-      dimension: dimension,
-      codeList: codeList,
-      code: code,</pre></div></div>
-            
-        </li>
-        
-        
-        <li id="section-4">
-            <div class="annotation">
-              
-              <div class="pilwrap ">
-                <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
               <p>There is a single unique integer id for each
 unique (dimension, codelist, code) pair that occurred in the data.</p>
@@ -91,11 +75,11 @@ unique (dimension, codelist, code) pair that occurred in the data.</p>
         </li>
         
         
-        <li id="section-5">
+        <li id="section-3">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-5">&#182;</a>
+                <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
               <p>Store key as a String, because it will be used primarily
 as a key for JavaScript objects, which must be a string.</p>

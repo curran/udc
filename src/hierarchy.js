@@ -1,4 +1,4 @@
-define(['member'], function (Member) {
+define(['getMember'], function (getMember) {
   return function (tree) {
     var dimension = tree.dimension,
         codeList = tree.codeList;
@@ -16,7 +16,7 @@ define(['member'], function (Member) {
     return {
       dimension: dimension,
       tree: transformTree(tree, function (node) {
-        return { member: Member(dimension, codeList, node.code) };
+        return { member: getMember(dimension, codeList, node.code) };
       }),
     };
   };
