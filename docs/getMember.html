@@ -22,7 +22,7 @@
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
               <h1 id="getmember-dimension-codelist-code-">getMember(dimension, codelist, code)</h1>
-<p>Implements the Member concept of the Universal Data Cube data model.</p>
+<p>Implements the Member concept of the Universal Data Cube data structure.</p>
 <p>Members are nodes in Dimension hierarchies.</p>
 <p>Gets (or creates if necessary) the Member object corresponding to
 the given (dimension, codelist, code) tuple.</p>
@@ -44,7 +44,7 @@ the given (dimension, codelist, code) tuple.</p>
       <span class="hljs-comment">/* An auto-incrementing integer id counter */</span>
       idCounter = <span class="hljs-number">0</span>;
 
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension, codeList, code)</span> {</span>
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getMember</span><span class="hljs-params">(dimension, codeList, code)</span> {</span>
 
     <span class="hljs-comment">/* Get or create the index bucket for the Member object. */</span>
     <span class="hljs-keyword">var</span> dimensionIndex = index[dimension] || (index[dimension] = {}),

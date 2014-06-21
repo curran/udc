@@ -30,9 +30,8 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>, <span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember, Cell)</span> {</span>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>, <span class="hljs-string">'getCell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember, getCell)</span> {</span>
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Thesaurus</span> <span class="hljs-params">(tables)</span> {</span>
-
     
     <span class="hljs-keyword">var</span> index = {},
         canonicalCodeLists = {};</pre></div></div>
@@ -167,7 +166,7 @@ for their respective dimensions.</p>
             </div>
             
             <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">canonicalizeCell</span><span class="hljs-params">(cell)</span>{</span>
-      <span class="hljs-keyword">return</span> Cell(cell.members.map(canonicalizeMember));
+      <span class="hljs-keyword">return</span> getCell(cell.members.map(canonicalizeMember));
     }</pre></div></div>
             
         </li>

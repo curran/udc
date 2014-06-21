@@ -1,4 +1,4 @@
-define(['_', 'getMember', 'cell'], function (_, getMember, Cell) {
+define(['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
 
   // Creates a cube from the given `table` object, where
   //
@@ -35,7 +35,7 @@ define(['_', 'getMember', 'cell'], function (_, getMember, Cell) {
 
   function Observation(row, dimensionColumns, measureColumns) {
     var observation = {
-      cell: Cell(dimensionColumns.map(function (dimensionColumn) {
+      cell: getCell(dimensionColumns.map(function (dimensionColumn) {
         var dimension = dimensionColumn.dimension,
             codeList = dimensionColumn.codeList,
             code = row[dimensionColumn.column];

@@ -1,7 +1,7 @@
 
 // # getMember(dimension, codelist, code)
 //
-// Implements the Member concept of the Universal Data Cube data model.
+// Implements the Member concept of the Universal Data Cube data structure.
 //
 // Members are nodes in Dimension hierarchies.
 //
@@ -22,7 +22,7 @@ define('getMember',[], function () {
       /* An auto-incrementing integer id counter */
       idCounter = 0;
 
-  return function (dimension, codeList, code) {
+  return function getMember(dimension, codeList, code) {
 
     /* Get or create the index bucket for the Member object. */
     var dimensionIndex = index[dimension] || (index[dimension] = {}),
@@ -42,36 +42,60 @@ define('getMember',[], function () {
   };
 });
 
-define('cell',[], function () {
+// # getCell(members)
+//
+// Implements the Cell concept of the Universal Data Cube data structure.
+//
+// Cells are unique sets of Member objects. They are used to define the
+// domain of Observations, which assign Measure values to Cells.
+//
+// Cell objects contain:
+//
+//  * members: [Member] - an array of Member objects, sorted by dimension name
+//  * id: String - The unique key for this particular set of Members.
+define('getCell',['_'], function () {
+
+  // index[dimension][codelist][code][dimension][codelist][code] ...
   var index = {},
+
       idCounter = 0;
-  return function (members) {
-    var cellIndex = members.sort(byDimension).reduce(function (subIndex, member) {
-      var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
-          codeListIndex = dimensionIndex[member.codeList] || (dimensionIndex[member.codeList] = {});
-      return codeListIndex[member.code] || (codeListIndex[member.code] = {});
-    }, index);
-    return cellIndex.cell || (cellIndex.cell = createCell(members));
+
+  return function getCell(members) {
+
+    // Normalize the given `members` array such that order doesn't matter
+    // by sorting alphabetically by the dimension names of the members.
+    var sortedMembers = _.sortBy(members, 'dimension'),
+        
+        // Get or create the index bucket for the Cell object.
+        cellIndex = sortedMembers.reduce(function (subIndex, member) {
+          var dimensionIndex = subIndex[member.dimension] || (subIndex[member.dimension] = {}),
+              codeListIndex = dimensionIndex[member.codeList] || (dimensionIndex[member.codeList] = {});
+          return codeListIndex[member.code] || (codeListIndex[member.code] = {});
+        }, index);
+
+    // Get or create the Cell object
+    return cellIndex.cell || (cellIndex.cell = Object.freeze({
+      members: sortedMembers,
+      // There is a single unique Cell id for each unique set of Members.
+      id: String(idCounter++)
+    }));
   };
-  function byDimension(a, b) {
-    return a.dimension > b.dimension ? 1 : -1;
-  }
-  function createCell(members){
+
+  /*
+ 
+    It may improve performance of the slice operation
+    to index members by dimension, however this will 
+    make Cell objects occupy more memory.
+
     var membersByDimension = {};
 
     members.forEach(function (member) {
       membersByDimension[member.dimension] = member;
     });
-
-    return Object.freeze({
-      members: members,
-      membersByDimension: membersByDimension,
-      id: String(idCounter++)//members.map(function (d) { return d.key; }).join('~')
-    });
-  }
+  */
 });
 
-define('cube',['_', 'getMember', 'cell'], function (_, getMember, Cell) {
+define('cube',['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
 
   // Creates a cube from the given `table` object, where
   //
@@ -108,7 +132,7 @@ define('cube',['_', 'getMember', 'cell'], function (_, getMember, Cell) {
 
   function Observation(row, dimensionColumns, measureColumns) {
     var observation = {
-      cell: Cell(dimensionColumns.map(function (dimensionColumn) {
+      cell: getCell(dimensionColumns.map(function (dimensionColumn) {
         var dimension = dimensionColumn.dimension,
             codeList = dimensionColumn.codeList,
             code = row[dimensionColumn.column];
@@ -142,9 +166,8 @@ define('cubeIndex',[], function () {
   };
 });
 
-define('thesaurus',['getMember', 'cell'], function (getMember, Cell) {
+define('thesaurus',['getMember', 'getCell'], function (getMember, getCell) {
   return function Thesaurus (tables) {
-
     
     var index = {},
         canonicalCodeLists = {};
@@ -207,7 +230,7 @@ define('thesaurus',['getMember', 'cell'], function (getMember, Cell) {
     // Translates the members of the given cell to the canonical code lists
     // for their respective dimensions.
     function canonicalizeCell(cell){
-      return Cell(cell.members.map(canonicalizeMember));
+      return getCell(cell.members.map(canonicalizeMember));
     }
 
     // Translates the members of the cell of the given observation
@@ -300,7 +323,7 @@ define('mergeHierarchies',[], function () {
   };
 });
 
-define('mergeCubes',['_', 'cubeIndex', 'cell'], function (_, CubeIndex, Cell) {
+define('mergeCubes',['_', 'cubeIndex'], function (_, CubeIndex) {
 
   // Canonicalizes and merges two cubes.
   //
@@ -357,18 +380,22 @@ define('mergeCubes',['_', 'cubeIndex', 'cell'], function (_, CubeIndex, Cell) {
   }
 });
 
-define('slice',['cell'], function (Cell) {
+define('slice',['getCell', '_'], function (getCell, _) {
   return function (cube, member) {
     return {
       dimensions: cube.dimensions.filter(function (dimension) {
         return dimension !== member.dimension;
       }),
       measures: cube.measures,
+
+      // Only include the Observations whose cells contain the member to slice by.
       observations: cube.observations.filter(function (observation) {
-        return observation.cell.membersByDimension[member.dimension].id === member.id;
+        return _.contains(observation.cell.members, member);
+
+        //return observation.cell.membersByDimension[member.dimension].id === member.id;
       }).map(function (observation) {
         return {
-          cell: Cell(observation.cell.members.filter(function (cellMember) {
+          cell: getCell(observation.cell.members.filter(function (cellMember) {
             return cellMember.dimension !== member.dimension;
           })),
           values: observation.values
@@ -378,11 +405,11 @@ define('slice',['cell'], function (Cell) {
   };
 });
 
-define('udc',['getMember', 'cell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
-    function (getMember, Cell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
+define('udc',['getMember', 'getCell', 'cube', 'cubeIndex', 'thesaurus', 'hierarchy', 'mergeHierarchies', 'mergeCubes', 'slice'],
+    function (getMember, getCell, Cube, CubeIndex, Thesaurus, Hierarchy, mergeHierarchies, mergeCubes, slice) {
   return {
     getMember: getMember,
-    getCell: Cell,
+    getCell: getCell,
     createCube: Cube,
     createCubeIndex: CubeIndex,
     createThesaurus: Thesaurus,

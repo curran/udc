@@ -1,6 +1,6 @@
 // # getMember(dimension, codelist, code)
 //
-// Implements the Member concept of the Universal Data Cube data model.
+// Implements the Member concept of the Universal Data Cube data structure.
 //
 // Members are nodes in Dimension hierarchies.
 //
@@ -21,7 +21,7 @@ define([], function () {
       /* An auto-incrementing integer id counter */
       idCounter = 0;
 
-  return function (dimension, codeList, code) {
+  return function getMember(dimension, codeList, code) {
 
     /* Get or create the index bucket for the Member object. */
     var dimensionIndex = index[dimension] || (index[dimension] = {}),

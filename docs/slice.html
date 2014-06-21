@@ -30,18 +30,46 @@
               
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'cell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(Cell)</span> {</span>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getCell'</span>, <span class="hljs-string">'_'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getCell, _)</span> {</span>
   <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cube, member)</span> {</span>
     <span class="hljs-keyword">return</span> {
       dimensions: cube.dimensions.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension)</span> {</span>
         <span class="hljs-keyword">return</span> dimension !== member.dimension;
       }),
-      measures: cube.measures,
-      observations: cube.observations.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
-        <span class="hljs-keyword">return</span> observation.cell.membersByDimension[member.dimension].id === member.id;
-      }).map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
+      measures: cube.measures,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Only include the Observations whose cells contain the member to slice by.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      observations: cube.observations.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
+        <span class="hljs-keyword">return</span> _.contains(observation.cell.members, member);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>return observation.cell.membersByDimension[member.dimension].id === member.id;</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      }).map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(observation)</span> {</span>
         <span class="hljs-keyword">return</span> {
-          cell: Cell(observation.cell.members.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cellMember)</span> {</span>
+          cell: getCell(observation.cell.members.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(cellMember)</span> {</span>
             <span class="hljs-keyword">return</span> cellMember.dimension !== member.dimension;
           })),
           values: observation.values

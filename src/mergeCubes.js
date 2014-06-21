@@ -1,4 +1,4 @@
-define(['_', 'cubeIndex', 'cell'], function (_, CubeIndex, Cell) {
+define(['_', 'cubeIndex'], function (_, CubeIndex) {
 
   // Canonicalizes and merges two cubes.
   //

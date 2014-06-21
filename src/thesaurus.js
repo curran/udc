@@ -1,6 +1,5 @@
-define(['getMember', 'cell'], function (getMember, Cell) {
+define(['getMember', 'getCell'], function (getMember, getCell) {
   return function Thesaurus (tables) {
-
     
     var index = {},
         canonicalCodeLists = {};
@@ -63,7 +62,7 @@ define(['getMember', 'cell'], function (getMember, Cell) {
     // Translates the members of the given cell to the canonical code lists
     // for their respective dimensions.
     function canonicalizeCell(cell){
-      return Cell(cell.members.map(canonicalizeMember));
+      return getCell(cell.members.map(canonicalizeMember));
     }
 
     // Translates the members of the cell of the given observation
