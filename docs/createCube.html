@@ -41,28 +41,28 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Creates a cube from the given <code>table</code> object, where</p>
+              <p>Creates a cube from the given <code>dataset</code> object, where</p>
 <ul>
-<li><code>table.rows</code> an array of <code>row</code> objects where<ul>
+<li><code>dataset.rows</code> an array of <code>row</code> objects where<ul>
 <li>Keys are column names</li>
 <li>Values are numbers or strings</li>
 </ul>
 </li>
-<li><code>table.dimensionColumns</code> an array of <code>dimensionColumn</code> objects that 
-describe how columns in the table relate to dimensions.<ul>
+<li><code>dataset.dimensionColumns</code> an array of <code>dimensionColumn</code> objects that 
+describe how columns in the dataset relate to dimensions.<ul>
 <li><code>column</code> the column name (key in <code>row</code> objects)</li>
 <li><code>dimension</code> the name of the dimension</li>
 <li><code>codeList</code> the name of the code list used by <code>row</code> objects.
-For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a string 
+For each <code>row</code> in <code>dataset.rows</code>, <code>row[column]</code> yields a string 
 that is a code from this code list.</li>
 </ul>
 </li>
-<li><code>table.measureColumns</code> an array of <code>measureColumn</code> objects that 
-describe how columns in the table relate to measures.<ul>
+<li><code>dataset.measureColumns</code> an array of <code>measureColumn</code> objects that 
+describe how columns in the dataset relate to measures.<ul>
 <li><code>column</code> the column name (key in <code>row</code> objects)</li>
 <li><code>measure</code> the name of the measure</li>
 <li><code>scale</code> the scale factor used by values.
-For each <code>row</code> in <code>table.rows</code>, <code>row[column]</code> yields a number <code>x</code> 
+For each <code>row</code> in <code>dataset.rows</code>, <code>row[column]</code> yields a number <code>x</code> 
 such that <br> <code>x * scale</code> yields the measure value.</li>
 </ul>
 </li>
@@ -70,17 +70,16 @@ such that <br> <code>x * scale</code> yields the measure value.</li>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createCube</span> <span class="hljs-params">(table)</span> {</span>
-    <span class="hljs-keyword">var</span> dimensionColumns = table.dimensionColumns,
-        measureColumns = table.measureColumns,
-        observations = table.rows.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
-          <span class="hljs-keyword">return</span> Observation(row, dimensionColumns, measureColumns);
-        });
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createCube</span> <span class="hljs-params">(dataset)</span> {</span>
+    <span class="hljs-keyword">var</span> dimensionColumns = dataset.dimensionColumns,
+        measureColumns = dataset.measureColumns;
 
     <span class="hljs-keyword">return</span> {
       dimensions: _.pluck(dimensionColumns, <span class="hljs-string">'dimension'</span>),
       measures: _.pluck(measureColumns, <span class="hljs-string">'measure'</span>),
-      observations: observations
+      observations: dataset.rows.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
+        <span class="hljs-keyword">return</span> createObservation(row, dimensionColumns, measureColumns);
+      })
     };
   };</pre></div></div>
             
@@ -95,31 +94,58 @@ such that <br> <code>x * scale</code> yields the measure value.</li>
               </div>
               <p>Observation objects contain:</p>
 <ul>
-<li>cell: Cell - The Cell defining the domain of this Observation.</li>
+<li>cell: Cell - The Cell defining the domain of this createObservation.</li>
 <li>values: { measureName -&gt; Number } - An object that maps measures to values.</li>
 </ul>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Observation</span><span class="hljs-params">(row, dimensionColumns, measureColumns)</span> {</span>
-    <span class="hljs-keyword">var</span> observation = {
-      cell: getCell(dimensionColumns.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
-        <span class="hljs-keyword">var</span> dimension = dimensionColumn.dimension,
-            codeList = dimensionColumn.codeList,
-            code = row[dimensionColumn.column];
-        <span class="hljs-keyword">return</span> getMember(dimension, codeList, code);
-      })),
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createObservation</span><span class="hljs-params">(row, dimensionColumns, measureColumns)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Look up the cell corresponding to the unique set of members
+expressed in the dimension columns of the given row.</p>
 
-      <span class="hljs-comment">/* TODO think about not creating this object,
-       * and providing a function instead f(measure) -&gt; Number */</span>
-      values: {}
-    };
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> cell = getCell(dimensionColumns.map(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+          <span class="hljs-keyword">var</span> dimension = d.dimension,
+              codeList = d.codeList,
+              code = row[d.column];
+          <span class="hljs-keyword">return</span> getMember(dimension, codeList, code);
+        })),
+        values = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>Populate the <code>values</code> object, which maps measures
+to numeric values adjusted to the scale of each measureColumn.</p>
 
-    measureColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
-      observation.values[d.measure] = row[d.column] * d.scale;
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    measureColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span>
+      values[d.measure] = row[d.column] * d.scale;
     });
 
-    <span class="hljs-keyword">return</span> observation;
+    <span class="hljs-keyword">return</span> {
+      cell: cell,
+      values: values
+    };
   }
 });</pre></div></div>
             

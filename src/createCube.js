@@ -1,60 +1,62 @@
 define(['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
 
-  // Creates a cube from the given `table` object, where
+  // Creates a cube from the given `dataset` object, where
   //
-  //  * `table.rows` an array of `row` objects where
+  //  * `dataset.rows` an array of `row` objects where
   //    * Keys are column names
   //    * Values are numbers or strings
-  //  * `table.dimensionColumns` an array of `dimensionColumn` objects that 
-  //    describe how columns in the table relate to dimensions.
+  //  * `dataset.dimensionColumns` an array of `dimensionColumn` objects that 
+  //    describe how columns in the dataset relate to dimensions.
   //    * `column` the column name (key in `row` objects)
   //    * `dimension` the name of the dimension
   //    * `codeList` the name of the code list used by `row` objects.
-  //      For each `row` in `table.rows`, `row[column]` yields a string 
+  //      For each `row` in `dataset.rows`, `row[column]` yields a string 
   //      that is a code from this code list.
-  //  * `table.measureColumns` an array of `measureColumn` objects that 
-  //    describe how columns in the table relate to measures.
+  //  * `dataset.measureColumns` an array of `measureColumn` objects that 
+  //    describe how columns in the dataset relate to measures.
   //    * `column` the column name (key in `row` objects)
   //    * `measure` the name of the measure
   //    * `scale` the scale factor used by values.
-  //      For each `row` in `table.rows`, `row[column]` yields a number `x` 
+  //      For each `row` in `dataset.rows`, `row[column]` yields a number `x` 
   //      such that <br> `x * scale` yields the measure value.
-  return function createCube (table) {
-    var dimensionColumns = table.dimensionColumns,
-        measureColumns = table.measureColumns,
-        observations = table.rows.map(function (row) {
-          return Observation(row, dimensionColumns, measureColumns);
-        });
+  return function createCube (dataset) {
+    var dimensionColumns = dataset.dimensionColumns,
+        measureColumns = dataset.measureColumns;
 
     return {
       dimensions: _.pluck(dimensionColumns, 'dimension'),
       measures: _.pluck(measureColumns, 'measure'),
-      observations: observations
+      observations: dataset.rows.map(function (row) {
+        return createObservation(row, dimensionColumns, measureColumns);
+      })
     };
   };
 
   // Observation objects contain:
   //
-  //  * cell: Cell - The Cell defining the domain of this Observation.
+  //  * cell: Cell - The Cell defining the domain of this createObservation.
   //  * values: { measureName -> Number } - An object that maps measures to values.
-  function Observation(row, dimensionColumns, measureColumns) {
-    var observation = {
-      cell: getCell(dimensionColumns.map(function (dimensionColumn) {
-        var dimension = dimensionColumn.dimension,
-            codeList = dimensionColumn.codeList,
-            code = row[dimensionColumn.column];
-        return getMember(dimension, codeList, code);
-      })),
+  function createObservation(row, dimensionColumns, measureColumns) {
 
-      /* TODO think about not creating this object,
-       * and providing a function instead f(measure) -> Number */
-      values: {}
-    };
+    // Look up the cell corresponding to the unique set of members
+    // expressed in the dimension columns of the given row.
+    var cell = getCell(dimensionColumns.map(function (d) {
+          var dimension = d.dimension,
+              codeList = d.codeList,
+              code = row[d.column];
+          return getMember(dimension, codeList, code);
+        })),
+        values = {};
 
+    // Populate the `values` object, which maps measures
+    // to numeric values adjusted to the scale of each measureColumn.
     measureColumns.forEach(function (d) {
-      observation.values[d.measure] = row[d.column] * d.scale;
+      values[d.measure] = row[d.column] * d.scale;
     });
 
-    return observation;
+    return {
+      cell: cell,
+      values: values
+    };
   }
 });
