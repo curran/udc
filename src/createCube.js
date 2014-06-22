@@ -19,7 +19,7 @@ define(['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
   //    * `scale` the scale factor used by values.
   //      For each `row` in `table.rows`, `row[column]` yields a number `x` 
   //      such that <br> `x * scale` yields the measure value.
-  return function Cube (table) {
+  return function createCube (table) {
     var dimensionColumns = table.dimensionColumns,
         measureColumns = table.measureColumns,
         observations = table.rows.map(function (row) {
@@ -33,6 +33,10 @@ define(['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
     };
   };
 
+  // Observation objects contain:
+  //
+  //  * cell: Cell - The Cell defining the domain of this Observation.
+  //  * values: { measureName -> Number } - An object that maps measures to values.
   function Observation(row, dimensionColumns, measureColumns) {
     var observation = {
       cell: getCell(dimensionColumns.map(function (dimensionColumn) {
@@ -41,6 +45,9 @@ define(['_', 'getMember', 'getCell'], function (_, getMember, getCell) {
             code = row[dimensionColumn.column];
         return getMember(dimension, codeList, code);
       })),
+
+      /* TODO think about not creating this object,
+       * and providing a function instead f(measure) -> Number */
       values: {}
     };
 
