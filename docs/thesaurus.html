@@ -27,14 +27,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-1">&#182;</a>
               </div>
-              
+              <p>Implements the Thesaurus concept of the Universal Data Cube data structure.</p>
+<p>The purpose of a Thesaurus is to canonicalize Cubes so they can be merged.</p>
+
             </div>
             
-            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>, <span class="hljs-string">'getCell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember, getCell)</span> {</span>
-  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Thesaurus</span> <span class="hljs-params">(tables)</span> {</span>
-    
-    <span class="hljs-keyword">var</span> index = {},
-        canonicalCodeLists = {};</pre></div></div>
+            <div class="content"><div class='highlight'><pre>define([<span class="hljs-string">'getMember'</span>, <span class="hljs-string">'getCell'</span>], <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(getMember, getCell)</span> {</span></pre></div></div>
             
         </li>
         
@@ -45,25 +43,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-2">&#182;</a>
               </div>
-              <p>Build the index.</p>
+              <p>A Thesaurus is constructed from many datasets.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    tables.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(table)</span> {</span>
-      table.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span>
-        <span class="hljs-keyword">var</span> equivalenceClass = {};
-        table.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimensionColumn)</span> {</span>
-          <span class="hljs-keyword">var</span> dimension = dimensionColumn.dimension,
-              codeList = dimensionColumn.codeList,
-              code = row[dimensionColumn.column],
-              member = getMember(dimension, codeList, code),
-              dimensionIndex = index[dimension] || (index[dimension] = {}),
-              codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
-          equivalenceClass[codeList] = member;
-          codeListIndex[code] = equivalenceClass;
-        });
-      });
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">Thesaurus</span> <span class="hljs-params">(datasets)</span> {</span></pre></div></div>
             
         </li>
         
@@ -74,13 +58,12 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-3">&#182;</a>
               </div>
-              <p>Derive canonical code lists.</p>
+              <p>index[dimension][codelist][code] = equivalenceClass
+equivalenceClass[codelist] = Member</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-built_in">Object</span>.keys(index).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension)</span> {</span>
-      canonicalCodeLists[dimension] = <span class="hljs-built_in">Object</span>.keys(index[dimension]).sort();
-    });</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> index = {},</pre></div></div>
             
         </li>
         
@@ -91,13 +74,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-4">&#182;</a>
               </div>
-              <p>Translates the given member to the given code list.</p>
+              <p>canonicalCodelists[dimension] = codelist</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">translate</span><span class="hljs-params">(member, codeList)</span>{</span>
-      <span class="hljs-keyword">return</span> index[member.dimension][member.codeList][member.code][codeList];
-    }</pre></div></div>
+            <div class="content"><div class='highlight'><pre>        canonicalCodelists = {};</pre></div></div>
             
         </li>
         
@@ -108,19 +89,11 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-5">&#182;</a>
               </div>
-              <p>Translates the given member to the canonical code list for its dimension.</p>
+              <p>Build the index.</p>
 
             </div>
             
-            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">canonicalizeMember</span><span class="hljs-params">(member)</span>{</span>
-      <span class="hljs-keyword">var</span> dimensionIndex = index[member.dimension],
-          codeListIndex,
-          codeList;
-      <span class="hljs-keyword">if</span>(dimensionIndex) {
-        codeListIndex = dimensionIndex[member.codeList];
-        <span class="hljs-keyword">if</span>(codeListIndex.hasOwnProperty(member.code)) {
-          codeList = canonicalCodeLists[member.dimension][<span class="hljs-number">0</span>];
-          <span class="hljs-keyword">return</span> codeListIndex[member.code][codeList];</pre></div></div>
+            <div class="content"><div class='highlight'><pre>    datasets.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dataset)</span> {</span></pre></div></div>
             
         </li>
         
@@ -131,16 +104,189 @@
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
+              <p>For each row of the dataset,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      dataset.rows.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(row)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>construct an equivalence class of Members.
+equivalenceClass[codelist] = Member</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="hljs-keyword">var</span> equivalenceClass = {};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>For each dimensionColumn,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        dataset.dimensionColumns.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(d)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              <p>get the Member represented by the current row,</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="hljs-keyword">var</span> dimension = d.dimension,
+              codelist = d.codeList,
+              code = row[d.column],
+              member = getMember(dimension, codelist, code),</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Get or create the index bucket for the Member object.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              dimensionIndex = index[dimension] || (index[dimension] = {}),
+              codelistIndex = dimensionIndex[codelist] || (dimensionIndex[codelist] = {});</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Add the Member to the equivalence class.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          equivalenceClass[codelist] = member;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Add the equivalence class to the Thesaurus index.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          codelistIndex[code] = equivalenceClass;
+
+        });
+      });
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Derive canonical code lists for each dimension.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> dimensions = <span class="hljs-built_in">Object</span>.keys(index);
+    dimensions.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-params">(dimension)</span> {</span>
+      <span class="hljs-keyword">var</span> codelists = <span class="hljs-built_in">Object</span>.keys(index[dimension]);
+      canonicalCodelists[dimension] = codelists.sort()[<span class="hljs-number">0</span>];
+    });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Translates the given member to the given code list.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">translate</span><span class="hljs-params">(member, codelist)</span>{</span>
+      <span class="hljs-keyword">return</span> index[member.dimension][member.codeList][member.code][codelist];
+    }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Translates the given member to the canonical code list for its dimension.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">canonicalizeMember</span><span class="hljs-params">(member)</span>{</span>
+      <span class="hljs-keyword">var</span> dimensionIndex = index[member.dimension],
+          codelistIndex,
+          codelist;
+      <span class="hljs-keyword">if</span>(dimensionIndex) {
+        codelistIndex = dimensionIndex[member.codeList];
+        <span class="hljs-keyword">if</span>(codelistIndex.hasOwnProperty(member.code)) {
+          codelist = canonicalCodelists[member.dimension];
+          <span class="hljs-keyword">return</span> codelistIndex[member.code][codelist];</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
               <p>TODO find a case where this is necessary
-var equivalenceClass = codeListIndex[member.code],
-   codeLists = canonicalCodeLists[member.dimension],
-   codeList,
+var equivalenceClass = codelistIndex[member.code],
+   codelists = canonicalCodelists[member.dimension],
+   codelist,
    i;
 console.log(equivalenceClass);
-for(i = 0; i &lt; codeLists.length; i++) {
- codeList = codeLists[i];
- if(equivalenceClass.hasOwnProperty(codeList)) {
-   return equivalenceClass[codeList];
+for(i = 0; i &lt; codelists.length; i++) {
+ codelist = codelists[i];
+ if(equivalenceClass.hasOwnProperty(codelist)) {
+   return equivalenceClass[codelist];
  }
 }</p>
 
@@ -154,11 +300,11 @@ for(i = 0; i &lt; codeLists.length; i++) {
         </li>
         
         
-        <li id="section-7">
+        <li id="section-17">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-7">&#182;</a>
+                <a class="pilcrow" href="#section-17">&#182;</a>
               </div>
               <p>Translates the members of the given cell to the canonical code lists
 for their respective dimensions.</p>
@@ -172,11 +318,11 @@ for their respective dimensions.</p>
         </li>
         
         
-        <li id="section-8">
+        <li id="section-18">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-8">&#182;</a>
+                <a class="pilcrow" href="#section-18">&#182;</a>
               </div>
               <p>Translates the members of the cell of the given observation
 to the canonical code lists for their respective dimensions.</p>
@@ -193,11 +339,11 @@ to the canonical code lists for their respective dimensions.</p>
         </li>
         
         
-        <li id="section-9">
+        <li id="section-19">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-9">&#182;</a>
+                <a class="pilcrow" href="#section-19">&#182;</a>
               </div>
               <p>Translates the members of the cells of the observations in the
 given cube to the canonical code lists for their respective dimensions.</p>
@@ -220,11 +366,11 @@ given cube to the canonical code lists for their respective dimensions.</p>
         </li>
         
         
-        <li id="section-10">
+        <li id="section-20">
             <div class="annotation">
               
               <div class="pilwrap ">
-                <a class="pilcrow" href="#section-10">&#182;</a>
+                <a class="pilcrow" href="#section-20">&#182;</a>
               </div>
               <p>canonicalizeObservation: canonicalizeObservation,</p>
 

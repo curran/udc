@@ -176,60 +176,87 @@ define('cubeIndex',[], function () {
   };
 });
 
+// Implements the Thesaurus concept of the Universal Data Cube data structure.
+//
+// The purpose of a Thesaurus is to canonicalize Cubes so they can be merged.
 define('thesaurus',['getMember', 'getCell'], function (getMember, getCell) {
-  return function Thesaurus (tables) {
+
+  // A Thesaurus is constructed from many datasets.
+  return function Thesaurus (datasets) {
     
+    // index[dimension][codelist][code] = equivalenceClass
+    // equivalenceClass[codelist] = Member
     var index = {},
-        canonicalCodeLists = {};
+
+        // canonicalCodelists[dimension] = codelist
+        canonicalCodelists = {};
 
     // Build the index.
-    tables.forEach(function (table) {
-      table.rows.forEach(function (row) {
+    datasets.forEach(function (dataset) {
+
+      // For each row of the dataset,
+      dataset.rows.forEach(function (row) {
+
+        // construct an equivalence class of Members.
+        // equivalenceClass[codelist] = Member
         var equivalenceClass = {};
-        table.dimensionColumns.forEach(function (dimensionColumn) {
-          var dimension = dimensionColumn.dimension,
-              codeList = dimensionColumn.codeList,
-              code = row[dimensionColumn.column],
-              member = getMember(dimension, codeList, code),
+
+        // For each dimensionColumn,
+        dataset.dimensionColumns.forEach(function (d) {
+
+          // get the Member represented by the current row,
+          var dimension = d.dimension,
+              codelist = d.codeList,
+              code = row[d.column],
+              member = getMember(dimension, codelist, code),
+
+              // Get or create the index bucket for the Member object.
               dimensionIndex = index[dimension] || (index[dimension] = {}),
-              codeListIndex = dimensionIndex[codeList] || (dimensionIndex[codeList] = {});
-          equivalenceClass[codeList] = member;
-          codeListIndex[code] = equivalenceClass;
+              codelistIndex = dimensionIndex[codelist] || (dimensionIndex[codelist] = {});
+
+          // Add the Member to the equivalence class.
+          equivalenceClass[codelist] = member;
+
+          // Add the equivalence class to the Thesaurus index.
+          codelistIndex[code] = equivalenceClass;
+
         });
       });
     });
 
-    // Derive canonical code lists.
-    Object.keys(index).forEach(function (dimension) {
-      canonicalCodeLists[dimension] = Object.keys(index[dimension]).sort();
+    // Derive canonical code lists for each dimension.
+    var dimensions = Object.keys(index);
+    dimensions.forEach(function (dimension) {
+      var codelists = Object.keys(index[dimension]);
+      canonicalCodelists[dimension] = codelists.sort()[0];
     });
 
     // Translates the given member to the given code list.
-    function translate(member, codeList){
-      return index[member.dimension][member.codeList][member.code][codeList];
+    function translate(member, codelist){
+      return index[member.dimension][member.codeList][member.code][codelist];
     }
 
     // Translates the given member to the canonical code list for its dimension.
     function canonicalizeMember(member){
       var dimensionIndex = index[member.dimension],
-          codeListIndex,
-          codeList;
+          codelistIndex,
+          codelist;
       if(dimensionIndex) {
-        codeListIndex = dimensionIndex[member.codeList];
-        if(codeListIndex.hasOwnProperty(member.code)) {
-          codeList = canonicalCodeLists[member.dimension][0];
-          return codeListIndex[member.code][codeList];
+        codelistIndex = dimensionIndex[member.codeList];
+        if(codelistIndex.hasOwnProperty(member.code)) {
+          codelist = canonicalCodelists[member.dimension];
+          return codelistIndex[member.code][codelist];
 
           // TODO find a case where this is necessary
-          //var equivalenceClass = codeListIndex[member.code],
-          //    codeLists = canonicalCodeLists[member.dimension],
-          //    codeList,
+          //var equivalenceClass = codelistIndex[member.code],
+          //    codelists = canonicalCodelists[member.dimension],
+          //    codelist,
           //    i;
           //console.log(equivalenceClass);
-          //for(i = 0; i < codeLists.length; i++) {
-          //  codeList = codeLists[i];
-          //  if(equivalenceClass.hasOwnProperty(codeList)) {
-          //    return equivalenceClass[codeList];
+          //for(i = 0; i < codelists.length; i++) {
+          //  codelist = codelists[i];
+          //  if(equivalenceClass.hasOwnProperty(codelist)) {
+          //    return equivalenceClass[codelist];
           //  }
           //}
         }
