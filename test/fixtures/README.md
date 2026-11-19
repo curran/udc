@@ -1,0 +1,3 @@
+# Original Universal Data Cube test fixtures
+
+Attributed source: [curran/udc](https://github.com/curran/udc/tree/gh-pages/tests/data), original 2014 UDC tests. These three small CSV files reproduce the original historical population/GDP/concordance example; they are not complete official UN or World Bank datasets. The UN population figures are represented in **thousands** and must be explicitly multiplied by 1,000. Country codes use UN M49 vs. ISO 3166-1 alpha-3; the country mapping is verified **fixture evidence**, not a claimed globally reviewed concordance. Test provenance/versions below are synthetic, local and immutable.
