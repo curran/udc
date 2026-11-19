@@ -1,0 +1,5 @@
+node_modules/
+dist/
+coverage/
+test/fixtures/*.csv
+test/fixtures/README.md
