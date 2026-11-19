@@ -2,19 +2,19 @@
 
 All documented functions and types are exported from `@vizhub/udc` and `src/index.ts`. The source contains zero server/framework imports.
 
-| Export | Signature / behavior |
-| --- | --- |
-| `parseTabular` | `(text: string, format: "csv" \| "tsv") => TabularRows` |
-| `createCube` | `(rows, semanticSchema, datasetSnapshot) => SourceCube` |
-| `getCellKey` | `(coordinate) => CellKey` with stable `udc-cell-v1:` prefix |
-| `codedRef` | Create `CodedMemberRef` for dimension/codelist/revision/code |
-| `canonicalMember` | Create canonical `Member` for dimension/member ID |
-| `resolveConcordance` | `(mappings, {revision, at?}) => Concordance` |
-| `canonicalizeCube` | `(source, concordance) => CanonicalCube` |
-| `integrateCubes` | `(a, b, {join:"inner"}) => CanonicalCube` |
-| `sliceCube` | `(cube, member) => CanonicalCube` |
-| `UDC_LIMITS` | Exported resource ceilings; see [limits](limitations.md) |
-| `UdcError` | Typed exception with `code` |
+| Export               | Signature / behavior                                         |
+| -------------------- | ------------------------------------------------------------ |
+| `parseTabular`       | `(text: string, format: "csv" \| "tsv") => TabularRows`      |
+| `createCube`         | `(rows, semanticSchema, datasetSnapshot) => SourceCube`      |
+| `getCellKey`         | `(coordinate) => CellKey` with stable `udc-cell-v1:` prefix  |
+| `codedRef`           | Create `CodedMemberRef` for dimension/codelist/revision/code |
+| `canonicalMember`    | Create canonical `Member` for dimension/member ID            |
+| `resolveConcordance` | `(mappings, {revision, at?}) => Concordance`                 |
+| `canonicalizeCube`   | `(source, concordance) => CanonicalCube`                     |
+| `integrateCubes`     | `(a, b, {join:"inner"}) => CanonicalCube`                    |
+| `sliceCube`          | `(cube, member) => CanonicalCube`                            |
+| `UDC_LIMITS`         | Exported resource ceilings; see [limits](limitations.md)     |
+| `UdcError`           | Typed exception with `code`                                  |
 
 `SemanticSchema` maps input columns to explicit `DimensionFieldMapping` and `MeasureFieldMapping` definitions. `MeasureDefinition` carries an ID, name and unit; each field mapping carries a scale. UDC does not infer column semantics.
 

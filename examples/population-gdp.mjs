@@ -89,7 +89,8 @@ const joined = integrateCubes(
 const sliced = sliceCube(joined, canonicalMember("year", "year:1960"));
 console.log(
   sliced.observations.map((row) => ({
-    country: row.coordinate.members.find((m) => m.dimensionId === "country")?.id,
+    country: row.coordinate.members.find((m) => m.dimensionId === "country")
+      ?.id,
     population: row.values.population.value,
     gdp: row.values["gdp-usd"].value,
   })),

@@ -2,15 +2,15 @@
 
 The original `curran/udc` library was written for RequireJS/AMD and bundled via Gulp and Bower. Its code and annotated HTML documentation remain on the historical `gh-pages` branch. This branch is a modern ESM/TypeScript reimplementation, **not a source-compatible major upgrade**.
 
-| 2014 API | Modern equivalent |
-| --- | --- |
-| `udc.createCube(dataset)` | `createCube(rows, semanticSchema, snapshot)` |
+| 2014 API                               | Modern equivalent                                                                 |
+| -------------------------------------- | --------------------------------------------------------------------------------- |
+| `udc.createCube(dataset)`              | `createCube(rows, semanticSchema, snapshot)`                                      |
 | `getMember(dimension, codelist, code)` | `codedRef(...)` for source identity, `canonicalMember(...)` for semantic identity |
-| `getCell(members)` | `getCellKey({ members })` |
-| `createThesaurus(tables)` | `resolveConcordance(explicitMappings, context)` |
-| `mergeCubes(a,b,thesaurus)` | `canonicalizeCube` on each, then `integrateCubes(a,b)` |
-| `slice(cube,member)` | `sliceCube(cube,canonicalMember)` |
-| `Hierarchy`, `mergeHierarchies` | Not yet implemented |
+| `getCell(members)`                     | `getCellKey({ members })`                                                         |
+| `createThesaurus(tables)`              | `resolveConcordance(explicitMappings, context)`                                   |
+| `mergeCubes(a,b,thesaurus)`            | `canonicalizeCube` on each, then `integrateCubes(a,b)`                            |
+| `slice(cube,member)`                   | `sliceCube(cube,canonicalMember)`                                                 |
+| `Hierarchy`, `mergeHierarchies`        | Not yet implemented                                                               |
 
 The previous join implementation chose the left source's cells and could overwrite conflicting measures. Modern UDC performs a strict inner join with explicit dimension and measure conflict errors. Historical process-local object IDs are replaced by durable coordinate keys; fuzzy and unverified equivalences are never silently used.
 

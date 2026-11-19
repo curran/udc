@@ -6,13 +6,13 @@ The first standalone release ports the typed, fixture-tested **virtual cube core
 
 The imported `UDC_LIMITS` are deliberately conservative:
 
-| Budget | Value |
-| --- | ---: |
-| Cube inputs in current integration API | 2 |
-| Rows per source cube | 10,000 |
-| Columns per source | 100 |
-| Output observations | 10,000 |
-| Input CSV/TSV size | 2 MiB |
+| Budget                                 |  Value |
+| -------------------------------------- | -----: |
+| Cube inputs in current integration API |      2 |
+| Rows per source cube                   | 10,000 |
+| Columns per source                     |    100 |
+| Output observations                    | 10,000 |
+| Input CSV/TSV size                     |  2 MiB |
 
 Inputs over budget fail rather than silently truncating. These limits are not a streaming guarantee or protection from all potentially expensive workloads.
 

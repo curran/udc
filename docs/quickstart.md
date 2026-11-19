@@ -15,14 +15,18 @@ const cube = createCube(
     id: "population-schema",
     revision: "v1",
     dimensions: [
-      { field: "country",
+      {
+        field: "country",
         dimension: { id: "country", name: "Country" },
-        codelist: { id: "iso-alpha3", revision: "v1" } },
+        codelist: { id: "iso-alpha3", revision: "v1" },
+      },
     ],
     measures: [
-      { field: "population",
+      {
+        field: "population",
         measure: { id: "population", name: "Population", unit: "persons" },
-        scale: 1 },
+        scale: 1,
+      },
     ],
   },
   { datasetId: "population-2026", revision: "2026-01" },

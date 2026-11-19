@@ -3,7 +3,9 @@ import { readFileSync } from "node:fs";
 import { pathToFileURL } from "node:url";
 import { resolve } from "node:path";
 
-const pkg = JSON.parse(readFileSync(new URL("../package.json", import.meta.url)));
+const pkg = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url)),
+);
 assert.equal(pkg.exports["."].types, "./dist/index.d.ts");
 assert.equal(pkg.exports["."].import, "./dist/index.js");
 

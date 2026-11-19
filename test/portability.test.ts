@@ -39,7 +39,10 @@ describe("provider-neutral package usage", () => {
     const rows = parseTabular("station,amount\nA,12.5\n", "csv");
     expect(() => createCube(rows, schema, { datasetId: "" })).toThrow();
     expect(() =>
-      createCube(rows, schema, { datasetId: "rainfall", revision: "bad revision!" }),
+      createCube(rows, schema, {
+        datasetId: "rainfall",
+        revision: "bad revision!",
+      }),
     ).toThrow();
   });
 });

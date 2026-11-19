@@ -34,17 +34,23 @@ const cube = createCube(
     id: "population-schema",
     revision: "v1",
     dimensions: [
-      { field: "country",
+      {
+        field: "country",
         dimension: { id: "country", name: "Country" },
-        codelist: { id: "iso-alpha3", revision: "v1" } },
-      { field: "year",
+        codelist: { id: "iso-alpha3", revision: "v1" },
+      },
+      {
+        field: "year",
         dimension: { id: "year", name: "Year" },
-        codelist: { id: "calendar-year", revision: "v1" } },
+        codelist: { id: "calendar-year", revision: "v1" },
+      },
     ],
     measures: [
-      { field: "population",
+      {
+        field: "population",
         measure: { id: "population", name: "Population", unit: "persons" },
-        scale: 1 },
+        scale: 1,
+      },
     ],
   },
   { datasetId: "population-1960", revision: "v1" },
@@ -55,15 +61,15 @@ const cube = createCube(
 
 ## Operations
 
-| Function | Purpose |
-| --- | --- |
-| `parseTabular(text, "csv" \| "tsv")` | Bounded record-aware parser |
-| `createCube(rows, schema, snapshot)` | Create a typed SourceCube with measure provenance |
-| `codedRef`, `canonicalMember`, `getCellKey` | Portable and order-invariant coordinate identities |
-| `resolveConcordance(mappings, context)` | Verified exact-equivalence closure with conflicts |
-| `canonicalizeCube(source, concordance)` | Translate coded coordinates to canonical member identities |
-| `integrateCubes(a, b)` | Strict inner join over identical canonical dimensions |
-| `sliceCube(cube, member)` | Select a member and remove its dimension |
+| Function                                    | Purpose                                                    |
+| ------------------------------------------- | ---------------------------------------------------------- |
+| `parseTabular(text, "csv" \| "tsv")`        | Bounded record-aware parser                                |
+| `createCube(rows, schema, snapshot)`        | Create a typed SourceCube with measure provenance          |
+| `codedRef`, `canonicalMember`, `getCellKey` | Portable and order-invariant coordinate identities         |
+| `resolveConcordance(mappings, context)`     | Verified exact-equivalence closure with conflicts          |
+| `canonicalizeCube(source, concordance)`     | Translate coded coordinates to canonical member identities |
+| `integrateCubes(a, b)`                      | Strict inner join over identical canonical dimensions      |
+| `sliceCube(cube, member)`                   | Select a member and remove its dimension                   |
 
 The implementation deliberately rejects unknown or non-equivalent identifiers, duplicate measure identities, incompatible grains, ambiguous mappings and over-budget operations. There is no guesswork or implicit aggregation.
 
