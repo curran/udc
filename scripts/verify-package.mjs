@@ -46,6 +46,9 @@ for (const name of [
   assert.equal(typeof mod[name], "function", name + " must be exported");
 }
 assert.equal(typeof mod.parseTabular, "undefined");
-const bundle = readFileSync(new URL("../dist/index.js", import.meta.url), "utf8");
+const bundle = readFileSync(
+  new URL("../dist/index.js", import.meta.url),
+  "utf8",
+);
 assert.doesNotMatch(bundle, /d3-dsv|csvParse|tsvParse/);
 console.log("Standalone ESM package smoke test passed.");
