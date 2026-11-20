@@ -4,8 +4,10 @@ on:
   push:
     tags:
       - "v*"
+    branches:
+      - "release/npm-v2.0.0"
 permissions:
-  contents: read
+  contents: write
   id-token: write
 jobs:
   publish:
@@ -22,3 +24,6 @@ jobs:
         run: npm run check
       - name: Publish with npm trusted publishing
         run: npm publish --access public --provenance
+      - name: Delete one-time release branch
+        if: always() && github.ref == 'refs/heads/release/npm-v2.0.0'
+        run: git push origin --delete release/npm-v2.0.0
