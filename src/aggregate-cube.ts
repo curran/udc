@@ -99,11 +99,10 @@ export function aggregateCube(
     if (seen.has(observation.cellKey))
       throw new UdcError("DUPLICATE", "Duplicate input coordinate");
     seen.add(observation.cellKey);
-    const axes = observation.coordinate.members.map((member) => member.dimensionId);
-    if (
-      axes.length !== declared.size ||
-      axes.some((id) => !declared.has(id))
-    )
+    const axes = observation.coordinate.members.map(
+      (member) => member.dimensionId,
+    );
+    if (axes.length !== declared.size || axes.some((id) => !declared.has(id)))
       throw new UdcError("INCOMPATIBLE", "Input coordinate grain mismatch");
     if (
       Object.keys(observation.values).length !== original.size ||
@@ -150,16 +149,14 @@ export function aggregateCube(
           throw new UdcError("INVALID", "Missing measure provenance");
         sources = [atomic.provenance];
       }
-      if (
-        !Number.isFinite(sum) ||
-        !Number.isSafeInteger(count) ||
-        count < 0
-      )
+      if (!Number.isFinite(sum) || !Number.isSafeInteger(count) || count < 0)
         throw new UdcError("INVALID", "Invalid aggregate accumulator");
       accumulator.sum += sum;
       accumulator.count += count;
-      if (!Number.isFinite(accumulator.sum) ||
-          !Number.isSafeInteger(accumulator.count))
+      if (
+        !Number.isFinite(accumulator.sum) ||
+        !Number.isSafeInteger(accumulator.count)
+      )
         throw new UdcError("LIMIT", "Aggregate accumulator overflow");
       accumulator.contributors.push(...sources);
       assertBound(
@@ -178,7 +175,10 @@ export function aggregateCube(
       const derived = outputMeasures[index];
       const accumulator = group.values.get(measure.id)!;
       if (measure.aggregation === "none" && group.rows > 1)
-        throw new UdcError("INCOMPATIBLE", "Non-additive measure cannot roll up");
+        throw new UdcError(
+          "INCOMPATIBLE",
+          "Non-additive measure cannot roll up",
+        );
       const value =
         measure.aggregation === "count"
           ? accumulator.count
@@ -212,7 +212,9 @@ export function aggregateCube(
   observations.sort((a, b) => stable(a.cellKey, b.cellKey));
   return {
     stage: "aggregated",
-    dimensions: cube.dimensions.filter((dimension) => retained.has(dimension.id)),
+    dimensions: cube.dimensions.filter((dimension) =>
+      retained.has(dimension.id),
+    ),
     measures: outputMeasures,
     observations,
     snapshots: cube.snapshots,

@@ -134,12 +134,16 @@ describe("explicit cube aggregation", () => {
       ),
     };
     expect(() => aggregateCube(incompatible, ["country"])).toThrow(UdcError);
-    expect(aggregateCube(incompatible, ["country", "year"]).observations).toHaveLength(4);
+    expect(
+      aggregateCube(incompatible, ["country", "year"]).observations,
+    ).toHaveLength(4);
   });
 
   it("rejects undeclared dimensions and duplicate coordinates", () => {
     expect(() => aggregateCube(source, ["unknown"])).toThrow(UdcError);
-    expect(() => aggregateCube(source, ["country", "country"])).toThrow(UdcError);
+    expect(() => aggregateCube(source, ["country", "country"])).toThrow(
+      UdcError,
+    );
     const duplicate: CanonicalCube = {
       ...source,
       observations: [...source.observations, source.observations[0]],
