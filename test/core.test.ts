@@ -4,6 +4,7 @@ import {
   codedRef,
   canonicalMember,
   createCube,
+  validateSemanticSchema,
   parseTabular,
   resolveConcordance,
   canonicalizeCube,
@@ -103,6 +104,37 @@ describe("coordinates", () => {
   });
 });
 describe("construct typed source observations", () => {
+  it("accepts each declared aggregation policy", () => {
+    for (const op of ["sum", "count", "average", "none"] as const) {
+      const changed = {
+        ...schema,
+        measures: [
+          {
+            ...schema.measures[0],
+            measure: { ...schema.measures[0].measure, aggregation: op },
+          },
+        ],
+      };
+      expect(() => validateSemanticSchema(changed)).not.toThrow();
+    }
+  });
+  it("rejects missing or unsupported aggregation policies", () => {
+    for (const bad of [undefined, "median", null]) {
+      const changed = {
+        ...schema,
+        measures: [
+          {
+            ...schema.measures[0],
+            measure: { ...schema.measures[0].measure, aggregation: bad },
+          },
+        ],
+      };
+      fail(
+        () => validateSemanticSchema(changed as unknown as SemanticSchema),
+        "INVALID",
+      );
+    }
+  });
   it("preserves zero, negative, missing and scaled values", () => {
     expect(
       cube([{ code: "156", n: "0" }]).observations[0].values.population.value,
