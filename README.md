@@ -4,7 +4,7 @@ A small, framework-independent TypeScript library for **semantic integration of 
 
 This is the modern continuation of [Curran Kelleher's original 2014 Universal Data Cube project](https://github.com/curran/udc/tree/gh-pages). The previous AMD/RequireJS version, tests, and annotated documentation are preserved on the historical `gh-pages` branch. The new implementation imports the typed in-memory core and pure golden tests developed in VizHub AI Studio, with provider-neutral snapshot identifiers.
 
-> **Release status:** `@vizhub/udc@1.0.0` is published on npm. The new aggregation-aware API is prepared for `2.0.0` and is not available from npm until a separately verified release. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
+> **Release status:** The package is published on npm. The aggregation-aware API is not yet available from npm until a separately verified release. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
 
 ## Start developing
 
@@ -62,22 +62,25 @@ const cube = createCube(
 );
 ```
 
-`createCube` produces a **SourceCube** with coded coordinates. To combine sources, build a concordance from explicitly verified exact mappings, call `canonicalizeCube` on both source cubes, then `integrateCubes`. See [the runnable population/GDP example](examples/population-gdp.mjs) for the complete workflow.
+`createCube` produces a **SourceCube** with coded coordinates; `canonicalizeCube` yields a **CanonicalCube**; and `aggregateCube` yields a distinct **AggregatedCube** stage that cannot be mistaken for single-source data. To combine sources, build a concordance from explicitly verified exact mappings, call `canonicalizeCube` on both source cubes, then `integrateCubes`. See [the runnable population/GDP example](examples/population-gdp.mjs) for the complete workflow.
 
 ## Operations
 
-| Function                                    | Purpose                                                    |
-| ------------------------------------------- | ---------------------------------------------------------- |
-| `parseTabular(text, "csv" \| "tsv")`        | Bounded record-aware parser                                |
-| `createCube(rows, schema, snapshot)`        | Create a typed SourceCube with measure provenance          |
-| `codedRef`, `canonicalMember`, `getCellKey` | Portable and order-invariant coordinate identities         |
-| `resolveConcordance(mappings, context)`     | Verified exact-equivalence closure with conflicts          |
-| `canonicalizeCube(source, concordance)`     | Translate coded coordinates to canonical member identities |
-| `integrateCubes(a, b)`                      | Strict inner join over identical canonical dimensions      |
-| `aggregateCube(cube, keepDimensions)`       | Explicit, provenance-preserving sum/count/average roll-ups |
-| `sliceCube(cube, member)`                   | Select a member and remove its dimension                   |
+| Function                                                      | Purpose                                                                         |
+| ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `parseTabular(text, "csv" \| "tsv")`                          | Bounded record-aware parser                                                     |
+| `createCube(rows, schema, snapshot)`                          | Create a typed SourceCube with measure provenance                               |
+| `codedRef`, `canonicalMember`, `memberIdentity`, `getCellKey` | Portable and order-invariant coordinate identities                              |
+| `validateSemanticSchema(schema, columns?)`                    | Validate schema mappings, IDs, and field coverage                               |
+| `resolveConcordance(mappings, context)`                       | Verified exact-equivalence closure with conflicts                               |
+| `canonicalizeCube(source, concordance)`                       | Translate coded coordinates to canonical member identities                      |
+| `integrateCubes(a, b)`                                        | Strict inner join over identical canonical dimensions                           |
+| `aggregateCube(cube, retainDimensionIds)`                     | Explicit roll-ups honoring each measure's `sum`/`count`/`average`/`none` policy |
+| `sliceCube(cube, member)`                                     | Select a member and remove its dimension                                        |
 
 The implementation deliberately rejects unknown or non-equivalent identifiers, duplicate measure identities, incompatible grains, ambiguous mappings and over-budget operations. There is no guesswork or implicit aggregation.
+
+Failures throw a typed `UdcError` carrying a `UdcErrorCode` (`INVALID`, `LIMIT`, `DUPLICATE`, `UNRESOLVED`, `CONFLICT`, `INCOMPATIBLE`). `UDC_LIMITS` exposes the resource ceilings; inputs over budget fail rather than truncate. Low-level `assertId` and `assertBound` raise the same errors.
 
 ## Documentation
 
