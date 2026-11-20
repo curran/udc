@@ -1,13 +1,14 @@
 # Quick start
 
-UDC is a **pure computation library**. It does not fetch URLs or discover a cloud catalog. Read bytes yourself, then pass decoded CSV/TSV text to `parseTabular`.
+UDC is a **pure computation library**. It accepts structured rows and does not fetch URLs, discover catalogs, or parse CSV/TSV. Parse data in the calling application with any library you prefer.
 
 ```ts
-import { parseTabular, createCube } from "@vizhub/udc";
+import { csvParse } from "d3-dsv"; // optional application dependency
+import { createCube } from "@vizhub/udc";
 
 const response = await fetch("/data/population.csv");
 if (!response.ok) throw new Error("Dataset unavailable");
-const rows = parseTabular(await response.text(), "csv");
+const rows = csvParse(await response.text());
 
 const cube = createCube(
   rows,
@@ -37,6 +38,8 @@ const cube = createCube(
   { datasetId: "population-2026", revision: "2026-01" },
 );
 ```
+
+`d3-dsv` in this example is installed by the application, not by UDC. You can instead pass data from another parser, an API, or a database directly to `createCube`.
 
 The resulting `SourceCube` retains original **coded** members. For integration:
 

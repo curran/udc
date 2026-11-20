@@ -1,5 +1,11 @@
 # Change log
 
+## Unreleased — breaking removal of CSV/TSV parser
+
+- Remove `parseTabular`, `TabularRows`, and the parser-only `UDC_LIMITS.fileBytes` from the public API. Callers now pass pre-parsed records to `createCube`.
+- Move `d3-dsv` to development-only use in tests and the example; UDC has zero production dependencies.
+- **Release note:** Removing public exports is a breaking change and requires a new major version on publication.
+
 ## 1.2.0 — Unreleased (breaking aggregation metadata)
 
 - Declare `aggregation` mandatory on every measure; existing `1.0.0` consumers need explicit migrations.

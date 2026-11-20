@@ -11,6 +11,11 @@ assert.equal(pkg.type, "module");
 assert.equal(pkg.exports["."].types, "./dist/index.d.ts");
 assert.equal(pkg.exports["."].import, "./dist/index.js");
 assert.equal(pkg.types, "./dist/index.d.ts");
+assert.equal(
+  Object.keys(pkg.dependencies ?? {}).length,
+  0,
+  "UDC must have zero production dependencies",
+);
 
 const declarations = readFileSync(
   new URL("../dist/index.d.ts", import.meta.url),
@@ -30,7 +35,6 @@ for (const name of [
 
 const mod = await import(pathToFileURL(resolve("dist/index.js")).href);
 for (const name of [
-  "parseTabular",
   "createCube",
   "resolveConcordance",
   "canonicalizeCube",
@@ -41,5 +45,7 @@ for (const name of [
 ]) {
   assert.equal(typeof mod[name], "function", name + " must be exported");
 }
-assert.deepEqual(mod.parseTabular("x,y\n1,2\n", "csv")[0], { x: "1", y: "2" });
+assert.equal(typeof mod.parseTabular, "undefined");
+const bundle = readFileSync(new URL("../dist/index.js", import.meta.url), "utf8");
+assert.doesNotMatch(bundle, /d3-dsv|csvParse|tsvParse/);
 console.log("Standalone ESM package smoke test passed.");

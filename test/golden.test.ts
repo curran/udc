@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import { csvParse } from "d3-dsv";
 import {
   createCube,
   canonicalizeCube,
@@ -10,7 +11,6 @@ import {
   codedRef,
   canonicalMember,
   getCellKey,
-  parseTabular,
   type SemanticSchema,
   type CodeMapping,
   type DatasetSnapshot,
@@ -94,7 +94,7 @@ function exact(
   };
 }
 const mappings: CodeMapping[] = [];
-for (const row of parseTabular(location, "csv")) {
+for (const row of csvParse(location)) {
   const id =
     row.countryName === "United States of America"
       ? "usa"
@@ -119,11 +119,11 @@ function integrated() {
     revision: "concordance:fixtures-v1",
   });
   const a = canonicalizeCube(
-    createCube(parseTabular(population, "csv"), popSchema, un),
+    createCube(csvParse(population), popSchema, un),
     concordance,
   );
   const b = canonicalizeCube(
-    createCube(parseTabular(gdp, "csv"), gdpSchema, wb),
+    createCube(csvParse(gdp), gdpSchema, wb),
     concordance,
   );
   return { cube: integrateCubes(a, b), concordance };

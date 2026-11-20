@@ -20,8 +20,7 @@
     "data-integration",
     "provenance",
     "data-visualization",
-    "typescript",
-    "d3"
+    "typescript"
   ],
   "sideEffects": false,
   "publishConfig": {
@@ -61,13 +60,11 @@
     "prepublishOnly": "npm run check",
     "example": "npm run build && node examples/population-gdp.mjs"
   },
-  "dependencies": {
-    "d3-dsv": "^3.0.2"
-  },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/d3-dsv": "^3.0.7",
     "@types/node": "^26.6.6",
+    "d3-dsv": "^3.0.2",
     "eslint": "^10.15.0",
     "prettier": "^3.10.1",
     "tsup": "^9.0.0",

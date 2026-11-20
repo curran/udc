@@ -3,7 +3,6 @@ export const UDC_LIMITS = {
   rows: 10_000,
   columns: 100,
   outputObservations: 10_000,
-  fileBytes: 2 * 1024 * 1024,
 } as const;
 export type UdcErrorCode =
   | "INVALID"

@@ -1,10 +1,9 @@
 # Public API
 
-All documented functions and types are exported from `@vizhub/udc` and `src/index.ts`. The source contains zero server/framework imports.
+All documented functions and types are exported from `@vizhub/udc` and `src/index.ts`. The source contains zero server/framework imports and no CSV/TSV parser. `createCube` accepts already-parsed records.
 
 | Export                    | Signature / behavior                                                                                                                 |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `parseTabular`            | `(text: string, format: "csv" \| "tsv") => TabularRows`                                                                              |
 | `createCube`              | `(rows, semanticSchema, datasetSnapshot) => SourceCube`                                                                              |
 | `validateSemanticSchema`  | `(schema: SemanticSchema, columns?: readonly string[]) => void`; validates IDs, field coverage, aggregation declarations and limits  |
 | `getCellKey`              | `(coordinate) => CellKey` with stable `udc-cell-v1:` prefix                                                                          |
@@ -20,7 +19,7 @@ All documented functions and types are exported from `@vizhub/udc` and `src/inde
 | `UdcError`                | Typed exception with `code: UdcErrorCode`                                                                                            |
 | `assertId`, `assertBound` | Low-level validators that throw `UdcError` on invalid identifiers or exhausted budgets                                               |
 
-Exported types include `DatasetSnapshot`, `Dimension`, `Codelist`, `CodedMemberRef`, `Member`, `MemberRef`, `Coordinate`, `CellKey`, `DimensionFieldMapping`, `AggregationOperator`, `MeasureDefinition`, `MeasureFieldMapping`, `SemanticSchema`, `MeasureProvenance`, `MeasureValue`, `Observation`, `CubeBase`, `SourceCube`, `CanonicalCube`, `AggregateAccumulator`, `AggregatedMeasureValue`, `AggregatedObservation`, `AggregatedCube`, `Relationship`, `CodeMapping`, `Resolution`, `Concordance`, `ConcordanceContext`, `IntegrationOptions`, `TabularRows`, `UdcErrorCode`.
+Exported types include `DatasetSnapshot`, `Dimension`, `Codelist`, `CodedMemberRef`, `Member`, `MemberRef`, `Coordinate`, `CellKey`, `DimensionFieldMapping`, `AggregationOperator`, `MeasureDefinition`, `MeasureFieldMapping`, `SemanticSchema`, `MeasureProvenance`, `MeasureValue`, `Observation`, `CubeBase`, `SourceCube`, `CanonicalCube`, `AggregateAccumulator`, `AggregatedMeasureValue`, `AggregatedObservation`, `AggregatedCube`, `Relationship`, `CodeMapping`, `Resolution`, `Concordance`, `ConcordanceContext`, `IntegrationOptions`, `UdcErrorCode`.
 
 `SemanticSchema` maps input columns to explicit `DimensionFieldMapping` and `MeasureFieldMapping` definitions. `MeasureDefinition` carries an ID, name, mandatory canonical unit and mandatory `aggregation: "sum" | "count" | "average" | "none"` declaration; each field mapping carries a scale. UDC does not infer column semantics.
 

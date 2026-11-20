@@ -2,7 +2,6 @@ export * from "./types";
 export * from "./limits";
 export * from "./coordinate";
 export * from "./semantic-schema";
-export * from "./parse-tabular";
 export * from "./create-cube";
 export * from "./concordance";
 export * from "./canonicalize-cube";
