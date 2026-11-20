@@ -1,8 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { createCube, parseTabular, type DatasetSnapshot } from "../src/index";
+import {
+  createCube,
+  parseTabular,
+  type DatasetSnapshot,
+  type SemanticSchema,
+} from "../src/index";
 
 describe("provider-neutral package usage", () => {
-  const schema = {
+  const schema: SemanticSchema = {
     id: "schema:rainfall",
     revision: "v1",
     dimensions: [
@@ -15,7 +20,12 @@ describe("provider-neutral package usage", () => {
     measures: [
       {
         field: "amount",
-        measure: { id: "rainfall", name: "Rainfall", unit: "mm" },
+        measure: {
+          id: "rainfall",
+          name: "Rainfall",
+          unit: "mm",
+          aggregation: "sum",
+        },
         scale: 1,
       },
     ],

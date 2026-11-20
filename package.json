@@ -7,11 +7,11 @@
   "author": "Curran Kelleher",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/curran/udc.git"
+    "url": "git+https://github.com/vizhub-studio/udc.git"
   },
-  "homepage": "https://github.com/curran/udc#readme",
+  "homepage": "https://github.com/vizhub-studio/udc#readme",
   "bugs": {
-    "url": "https://github.com/curran/udc/issues"
+    "url": "https://github.com/vizhub-studio/udc/issues"
   },
   "keywords": [
     "udc",

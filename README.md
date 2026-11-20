@@ -4,7 +4,7 @@ A small, framework-independent TypeScript library for **semantic integration of 
 
 This is the modern continuation of [Curran Kelleher's original 2014 Universal Data Cube project](https://github.com/curran/udc/tree/gh-pages). The previous AMD/RequireJS version, tests, and annotated documentation are preserved on the historical `gh-pages` branch. The new implementation imports the typed in-memory core and pure golden tests developed in VizHub AI Studio, with provider-neutral snapshot identifiers.
 
-> **Release status:** Standalone package source. `@vizhub/udc` is the intended npm package name; do not assume it is published until a tagged release is available. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
+> **Release status:** `@vizhub/udc@1.0.0` is published on npm. The new aggregation-aware API is prepared for `2.0.0` and is not available from npm until a separately verified release. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
 
 ## Start developing
 
@@ -48,7 +48,12 @@ const cube = createCube(
     measures: [
       {
         field: "population",
-        measure: { id: "population", name: "Population", unit: "persons" },
+        measure: {
+          id: "population",
+          name: "Population",
+          unit: "persons",
+          aggregation: "sum",
+        },
         scale: 1,
       },
     ],
@@ -69,6 +74,7 @@ const cube = createCube(
 | `resolveConcordance(mappings, context)`     | Verified exact-equivalence closure with conflicts          |
 | `canonicalizeCube(source, concordance)`     | Translate coded coordinates to canonical member identities |
 | `integrateCubes(a, b)`                      | Strict inner join over identical canonical dimensions      |
+| `aggregateCube(cube, keepDimensions)`       | Explicit, provenance-preserving sum/count/average roll-ups |
 | `sliceCube(cube, member)`                   | Select a member and remove its dimension                   |
 
 The implementation deliberately rejects unknown or non-equivalent identifiers, duplicate measure identities, incompatible grains, ambiguous mappings and over-budget operations. There is no guesswork or implicit aggregation.

@@ -1,5 +1,23 @@
 # Change log
 
+## 2.0.0 — Unreleased (breaking aggregation metadata)
+
+- Declare `aggregation` mandatory on every measure; existing `1.0.0` consumers need explicit migrations.
+- Add explicit, provenance-preserving `aggregateCube` with composable averages and derived counts.
+- Update package release metadata and add a reproducible manual/tag release workflow.
+
+## Unreleased — Explicit cube roll-ups
+
+- Add `aggregateCube` to reduce canonical coordinates by declared sum, count and average operators.
+- Preserve original per-value source lineage and sufficient statistics to make repeated averages correct.
+- Keep aggregated cubes a distinct stage and reject inappropriate non-additive roll-ups.
+
+## Unreleased — Measure aggregation semantics
+
+- Require a measure aggregation policy: `sum`, `count`, `average`, or `none`.
+- Reject undeclared or unsupported operators without silently aggregating.
+- Keep canonical measure `unit` mandatory; changing schemas is required for consumers.
+
 ## 0.1.0 — Unreleased
 
 - Modern TypeScript ESM reimplementation of Universal Data Cube extracted from VizHub AI Studio.
