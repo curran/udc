@@ -2,6 +2,10 @@
 
 UDC treats **dimensions** as identifying axes (e.g., Country, Year), **measures** as typed quantitative properties (e.g., Population in persons), and **observations** as measure values at an order-independent coordinate.
 
+## Declared measure aggregation
+
+Each measure declares a mandatory canonical `unit` and `aggregation`: `sum`, `count`, `average`, or `none`. `none` prohibits roll-up instead of silently choosing an operation. `count` means counting non-null observations (not summing a count-valued measure). The unit of a derived count is observations, unlike the input physical unit. `sum` and `average` work on values in the declared unit. This release records policy only: integration and slicing do not implicitly aggregate. Change the schema revision when these definitions change.
+
 ## Source versus canonical cubes
 
 A `SourceCube` stores `CodedMemberRef` values containing a dimension ID, code-list ID and revision, and literal source code. A `CanonicalCube` stores stable `Member` identities. A code such as UN M49 `156` and ISO alpha-3 `CHN` cannot be joined merely because they look compatible. Reviewed exact mappings can resolve both to one canonical `country:china` identity.

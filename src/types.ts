@@ -41,10 +41,16 @@ export interface DimensionFieldMapping {
   dimension: Dimension;
   codelist: Codelist;
 }
+/** An explicit roll-up rule for non-null measure values. */
+export type AggregationOperator = "sum" | "count" | "average" | "none";
+
 export interface MeasureDefinition {
   id: string;
   name: string;
+  /** Canonical unit at the declared observation grain. */
   unit: string;
+  /** Required; none means roll-up is explicitly prohibited. */
+  aggregation: AggregationOperator;
 }
 export interface MeasureFieldMapping {
   field: string;

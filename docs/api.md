@@ -16,7 +16,7 @@ All documented functions and types are exported from `@vizhub/udc` and `src/inde
 | `UDC_LIMITS`         | Exported resource ceilings; see [limits](limitations.md)     |
 | `UdcError`           | Typed exception with `code`                                  |
 
-`SemanticSchema` maps input columns to explicit `DimensionFieldMapping` and `MeasureFieldMapping` definitions. `MeasureDefinition` carries an ID, name and unit; each field mapping carries a scale. UDC does not infer column semantics.
+`SemanticSchema` maps input columns to explicit `DimensionFieldMapping` and `MeasureFieldMapping` definitions. `MeasureDefinition` carries an ID, name, mandatory canonical unit and mandatory `aggregation: "sum" | "count" | "average" | "none"` declaration; each field mapping carries a scale. UDC does not infer column semantics.
 
 The `Resolution` result of a concordance has distinct `resolved`, `unresolved` and `conflict` statuses. Do not treat failure as an inferred match.
 

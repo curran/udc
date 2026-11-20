@@ -4,12 +4,14 @@ import {
   codedRef,
   canonicalMember,
   createCube,
+  validateSemanticSchema,
   parseTabular,
   resolveConcordance,
   canonicalizeCube,
   integrateCubes,
   sliceCube,
   UdcError,
+  type CanonicalCube,
   type CodeMapping,
   type SemanticSchema,
   type DatasetSnapshot,
@@ -40,7 +42,12 @@ const schema: SemanticSchema = {
   measures: [
     {
       field: "n",
-      measure: { id: "population", name: "Population", unit: "persons" },
+      measure: {
+        id: "population",
+        name: "Population",
+        unit: "persons",
+        aggregation: "sum",
+      },
       scale: 1000,
     },
   ],
@@ -98,6 +105,37 @@ describe("coordinates", () => {
   });
 });
 describe("construct typed source observations", () => {
+  it("accepts each declared aggregation policy", () => {
+    for (const op of ["sum", "count", "average", "none"] as const) {
+      const changed = {
+        ...schema,
+        measures: [
+          {
+            ...schema.measures[0],
+            measure: { ...schema.measures[0].measure, aggregation: op },
+          },
+        ],
+      };
+      expect(() => validateSemanticSchema(changed)).not.toThrow();
+    }
+  });
+  it("rejects missing or unsupported aggregation policies", () => {
+    for (const bad of [undefined, "median", null]) {
+      const changed = {
+        ...schema,
+        measures: [
+          {
+            ...schema.measures[0],
+            measure: { ...schema.measures[0].measure, aggregation: bad },
+          },
+        ],
+      };
+      fail(
+        () => validateSemanticSchema(changed as unknown as SemanticSchema),
+        "INVALID",
+      );
+    }
+  });
   it("preserves zero, negative, missing and scaled values", () => {
     expect(
       cube([{ code: "156", n: "0" }]).observations[0].values.population.value,
@@ -295,9 +333,9 @@ describe("canonicalization, integration and slices", () => {
     const a = canon(),
       b = canon();
     fail(() => integrateCubes(a, b), "CONFLICT");
-    const different = {
+    const different: CanonicalCube = {
       ...b,
-      measures: [{ id: "gdp", name: "GDP", unit: "USD" }],
+      measures: [{ id: "gdp", name: "GDP", unit: "USD", aggregation: "sum" }],
       observations: b.observations.map((x) => ({
         ...x,
         values: {
