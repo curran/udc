@@ -4,7 +4,7 @@ A small, framework-independent TypeScript library for **semantic integration of 
 
 This is the modern continuation of [Curran Kelleher's original 2014 Universal Data Cube project](https://github.com/curran/udc/tree/gh-pages). The previous AMD/RequireJS version, tests, and annotated documentation are preserved on the historical `gh-pages` branch. The new implementation imports the typed in-memory core and pure golden tests developed in VizHub AI Studio, with provider-neutral snapshot identifiers.
 
-> **Release status:** `@vizhub/udc@2.0.0` is the aggregation-aware release prepared from this repository. If npm still serves `1.1.0`, that artifact predates the aggregation-aware API. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
+> **Release status:** `@vizhub/udc@1.2.0` is the aggregation-aware release prepared from this repository. If npm still serves `1.1.0`, that artifact predates the aggregation-aware API. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
 
 ## Start developing
 

@@ -1,6 +1,6 @@
 # Change log
 
-## 2.0.0 — Unreleased (breaking aggregation metadata)
+## 1.2.0 — Unreleased (breaking aggregation metadata)
 
 - Declare `aggregation` mandatory on every measure; existing `1.0.0` consumers need explicit migrations.
 - Add explicit, provenance-preserving `aggregateCube` with composable averages and derived counts.
@@ -12,7 +12,7 @@
 
 ## 1.1.0 — Published
 
-- Published package metadata update. The published artifact did not include the aggregation-aware API; use `2.0.0` for those features.
+- Published package metadata update. The published artifact did not include the aggregation-aware API; use `1.2.0` for those features.
 
 ## 1.0.0 — Published
 

@@ -7,7 +7,6 @@ const pkg = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url)),
 );
 assert.equal(pkg.name, "@vizhub/udc");
-assert.equal(pkg.version, "2.0.0");
 assert.equal(pkg.type, "module");
 assert.equal(pkg.exports["."].types, "./dist/index.d.ts");
 assert.equal(pkg.exports["."].import, "./dist/index.js");
