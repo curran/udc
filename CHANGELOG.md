@@ -1,5 +1,11 @@
 # Change log
 
+## 2.0.0 — Unreleased (breaking aggregation metadata)
+
+- Declare `aggregation` mandatory on every measure; existing `1.0.0` consumers need explicit migrations.
+- Add explicit, provenance-preserving `aggregateCube` with composable averages and derived counts.
+- Update package release metadata and add a reproducible manual/tag release workflow.
+
 ## Unreleased — Explicit cube roll-ups
 
 - Add `aggregateCube` to reduce canonical coordinates by declared sum, count and average operators.

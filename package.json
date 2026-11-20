@@ -1,17 +1,17 @@
 {
   "name": "@vizhub/udc",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "A portable, provenance-aware semantic data cube engine for JavaScript and TypeScript",
   "type": "module",
   "license": "MIT",
   "author": "Curran Kelleher",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/curran/udc.git"
+    "url": "git+https://github.com/vizhub-studio/udc.git"
   },
-  "homepage": "https://github.com/curran/udc#readme",
+  "homepage": "https://github.com/vizhub-studio/udc#readme",
   "bugs": {
-    "url": "https://github.com/curran/udc/issues"
+    "url": "https://github.com/vizhub-studio/udc/issues"
   },
   "keywords": [
     "udc",
