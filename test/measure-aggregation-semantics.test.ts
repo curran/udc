@@ -53,7 +53,8 @@ describe("aggregation declarations", () => {
   for (const invalid of [undefined, "", "median", null]) {
     it("rejects invalid " + String(invalid), () => {
       const definition = schema("sum");
-      (definition.measures[0].measure as { aggregation: unknown }).aggregation = invalid;
+      (definition.measures[0].measure as { aggregation: unknown }).aggregation =
+        invalid;
       expect(() => validateSemanticSchema(definition)).toThrow(UdcError);
     });
   }

@@ -25,11 +25,11 @@ const cube = createCube(
       {
         field: "population",
         measure: {
-        id: "population",
-        name: "Population",
-        unit: "persons",
-        aggregation: "sum",
-      },
+          id: "population",
+          name: "Population",
+          unit: "persons",
+          aggregation: "sum",
+        },
         scale: 1,
       },
     ],

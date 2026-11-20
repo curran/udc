@@ -16,11 +16,11 @@ describe("provider-neutral package usage", () => {
       {
         field: "amount",
         measure: {
-        id: "rainfall",
-        name: "Rainfall",
-        unit: "mm",
-        aggregation: "sum",
-      },
+          id: "rainfall",
+          name: "Rainfall",
+          unit: "mm",
+          aggregation: "sum",
+        },
         scale: 1,
       },
     ],
