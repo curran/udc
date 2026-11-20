@@ -6,6 +6,12 @@ This is the modern continuation of [Curran Kelleher's original 2014 Universal Da
 
 > **Release status:** `@vizhub/udc@1.2.0` is the aggregation-aware release prepared from this repository. If npm still serves `1.1.0`, that artifact predates the aggregation-aware API. The package contains **no network loader, database, UI, backend API, or VizHub authentication logic**.
 
+## Watch the presentation
+
+[![Watch the Universal Data Cube (UDC) presentation on YouTube](https://img.youtube.com/vi/69E7t4gpCzk/hqdefault.jpg)](https://youtu.be/69E7t4gpCzk?is=WfK5nyU5v2Ml90Ev)
+
+[**Watch the UDC presentation on YouTube**](https://youtu.be/69E7t4gpCzk?is=WfK5nyU5v2Ml90Ev)
+
 ## Start developing
 
 Requires Node.js 22 or newer.
