@@ -1,0 +1,31 @@
+name: Temporary PR roll-up formatter
+on:
+  push:
+    branches:
+      - feat/explicit-cube-rollups-20261120
+permissions:
+  contents: write
+jobs:
+  format:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feat/explicit-cube-rollups-20261120
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - name: Resolve published UDC version
+        run: npm view @vizhub/udc version || true
+      - run: npx prettier --write src/aggregate-cube.ts test/aggregate-cube.test.ts README.md docs/api.md
+      - name: Commit formatting to PR branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/aggregate-cube.ts test/aggregate-cube.test.ts README.md docs/api.md
+          if ! git diff --cached --quiet; then
+            git commit -m "style(udc): format aggregation implementation"
+            git push origin HEAD:refs/heads/feat/explicit-cube-rollups-20261120
+          fi
