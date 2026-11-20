@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { createCube, parseTabular, type DatasetSnapshot, type SemanticSchema } from "../src/index";
+import {
+  createCube,
+  parseTabular,
+  type DatasetSnapshot,
+  type SemanticSchema,
+} from "../src/index";
 
 describe("provider-neutral package usage", () => {
   const schema: SemanticSchema = {
