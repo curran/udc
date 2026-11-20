@@ -4,19 +4,19 @@
 
 - Declare `aggregation` mandatory on every measure; existing `1.0.0` consumers need explicit migrations.
 - Add explicit, provenance-preserving `aggregateCube` with composable averages and derived counts.
+- Add `AggregatedCube` as a distinct result stage with original per-value lineage and sufficient statistics.
+- Require a measure aggregation policy: `sum`, `count`, `average`, or `none`; reject undeclared or unsupported operators without silently aggregating.
+- Keep canonical measure `unit` mandatory; changing schemas is required for consumers.
+- Build `dist/` during `prepublishOnly` so the published tarball always matches the verified source.
 - Update package release metadata and add a reproducible manual/tag release workflow.
 
-## Unreleased — Explicit cube roll-ups
+## 1.1.0 — Published
 
-- Add `aggregateCube` to reduce canonical coordinates by declared sum, count and average operators.
-- Preserve original per-value source lineage and sufficient statistics to make repeated averages correct.
-- Keep aggregated cubes a distinct stage and reject inappropriate non-additive roll-ups.
+- Published package metadata update. The published artifact did not include the aggregation-aware API; use `2.0.0` for those features.
 
-## Unreleased — Measure aggregation semantics
+## 1.0.0 — Published
 
-- Require a measure aggregation policy: `sum`, `count`, `average`, or `none`.
-- Reject undeclared or unsupported operators without silently aggregating.
-- Keep canonical measure `unit` mandatory; changing schemas is required for consumers.
+- First standalone npm release of the modern TypeScript ESM core.
 
 ## 0.1.0 — Unreleased
 

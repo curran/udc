@@ -57,6 +57,8 @@
     "format": "npm run prettier",
     "format:check": "npm run prettier:check",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm test && npm run test:package",
+    "prepack": "npm run build",
+    "prepublishOnly": "npm run check",
     "example": "npm run build && node examples/population-gdp.mjs"
   },
   "dependencies": {
