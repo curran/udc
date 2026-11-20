@@ -54,7 +54,7 @@ const schema = (
   measures: [
     {
       field: "value",
-      measure: { id: measureId, name: measureId, unit },
+      measure: { id: measureId, name: measureId, unit, aggregation: "sum" },
       scale: 1,
     },
   ],

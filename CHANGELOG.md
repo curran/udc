@@ -1,5 +1,11 @@
 # Change log
 
+## Unreleased — Measure aggregation semantics
+
+- Require a measure aggregation policy: `sum`, `count`, `average`, or `none`.
+- Reject undeclared or unsupported operators without silently aggregating.
+- Keep canonical measure `unit` mandatory; changing schemas is required for consumers.
+
 ## 0.1.0 — Unreleased
 
 - Modern TypeScript ESM reimplementation of Universal Data Cube extracted from VizHub AI Studio.

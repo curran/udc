@@ -40,7 +40,12 @@ const schema: SemanticSchema = {
   measures: [
     {
       field: "n",
-      measure: { id: "population", name: "Population", unit: "persons" },
+      measure: {
+        id: "population",
+        name: "Population",
+        unit: "persons",
+        aggregation: "sum",
+      },
       scale: 1000,
     },
   ],
@@ -297,7 +302,7 @@ describe("canonicalization, integration and slices", () => {
     fail(() => integrateCubes(a, b), "CONFLICT");
     const different = {
       ...b,
-      measures: [{ id: "gdp", name: "GDP", unit: "USD" }],
+      measures: [{ id: "gdp", name: "GDP", unit: "USD", aggregation: "sum" }],
       observations: b.observations.map((x) => ({
         ...x,
         values: {

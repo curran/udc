@@ -32,7 +32,12 @@ const popSchema = {
   measures: [
     {
       field: "population",
-      measure: { id: "population", name: "Population", unit: "persons" },
+      measure: {
+        id: "population",
+        name: "Population",
+        unit: "persons",
+        aggregation: "sum",
+      },
       scale: 1000,
     },
   ],
@@ -44,7 +49,12 @@ const gdpSchema = {
   measures: [
     {
       field: "gdp",
-      measure: { id: "gdp-usd", name: "GDP (current US$)", unit: "USD" },
+      measure: {
+        id: "gdp-usd",
+        name: "GDP (current US$)",
+        unit: "USD",
+        aggregation: "sum",
+      },
       scale: 1,
     },
   ],
