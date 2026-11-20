@@ -1,6 +1,6 @@
 {
   "name": "@vizhub/udc",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "A portable, provenance-aware semantic data cube engine for JavaScript and TypeScript",
   "type": "module",
   "license": "MIT",
