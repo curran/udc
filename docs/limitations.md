@@ -12,9 +12,8 @@ The imported `UDC_LIMITS` are deliberately conservative:
 | Rows per source cube                   | 10,000 |
 | Columns per source                     |    100 |
 | Output observations                    | 10,000 |
-| Input CSV/TSV size                     |  2 MiB |
 
-Inputs over budget fail rather than silently truncating. These limits are not a streaming guarantee or protection from all potentially expensive workloads.
+Core operations reject over-budget row/column counts rather than silently truncating. File byte limits and CSV/TSV parsing belong to callers. These limits are not a streaming guarantee or protection from all potentially expensive workloads.
 
 ## Not implemented
 

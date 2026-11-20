@@ -22,11 +22,13 @@ After npm publication, application consumers can install `@vizhub/udc` and impor
 
 ## Quick start
 
-```ts
-import { parseTabular, createCube } from "@vizhub/udc";
+UDC accepts structured rows, not raw CSV/TSV files. Parsing is the caller's responsibility; the published library has no production dependencies.
 
-const csv = "country,year,population\nCHN,1960,650680114\n";
-const rows = parseTabular(csv, "csv");
+```ts
+import { createCube } from "@vizhub/udc";
+
+// The host application supplies already-parsed rows.
+const rows = [{ country: "CHN", year: "1960", population: "650680114" }];
 
 const cube = createCube(
   rows,
@@ -68,7 +70,6 @@ const cube = createCube(
 
 | Function                                                      | Purpose                                                                         |
 | ------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `parseTabular(text, "csv" \| "tsv")`                          | Bounded record-aware parser                                                     |
 | `createCube(rows, schema, snapshot)`                          | Create a typed SourceCube with measure provenance                               |
 | `codedRef`, `canonicalMember`, `memberIdentity`, `getCellKey` | Portable and order-invariant coordinate identities                              |
 | `validateSemanticSchema(schema, columns?)`                    | Validate schema mappings, IDs, and field coverage                               |

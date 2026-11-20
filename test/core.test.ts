@@ -5,7 +5,6 @@ import {
   canonicalMember,
   createCube,
   validateSemanticSchema,
-  parseTabular,
   resolveConcordance,
   canonicalizeCube,
   integrateCubes,
@@ -209,13 +208,17 @@ describe("construct typed source observations", () => {
       "INVALID",
     );
   });
-  it("parses CSV/TSV, quoted fields and multiline values", () => {
-    expect(parseTabular('a,b\n"x,y","two\nlines"\n', "csv")[0]).toEqual({
-      a: "x,y",
-      b: "two\nlines",
-    });
-    expect(parseTabular("a\tb\nx\ty\n", "tsv")[0]).toEqual({ a: "x", b: "y" });
-    fail(() => parseTabular("a,b\n" + "x,y\n".repeat(10_001), "csv"), "LIMIT");
+  it("enforces row budgets on structured input", () => {
+    fail(
+      () =>
+        cube(
+          Array.from({ length: 10_001 }, (_, i) => ({
+            code: String(i),
+            n: "2",
+          })),
+        ),
+      "LIMIT",
+    );
   });
 });
 describe("explicit concordance semantics", () => {

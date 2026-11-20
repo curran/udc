@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
   createCube,
-  parseTabular,
   type DatasetSnapshot,
   type SemanticSchema,
 } from "../src/index";
@@ -37,7 +36,7 @@ describe("provider-neutral package usage", () => {
       revision: "version-1",
       sourceId: "weather-catalog",
     };
-    const rows = parseTabular("station,amount\nA,12.5\n", "csv");
+    const rows = [{ station: "A", amount: "12.5" }];
     const cube = createCube(rows, schema, snapshot);
     expect(cube.observations[0].values.rainfall.value).toBe(12.5);
     expect(cube.observations[0].values.rainfall.provenance.snapshot).toEqual(
@@ -46,7 +45,7 @@ describe("provider-neutral package usage", () => {
   });
 
   it("rejects empty or invalid required snapshot identity", () => {
-    const rows = parseTabular("station,amount\nA,12.5\n", "csv");
+    const rows = [{ station: "A", amount: "12.5" }];
     expect(() => createCube(rows, schema, { datasetId: "" })).toThrow();
     expect(() =>
       createCube(rows, schema, {

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
+import { csvParse } from "d3-dsv";
 import {
-  parseTabular,
   createCube,
   resolveConcordance,
   codedRef,
@@ -11,9 +11,8 @@ import {
 } from "../dist/index.js";
 
 const read = (file) =>
-  parseTabular(
+  csvParse(
     readFileSync(new URL("../test/fixtures/" + file, import.meta.url), "utf8"),
-    "csv",
   );
 const population = read("total_population.csv");
 const gdp = read("GDP_current_USD.csv");
