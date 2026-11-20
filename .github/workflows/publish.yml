@@ -1,0 +1,29 @@
+name: Publish UDC to npm
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - "release/npm-v2.0.0"
+permissions:
+  contents: write
+  id-token: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+      - name: Install
+        run: npm ci
+      - name: Verify package
+        run: npm run check
+      - name: Publish with npm trusted publishing
+        run: npm publish --access public --provenance
+      - name: Delete one-time release branch
+        if: always() && github.ref == 'refs/heads/release/npm-v2.0.0'
+        run: git push origin --delete release/npm-v2.0.0
