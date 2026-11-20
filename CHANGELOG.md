@@ -1,5 +1,11 @@
 # Change log
 
+## Unreleased — Explicit cube roll-ups
+
+- Add `aggregateCube` to reduce canonical coordinates by declared sum, count and average operators.
+- Preserve original per-value source lineage and sufficient statistics to make repeated averages correct.
+- Keep aggregated cubes a distinct stage and reject inappropriate non-additive roll-ups.
+
 ## Unreleased — Measure aggregation semantics
 
 - Require a measure aggregation policy: `sum`, `count`, `average`, or `none`.

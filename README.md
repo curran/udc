@@ -74,6 +74,7 @@ const cube = createCube(
 | `resolveConcordance(mappings, context)`     | Verified exact-equivalence closure with conflicts          |
 | `canonicalizeCube(source, concordance)`     | Translate coded coordinates to canonical member identities |
 | `integrateCubes(a, b)`                      | Strict inner join over identical canonical dimensions      |
+| `aggregateCube(cube, keepDimensions)`       | Explicit, provenance-preserving sum/count/average roll-ups |
 | `sliceCube(cube, member)`                   | Select a member and remove its dimension                   |
 
 The implementation deliberately rejects unknown or non-equivalent identifiers, duplicate measure identities, incompatible grains, ambiguous mappings and over-budget operations. There is no guesswork or implicit aggregation.

@@ -22,6 +22,14 @@ For standalone callers, the required `DatasetSnapshot` field is `datasetId`. `re
 
 Only exact, verified edges form equivalence classes. A class requires one unambiguous canonical assignment. Unverified, close, related, broader and narrower mappings are deliberately excluded. Effective-dated mappings require an explicit query date. Contradictions yield conflict or unresolved results.
 
+## Explicit aggregation
+
+`aggregateCube(cube, retainedDimensionIds)` is an explicit roll-up over canonical coordinates. It does not infer dimension hierarchies or silently run during integration/slicing. A measure's required `aggregation` declaration controls reduction: `sum`, `average`, `count`, or `none`. `none` rejects groups containing multiple observations. Nulls are excluded from arithmetic; empty sums and averages yield null, whereas count yields zero. Zero is never treated as missing.
+
+The result is an `AggregatedCube`, distinct from a `CanonicalCube`; its values retain all contributing original source-row provenance and sufficient `sum`/`count` state for a later roll-up. Averages of unequal-sized groups are recomputed using that state, not averaged as unweighted means. A `count` operation creates a derived `:count` measure in `observations` units whose later roll-ups use `sum`. All resulting measure metadata and coordinates are deterministic. Runtime row and output limits still apply.
+
+No hierarchy lookup, source-unit conversion, weighted rate calculation, implicit roll-up, or SQL is performed by this operation.
+
 ## Integration and slicing
 
 `integrateCubes` performs an **inner join only** between canonical cubes with the same dimension set and granularity. It refuses duplicate measure IDs. `sliceCube` selects observations at one canonical member and removes the selected axis, preserving measure lineage. Neither operation implicitly aggregates or fills missing values.
