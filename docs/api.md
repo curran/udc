@@ -12,6 +12,7 @@ All documented functions and types are exported from `@vizhub/udc` and `src/inde
 | `resolveConcordance` | `(mappings, {revision, at?}) => Concordance`                 |
 | `canonicalizeCube`   | `(source, concordance) => CanonicalCube`                     |
 | `integrateCubes`     | `(a, b, {join:"inner"}) => CanonicalCube`                    |
+| `aggregateCube`    | `(canonicalOrAggregatedCube, retainedDimensionIds) => AggregatedCube`; explicitly reduce coordinates using declared measure policies |
 | `sliceCube`          | `(cube, member) => CanonicalCube`                            |
 | `UDC_LIMITS`         | Exported resource ceilings; see [limits](limitations.md)     |
 | `UdcError`           | Typed exception with `code`                                  |

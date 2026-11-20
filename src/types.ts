@@ -97,6 +97,32 @@ export interface SourceCube extends CubeBase<CodedMemberRef> {
 export interface CanonicalCube extends CubeBase<Member> {
   stage: "canonical";
 }
+/** Reusable sufficient statistics for compositional roll-ups. */
+export interface AggregateAccumulator {
+  sum: number;
+  count: number;
+}
+/** Aggregated observations never masquerade as single-source observations. */
+export interface AggregatedMeasureValue {
+  value: number | null;
+  state: AggregateAccumulator;
+  contributors: readonly MeasureProvenance[];
+}
+export interface AggregatedObservation {
+  coordinate: Coordinate<Member>;
+  cellKey: CellKey;
+  values: Readonly<Record<string, AggregatedMeasureValue>>;
+}
+export interface AggregatedCube {
+  stage: "aggregated";
+  dimensions: readonly Dimension[];
+  measures: readonly MeasureDefinition[];
+  observations: readonly AggregatedObservation[];
+  snapshots: readonly DatasetSnapshot[];
+  schemaRevisions: readonly string[];
+  concordanceRevisions: readonly string[];
+}
+
 export type Relationship =
   "exact" | "close" | "broader" | "narrower" | "related";
 export interface CodeMapping {
