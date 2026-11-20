@@ -11,6 +11,7 @@ import {
   integrateCubes,
   sliceCube,
   UdcError,
+  type CanonicalCube,
   type CodeMapping,
   type SemanticSchema,
   type DatasetSnapshot,
@@ -332,7 +333,7 @@ describe("canonicalization, integration and slices", () => {
     const a = canon(),
       b = canon();
     fail(() => integrateCubes(a, b), "CONFLICT");
-    const different = {
+    const different: CanonicalCube = {
       ...b,
       measures: [{ id: "gdp", name: "GDP", unit: "USD", aggregation: "sum" }],
       observations: b.observations.map((x) => ({
